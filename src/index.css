@@ -1,0 +1,159 @@
+/* ============================================================
+   Qafilaa landing — global stylesheet
+   Base reset, scroll behaviour, text selection, and every
+   keyframe used across the page. Values transcribed 1:1 from
+   the original Qafilaa Design prototype so motion matches.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #070d0b;
+  color: #f2f6f5;
+  font-family: Inter, system-ui, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(32, 214, 168, 0.3);
+  color: #f2f6f5;
+}
+
+/* ---- Landing-page keyframes ---- */
+@keyframes qf-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+@keyframes qf-floats {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+@keyframes qf-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes qf-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-46px, -30px, 0);
+  }
+}
+@keyframes qf-dash {
+  to {
+    stroke-dashoffset: -420;
+  }
+}
+@keyframes qf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes qf-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes qf-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes qf-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+@keyframes qf-sheen {
+  0% {
+    transform: translateX(-130%);
+  }
+  60%,
+  100% {
+    transform: translateX(230%);
+  }
+}
+@keyframes qf-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+/* ---- ConvoyMap keyframes ---- */
+@keyframes qf-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes qf-dash-map {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+
+/* Respect reduced-motion preferences without breaking final layout. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
