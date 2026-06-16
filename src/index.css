@@ -144,6 +144,86 @@ body {
   }
 }
 
+/* ============================================================
+   Responsive breakpoints
+   Tablet + mobile layout collapse. These override the desktop
+   inline-style values via !important (inline styles otherwise win
+   the cascade). Breakpoints and values mirror the updated
+   Qafilaa Landing design.
+   ============================================================ */
+@media (max-width: 1000px) {
+  [data-features-grid] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  [data-split] {
+    grid-template-columns: 1fr !important;
+    gap: 34px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  [data-hero-grid] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    justify-items: start !important;
+  }
+  [data-nav-textlinks] {
+    display: none !important;
+  }
+  [data-hero] {
+    padding-top: 52px !important;
+    padding-bottom: 36px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #qf-landing section {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+  #qf-landing nav > div {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+  [data-features-grid] {
+    grid-template-columns: 1fr !important;
+  }
+  [data-feature-wide] {
+    grid-column: auto !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  [data-feature-wide] [data-feature-demo] {
+    width: 100% !important;
+    height: 120px !important;
+  }
+  [data-float-chip] {
+    display: none !important;
+  }
+  [data-sos-visual] {
+    position: static !important;
+    transform: none !important;
+    margin: 30px auto 0 !important;
+    right: auto !important;
+    top: auto !important;
+  }
+  [data-faq] {
+    padding-top: 56px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  [data-phone] {
+    transform: scale(0.86) !important;
+    transform-origin: top center !important;
+  }
+  [data-countdown] > div {
+    min-width: 70px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
+
 /* Respect reduced-motion preferences without breaking final layout. */
 @media (prefers-reduced-motion: reduce) {
   html {

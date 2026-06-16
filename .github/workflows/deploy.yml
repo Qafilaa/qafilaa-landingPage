@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: {}
-
-# Allow only one deploy at a time; cancel older in-progress runs.
-concurrency:
-  group: deploy-prod
-  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,8 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
@@ -31,38 +24,28 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Sync static assets to S3 (long cache, except index.html)
-        uses: jakejarvis/s3-sync-action@v0.5.1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          args: >-
-            --delete
-            --exclude "index.html"
-            --cache-control "public, max-age=31536000, immutable"
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SOURCE_DIR: 'dist'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload index.html with no-cache
+      - name: Sync assets to S3 (long cache, hashed files)
         run: |
-          aws s3 cp dist/index.html s3://$AWS_S3_BUCKET/index.html \
+          aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }}/ \
+            --delete \
+            --exclude "index.html" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      - name: Upload index.html (no cache)
+        run: |
+          aws s3 cp dist/index.html s3://${{ secrets.AWS_S3_BUCKET }}/index.html \
             --cache-control "no-cache, no-store, must-revalidate" \
             --content-type "text/html"
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}

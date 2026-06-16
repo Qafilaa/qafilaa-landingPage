@@ -40,7 +40,7 @@ export function StatsBand() {
           ...style,
           transition: `opacity .9s ${EASE}, transform .9s ${EASE}`,
           display: 'grid',
-          gridTemplateColumns: 'repeat(4,1fr)',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
           gap: 18,
         }}
       >

@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { colors, fonts, layout, EASE } from '../theme';
+import { colors, fonts, layout } from '../theme';
 import { site } from '../content';
 import { ConvoyMap } from './ConvoyMap';
 import { WaitlistForm } from './WaitlistForm';
@@ -52,13 +52,14 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
 
   return (
     <section
+      data-hero
       ref={containerRef as React.RefObject<HTMLElement>}
       onMouseMove={onMouseMove}
       style={{
         position: 'relative',
-        maxWidth: layout.maxWidth,
-        margin: '0 auto',
-        padding: '84px 28px 60px',
+        // Full-bleed so the ambient glow/terrain layers span the viewport;
+        // the content below is re-constrained to the 1180px column.
+        padding: '84px 0 60px',
         overflow: 'hidden',
       }}
     >
@@ -123,16 +124,18 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
         </svg>
       </div>
 
-      <div
-        style={{
-          position: 'relative',
-          display: 'grid',
-          gridTemplateColumns: '1.05fr 0.95fr',
-          gap: 40,
-          alignItems: 'center',
-        }}
-      >
-        {/* copy column */}
+      <div style={{ position: 'relative', maxWidth: layout.maxWidth, margin: '0 auto', padding: '0 28px' }}>
+        <div
+          data-hero-grid
+          style={{
+            position: 'relative',
+            display: 'grid',
+            gridTemplateColumns: '1.05fr 0.95fr',
+            gap: 40,
+            alignItems: 'center',
+          }}
+        >
+          {/* copy column */}
         <div>
           <div
             ref={badge.ref}
@@ -236,7 +239,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
           ref={phone.ref}
           style={{ ...phone.style, position: 'relative', display: 'flex', justifyContent: 'center' }}
         >
-          <div style={{ position: 'relative', animation: 'qf-float 7s ease-in-out infinite' }}>
+          <div data-phone style={{ position: 'relative', animation: 'qf-float 7s ease-in-out infinite' }}>
             <div
               style={{
                 width: 300,
@@ -393,6 +396,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
 
             {/* floating telemetry chips */}
             <div
+              data-float-chip
               style={{
                 ...chipBase,
                 top: 90,
@@ -405,6 +409,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               <div style={{ fontSize: 14, fontWeight: 600, marginTop: 3, color: colors.accent }}>Live now</div>
             </div>
             <div
+              data-float-chip
               style={{
                 ...chipBase,
                 top: 300,
@@ -420,6 +425,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               </div>
             </div>
             <div
+              data-float-chip
               style={{
                 ...chipBase,
                 bottom: 36,
@@ -435,6 +441,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>

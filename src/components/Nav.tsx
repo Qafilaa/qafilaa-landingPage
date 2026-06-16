@@ -86,18 +86,24 @@ export function Nav() {
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 34 }}>
-          {navLinks.map((link) => (
-            <HoverLink
-              key={link.href}
-              href={link.href}
-              style={navLinkStyle}
-              hoverStyle={{ color: colors.text }}
-            >
-              {link.label}
-            </HoverLink>
-          ))}
-          <a href="#waitlist" style={{ ...ctaStyle, ...cta.style }} {...cta.hoverProps}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <div data-nav-textlinks style={{ display: 'flex', alignItems: 'center', gap: 34 }}>
+            {navLinks.map((link) => (
+              <HoverLink
+                key={link.href}
+                href={link.href}
+                style={navLinkStyle}
+                hoverStyle={{ color: colors.text }}
+              >
+                {link.label}
+              </HoverLink>
+            ))}
+          </div>
+          <a
+            href="#waitlist"
+            style={{ ...ctaStyle, whiteSpace: 'nowrap', ...cta.style }}
+            {...cta.hoverProps}
+          >
             Join the waitlist
           </a>
         </div>
