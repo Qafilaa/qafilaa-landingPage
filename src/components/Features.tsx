@@ -296,8 +296,8 @@ export function Features() {
           </div>
           <h3 style={title}>One-tap SOS</h3>
           <p style={body}>
-            Hold to alert the whole convoy with your live location and altitude. Help heads straight to you — no
-            shouting into a dead radio.
+            Hold for two seconds to alert the whole convoy with your live location and altitude. Help heads straight to
+            you — no shouting into a dead radio.
           </p>
         </FeatureCard>
       </div>

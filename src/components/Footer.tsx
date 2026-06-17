@@ -2,6 +2,12 @@ import type { CSSProperties } from 'react';
 import { colors, fonts, layout } from '../theme';
 import { Logo } from './icons';
 import { HoverLink } from './HoverLink';
+import type { LegalDoc } from './LegalModal';
+
+interface FooterProps {
+  /** Opens the Privacy / Terms legal modal. */
+  onOpenLegal: (doc: Exclude<LegalDoc, null>) => void;
+}
 
 const colTitle: CSSProperties = {
   fontSize: 12,
@@ -33,12 +39,20 @@ const columns = [
     links: [
       { href: '#faq', label: 'FAQ' },
       { href: '#waitlist', label: 'Waitlist' },
-      { href: '#waitlist', label: 'Contact' },
+      { href: 'mailto:hello@qafilaa.in', label: 'Contact' },
     ],
   },
 ];
 
-export function Footer() {
+const legalLink: CSSProperties = {
+  fontSize: 13,
+  color: colors.textDim,
+  textDecoration: 'none',
+  transition: 'color .2s',
+  cursor: 'pointer',
+};
+
+export function Footer({ onOpenLegal }: FooterProps) {
   return (
     <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 60 }}>
       <div
@@ -72,8 +86,7 @@ export function Footer() {
             <span style={{ fontFamily: fonts.display, fontSize: 20, fontWeight: 600 }}>Qafilaa</span>
           </div>
           <p style={{ color: colors.textDim, fontSize: 14, lineHeight: 1.55, margin: '16px 0 0' }}>
-            Ride together. No one left behind. Built for the rides where the road runs out of signal before it runs out
-            of mountain.
+            Built for the rides where the road runs out of signal before it runs out of mountain.
           </p>
         </div>
 
@@ -110,7 +123,30 @@ export function Footer() {
           }}
         >
           <span style={{ fontSize: 13, color: colors.textDim }}>© 2026 Qafilaa · Made for the mountains.</span>
-          <span style={{ fontSize: 13, color: colors.textDim }}>Privacy · Terms</span>
+          <div style={{ display: 'flex', gap: 18 }}>
+            <HoverLink
+              href="#"
+              style={legalLink}
+              hoverStyle={{ color: colors.text }}
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenLegal('privacy');
+              }}
+            >
+              Privacy
+            </HoverLink>
+            <HoverLink
+              href="#"
+              style={legalLink}
+              hoverStyle={{ color: colors.text }}
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenLegal('terms');
+              }}
+            >
+              Terms
+            </HoverLink>
+          </div>
         </div>
       </div>
     </footer>

@@ -71,7 +71,7 @@ export function useLandingFx() {
       const coreText = btn.querySelector<HTMLElement>('[data-sos-core-text]');
       const coreSub = btn.querySelector<HTMLElement>('[data-sos-core-sub]');
       const status = root.querySelector<HTMLElement>('[data-sos-status]');
-      const HOLD = 1500;
+      const HOLD = 2000;
       let sraf: number | null = null;
       let start = 0;
       let sent = false;
@@ -85,7 +85,7 @@ export function useLandingFx() {
         setRing(0);
         if (core) core.style.transform = 'scale(1)';
         if (status) {
-          status.textContent = 'Press & hold to broadcast';
+          status.textContent = 'Press & hold for two seconds';
           status.style.color = '#9FB0AC';
         }
         if (coreSub) coreSub.textContent = 'Hold';
@@ -117,7 +117,7 @@ export function useLandingFx() {
           if (coreText) coreText.textContent = 'SOS';
           if (coreSub) coreSub.textContent = 'Hold';
           if (status) {
-            status.textContent = 'Press & hold to broadcast';
+            status.textContent = 'Press & hold for two seconds';
             status.style.color = '#9FB0AC';
           }
         }, 2600);

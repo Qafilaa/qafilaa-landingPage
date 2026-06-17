@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, MouseEvent, ReactNode } from 'react';
 import { useHover } from '../hooks/useHover';
 
 interface HoverLinkProps {
@@ -6,16 +6,17 @@ interface HoverLinkProps {
   children: ReactNode;
   style: CSSProperties;
   hoverStyle: CSSProperties;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 }
 
 /**
  * Anchor that swaps in `hoverStyle` while hovered — the inline-style equivalent
  * of the prototype's `style-hover` attribute.
  */
-export function HoverLink({ href, children, style, hoverStyle }: HoverLinkProps) {
+export function HoverLink({ href, children, style, hoverStyle, onClick }: HoverLinkProps) {
   const { hoverProps, style: hovered } = useHover(hoverStyle);
   return (
-    <a href={href} style={{ ...style, ...hovered }} {...hoverProps}>
+    <a href={href} style={{ ...style, ...hovered }} onClick={onClick} {...hoverProps}>
       {children}
     </a>
   );

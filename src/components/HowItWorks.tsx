@@ -68,7 +68,7 @@ const steps = [
     n: '2',
     label: 'Gather',
     title: 'Everyone joins',
-    body: 'Share one link. Riders tap in and appear on the map instantly — no accounts to wrangle at the trailhead.',
+    body: 'Share one link. Riders tap in and appear on the map instantly — no app store, no accounts to wrangle at the trailhead.',
     delay: 120,
   },
   {

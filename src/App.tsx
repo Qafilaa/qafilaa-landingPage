@@ -14,12 +14,16 @@ import { DeviceShowcase } from './components/DeviceShowcase';
 import { Waitlist } from './components/Waitlist';
 import { Faq } from './components/Faq';
 import { Footer } from './components/Footer';
+import { LegalModal, type LegalDoc } from './components/LegalModal';
 
 export default function App() {
   // Submitting either waitlist form flips the whole page into its success
   // state — mirrors the prototype's shared data-form / data-form-ok toggle.
   const [submitted, setSubmitted] = useState(false);
   const handleSubmit = () => setSubmitted(true);
+
+  // Which legal document the footer modal is showing (null = closed).
+  const [legal, setLegal] = useState<LegalDoc>(null);
 
   // Pointer-driven motion engine: parallax diorama, card tilt/glare, magnetic
   // buttons, cursor scout-light, GPS particles and the hold-to-send SOS.
@@ -73,7 +77,8 @@ export default function App() {
       <DeviceShowcase />
       <Waitlist submitted={submitted} onSubmit={handleSubmit} />
       <Faq />
-      <Footer />
+      <Footer onOpenLegal={setLegal} />
+      <LegalModal legal={legal} onClose={() => setLegal(null)} />
     </div>
   );
 }

@@ -104,6 +104,7 @@ export function Safety() {
             data-sos-btn
             role="button"
             tabIndex={0}
+            aria-label="Demo SOS — press and hold for two seconds to preview the convoy alert. This is a demo and does not contact emergency services."
             style={{
               position: 'relative',
               width: 168,
@@ -149,8 +150,8 @@ export function Safety() {
               <span data-sos-core-sub style={{ fontSize: 9.5, letterSpacing: '1px', textTransform: 'uppercase', color: 'rgba(26,8,7,0.7)', fontWeight: 700, marginTop: 4 }}>Hold</span>
             </span>
           </div>
-          <div data-sos-status style={{ fontSize: 13, color: colors.textMuted, textAlign: 'center', minHeight: 18, transition: 'color .3s' }}>
-            Press &amp; hold to broadcast
+          <div data-sos-status aria-live="polite" style={{ fontSize: 13, color: colors.textMuted, textAlign: 'center', minHeight: 18, transition: 'color .3s' }}>
+            Press &amp; hold for two seconds
           </div>
         </div>
       </div>

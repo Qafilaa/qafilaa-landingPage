@@ -119,7 +119,7 @@ export function OfflineSpotlight() {
               <div style={{ ...avatar, color: colors.text }}>VC</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 14, fontWeight: 500 }}>
-                  Viren C. <span style={{ color: colors.accent, fontSize: 12 }}>· Lead</span>
+                  Viren C <span style={{ color: colors.accent, fontSize: 12 }}>· Lead</span>
                 </div>
                 <div style={{ fontSize: 12, color: colors.accent }}>live now</div>
               </div>
@@ -129,7 +129,7 @@ export function OfflineSpotlight() {
               <div style={{ ...avatar, color: colors.textMuted }}>GH</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 14, fontWeight: 500, color: colors.textMuted }}>
-                  Gaurav H. <span style={{ color: colors.textDim, fontSize: 12 }}>· Sweep</span>
+                  Gaurav Hendre <span style={{ color: colors.textDim, fontSize: 12 }}>· Sweep</span>
                 </div>
                 <div style={{ fontSize: 12, color: colors.textDim }}>last seen 4m ago · 5.6 km back</div>
               </div>
