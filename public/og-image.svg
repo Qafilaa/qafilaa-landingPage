@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a1410"/>
+      <stop offset="1" stop-color="#070d0b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.78" cy="0.28" r="0.5">
+      <stop offset="0" stop-color="#20d6a8" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#20d6a8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- route line with convoy dots -->
+  <path d="M90 470 C300 470 360 250 560 210 C760 170 840 360 1080 300"
+        fill="none" stroke="#1c352c" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="90" cy="470" r="9" fill="#5b7a6f"/>
+  <circle cx="300" cy="372" r="9" fill="#8fb7aa"/>
+  <circle cx="560" cy="210" r="11" fill="#20d6a8"/>
+  <circle cx="1080" cy="300" r="18" fill="#20d6a8"/>
+  <circle cx="1080" cy="300" r="30" fill="none" stroke="#20d6a8" stroke-width="4" opacity="0.35"/>
+
+  <!-- wordmark -->
+  <text x="90" y="200" font-family="'Space Grotesk', sans-serif" font-size="92" font-weight="700" fill="#f2f6f5">Qafilaa</text>
+
+  <!-- tagline -->
+  <text x="92" y="270" font-family="Inter, sans-serif" font-size="34" font-weight="600" fill="#20d6a8">Ride together. No one left behind.</text>
+
+  <!-- subhead -->
+  <text x="92" y="540" font-family="Inter, sans-serif" font-size="30" font-weight="400" fill="#a9b8b2">Live convoy map · rally points · one-tap SOS</text>
+  <text x="92" y="582" font-family="Inter, sans-serif" font-size="30" font-weight="400" fill="#a9b8b2">Built for rides where the road runs out of signal.</text>
+</svg>

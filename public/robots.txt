@@ -1,0 +1,9 @@
+# Qafilaa — https://qafilaa.in
+# Allow all crawlers full access to the marketing site.
+
+User-agent: *
+Allow: /
+
+# Block nothing (single-page marketing site, all content is public).
+
+Sitemap: https://qafilaa.in/sitemap.xml
