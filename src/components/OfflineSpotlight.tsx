@@ -116,20 +116,20 @@ export function OfflineSpotlight() {
 
           <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={riderRow}>
-              <div style={{ ...avatar, color: colors.text }}>AK</div>
+              <div style={{ ...avatar, color: colors.text }}>VC</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 14, fontWeight: 500 }}>
-                  Aman Kohli <span style={{ color: colors.accent, fontSize: 12 }}>· Lead</span>
+                  Viren C. <span style={{ color: colors.accent, fontSize: 12 }}>· Lead</span>
                 </div>
                 <div style={{ fontSize: 12, color: colors.accent }}>live now</div>
               </div>
               <span style={{ width: 9, height: 9, borderRadius: 999, background: colors.success }} />
             </div>
             <div style={{ ...riderRow, opacity: 0.62 }}>
-              <div style={{ ...avatar, color: colors.textMuted }}>VT</div>
+              <div style={{ ...avatar, color: colors.textMuted }}>GH</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 14, fontWeight: 500, color: colors.textMuted }}>
-                  Vikram T. <span style={{ color: colors.textDim, fontSize: 12 }}>· Sweep</span>
+                  Gaurav H. <span style={{ color: colors.textDim, fontSize: 12 }}>· Sweep</span>
                 </div>
                 <div style={{ fontSize: 12, color: colors.textDim }}>last seen 4m ago · 5.6 km back</div>
               </div>

@@ -231,9 +231,9 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               />
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 }}>
                 <div style={{ display: 'flex' }}>
-                  <div style={avatarBase}>AK</div>
-                  <div style={{ ...avatarBase, marginLeft: -9 }}>RS</div>
-                  <div style={{ ...avatarBase, marginLeft: -9 }}>MD</div>
+                  <div style={avatarBase}>VC</div>
+                  <div style={{ ...avatarBase, marginLeft: -9 }}>AJ</div>
+                  <div style={{ ...avatarBase, marginLeft: -9 }}>TH</div>
                   <div style={{ ...avatarBase, marginLeft: -9, background: 'rgba(32,214,168,0.18)', color: colors.accent }}>+</div>
                 </div>
                 <span style={{ fontSize: 14, color: colors.textMuted }}>
@@ -249,7 +249,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
             <div data-phone-float style={{ position: 'relative', animation: 'qf-float 7s ease-in-out infinite' }}>
               {/* floating telemetry chips */}
               <div data-float-chip style={{ position: 'absolute', top: 78, left: -92, zIndex: 3, padding: '11px 14px', borderRadius: 14, background: 'rgba(14,20,19,0.92)', border: '1px solid rgba(32,214,168,0.30)', boxShadow: '0 18px 44px rgba(0,0,0,0.5)', animation: 'qf-floats 5.5s ease-in-out infinite', willChange: 'transform' }}>
-                <div style={chipLabel}>Lead · Aman</div>
+                <div style={chipLabel}>Lead · Viren</div>
                 <div style={{ fontSize: 14, fontWeight: 600, marginTop: 3, color: colors.accent, display: 'flex', alignItems: 'center', gap: 7 }}>
                   <span style={{ width: 7, height: 7, borderRadius: 999, background: colors.accent, animation: 'qf-blink 1.8s ease-in-out infinite' }} />
                   Live now

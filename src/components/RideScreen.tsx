@@ -27,12 +27,12 @@ function buildRiders(state: RideState): Record<RiderKey, RiderInfo> {
   const offline = state === 'offline' || state === 'stale';
   const c = offline ? STALE : null;
   return {
-    ak: { name: 'Aman Kohli', role: 'Lead', dist: '0.0 km · ahead', left: '62%', top: '16%', color: c || TEAL },
-    rs: { name: 'Ravi Sharma', role: 'Rider', dist: '0.9 km back', left: '46%', top: '34%', color: c || amber },
-    jp: { name: 'You · Jai P.', role: 'On route', dist: 'leading the pack', left: '54%', top: '52%', color: c || TEAL },
-    md: { name: 'Manoj Das', role: 'Rider', dist: '2.1 km back', left: '33%', top: '64%', color: c || green },
+    ak: { name: 'Viren C.', role: 'Lead', dist: '0.0 km · ahead', left: '62%', top: '16%', color: c || TEAL },
+    rs: { name: 'Akash J.', role: 'Rider', dist: '0.9 km back', left: '46%', top: '34%', color: c || amber },
+    jp: { name: 'You · Yash T.', role: 'On route', dist: 'leading the pack', left: '54%', top: '52%', color: c || TEAL },
+    md: { name: 'Tejas H.', role: 'Rider', dist: '2.1 km back', left: '33%', top: '64%', color: c || green },
     vt: {
-      name: 'Vikram Thapa',
+      name: 'Gaurav H.',
       role: 'Sweep',
       dist: offline ? 'last seen 4m ago' : '5.6 km back',
       left: '24%',
@@ -182,33 +182,33 @@ export function RideScreen({ state = 'live' }: RideScreenProps) {
       </div>
 
       {/* ===== RIDER PINS ===== */}
-      {/* AK lead */}
+      {/* VC lead */}
       <div data-rs-pin onClick={() => setFocus('ak')} style={{ position: 'absolute', left: '62%', top: '16%', transform: 'translate(-50%,-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <div style={{ position: 'relative', width: 40, height: 40 }}>
-          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `2.5px solid ${ringColor}`, background: '#243430', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>AK</div>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `2.5px solid ${ringColor}`, background: '#243430', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>VC</div>
           <div style={{ position: 'absolute', right: -2, bottom: -2, width: 12, height: 12, borderRadius: 999, background: '#36D399', border: '2px solid #0A1110' }} />
         </div>
         <span style={{ padding: '2px 7px', borderRadius: 999, background: 'rgba(32,214,168,0.16)', color: routeColor, fontSize: 9.5, fontWeight: 600 }}>Lead</span>
       </div>
-      {/* RS */}
+      {/* AJ */}
       <div data-rs-pin onClick={() => setFocus('rs')} style={{ position: 'absolute', left: '46%', top: '34%', transform: 'translate(-50%,-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <div style={{ position: 'relative', width: 38, height: 38 }}>
-          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `2.5px solid ${ringColor}`, background: '#243430', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>RS</div>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `2.5px solid ${ringColor}`, background: '#243430', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>AJ</div>
           <div style={{ position: 'absolute', right: -2, bottom: -2, width: 11, height: 11, borderRadius: 999, background: '#FFB020', border: '2px solid #0A1110' }} />
         </div>
       </div>
-      {/* You JP */}
+      {/* You YT */}
       <div data-rs-pin onClick={() => setFocus('jp')} style={{ position: 'absolute', left: '54%', top: '52%', transform: 'translate(-50%,-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <div style={{ position: 'relative', width: 46, height: 46 }}>
           <div style={{ position: 'absolute', inset: -8, borderRadius: 999, background: ringColor, opacity: m.pulse, animation: 'rs-pulse 2.4s ease-out infinite' }} />
-          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: '3px solid #20D6A8', background: '#20D6A8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0A1110', fontSize: 14, fontWeight: 700 }}>JP</div>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: '3px solid #20D6A8', background: '#20D6A8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0A1110', fontSize: 14, fontWeight: 700 }}>YT</div>
         </div>
         <span style={{ padding: '2px 8px', borderRadius: 999, background: 'rgba(32,214,168,0.16)', color: routeColor, fontSize: 9.5, fontWeight: 600 }}>You</span>
       </div>
-      {/* MD */}
+      {/* TH */}
       <div data-rs-pin onClick={() => setFocus('md')} style={{ position: 'absolute', left: '33%', top: '64%', transform: 'translate(-50%,-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <div style={{ position: 'relative', width: 38, height: 38 }}>
-          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `2.5px solid ${ringColor}`, background: '#243430', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>MD</div>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: 999, border: `2.5px solid ${ringColor}`, background: '#243430', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600 }}>TH</div>
           <div style={{ position: 'absolute', right: -2, bottom: -2, width: 11, height: 11, borderRadius: 999, background: '#36D399', border: '2px solid #0A1110' }} />
         </div>
       </div>
@@ -278,11 +278,11 @@ export function RideScreen({ state = 'live' }: RideScreenProps) {
 
         {/* roster */}
         <div style={{ display: 'flex', gap: 9, paddingBottom: 12, marginBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          <RosterAvatar label="AK" dot="#36D399" caption="Lead" ring={sel('ak')} onClick={() => setFocus('ak')} />
-          <RosterAvatar label="RS" dot="#FFB020" caption="0.9 km" ring={sel('rs')} onClick={() => setFocus('rs')} />
-          <RosterAvatar label="JP" you caption="You" captionColor={routeColor} ring={sel('jp')} onClick={() => setFocus('jp')} />
-          <RosterAvatar label="MD" dot="#36D399" caption="2.1 km" ring={sel('md')} onClick={() => setFocus('md')} />
-          <RosterAvatar label="VT" dot={vtDot} caption="Sweep" captionColor="#6B7C78" muted ring={sel('vt')} onClick={() => setFocus('vt')} />
+          <RosterAvatar label="VC" dot="#36D399" caption="Lead" ring={sel('ak')} onClick={() => setFocus('ak')} />
+          <RosterAvatar label="AJ" dot="#FFB020" caption="0.9 km" ring={sel('rs')} onClick={() => setFocus('rs')} />
+          <RosterAvatar label="YT" you caption="You" captionColor={routeColor} ring={sel('jp')} onClick={() => setFocus('jp')} />
+          <RosterAvatar label="TH" dot="#36D399" caption="2.1 km" ring={sel('md')} onClick={() => setFocus('md')} />
+          <RosterAvatar label="GH" dot={vtDot} caption="Sweep" captionColor="#6B7C78" muted ring={sel('vt')} onClick={() => setFocus('vt')} />
         </div>
 
         {/* next rally */}
