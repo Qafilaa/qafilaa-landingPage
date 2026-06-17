@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { colors } from './theme';
+import { useLandingFx } from './hooks/useLandingFx';
 import { Nav } from './components/Nav';
 import { Hero } from './components/Hero';
 import { RouteMarquee } from './components/RouteMarquee';
@@ -20,10 +21,16 @@ export default function App() {
   const [submitted, setSubmitted] = useState(false);
   const handleSubmit = () => setSubmitted(true);
 
+  // Pointer-driven motion engine: parallax diorama, card tilt/glare, magnetic
+  // buttons, cursor scout-light, GPS particles and the hold-to-send SOS.
+  useLandingFx();
+
   return (
     <div
       id="qf-landing"
       style={{
+        position: 'relative',
+        isolation: 'isolate',
         background: colors.bg,
         color: colors.text,
         fontFamily: 'Inter, system-ui, sans-serif',
@@ -31,6 +38,26 @@ export default function App() {
         WebkitFontSmoothing: 'antialiased',
       }}
     >
+      {/* lagging cursor scout-light */}
+      <div
+        data-cursor
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: 420,
+          height: 420,
+          borderRadius: 999,
+          pointerEvents: 'none',
+          zIndex: 1,
+          mixBlendMode: 'screen',
+          opacity: 0,
+          transition: 'opacity .5s',
+          background: 'radial-gradient(circle, rgba(32,214,168,0.16), rgba(32,214,168,0.05) 38%, transparent 66%)',
+          willChange: 'transform',
+        }}
+      />
+
       <Nav />
       <Hero submitted={submitted} onSubmit={handleSubmit} />
       <RouteMarquee />

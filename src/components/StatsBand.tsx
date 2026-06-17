@@ -1,6 +1,7 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { colors, fonts, layout, EASE } from '../theme';
 import { useReveal } from '../hooks/useReveal';
+import { useHover } from '../hooks/useHover';
 import { useCountUp } from '../hooks/useCountUp';
 
 const card: CSSProperties = {
@@ -8,7 +9,19 @@ const card: CSSProperties = {
   border: '1px solid rgba(255,255,255,0.08)',
   borderRadius: 18,
   padding: '28px 24px',
+  transition: 'transform .14s ease-out, border-color .3s',
+  willChange: 'transform',
 };
+
+/** A stat tile that tilts under the pointer (driven by the FX engine). */
+function StatCard({ children }: { children: ReactNode }) {
+  const hover = useHover({ borderColor: 'rgba(32,214,168,0.3)' });
+  return (
+    <div data-tilt data-tilt-max="7" data-stat {...hover.hoverProps} style={{ ...card, ...hover.style }}>
+      {children}
+    </div>
+  );
+}
 
 const numberStyle: CSSProperties = {
   fontFamily: fonts.display,
@@ -44,22 +57,22 @@ export function StatsBand() {
           gap: 18,
         }}
       >
-        <div style={card}>
+        <StatCard>
           <div style={numberStyle}>{highestPass}</div>
           <div style={labelStyle}>metres — highest pass tracked</div>
-        </div>
-        <div style={card}>
+        </StatCard>
+        <StatCard>
           <div style={numberStyle}>{offline}</div>
           <div style={labelStyle}>offline-ready — works past the last bar</div>
-        </div>
-        <div style={card}>
+        </StatCard>
+        <StatCard>
           <div style={{ ...numberStyle, color: colors.accent }}>{leftBehind}</div>
           <div style={labelStyle}>riders left behind — the whole point</div>
-        </div>
-        <div style={card}>
+        </StatCard>
+        <StatCard>
           <div style={numberStyle}>{passes}</div>
           <div style={labelStyle}>legendary passes mapped at launch</div>
-        </div>
+        </StatCard>
       </div>
     </section>
   );

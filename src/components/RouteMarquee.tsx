@@ -27,7 +27,7 @@ const fade = (side: 'left' | 'right'): CSSProperties => ({
 
 function PassGroup({ ariaHidden = false }: { ariaHidden?: boolean }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 0 }} aria-hidden={ariaHidden || undefined}>
+    <div style={{ display: 'flex', alignItems: 'center' }} aria-hidden={ariaHidden || undefined}>
       {passes.map((pass) => (
         <span key={pass} style={item}>
           {pass}
@@ -48,11 +48,12 @@ export function RouteMarquee() {
         padding: '22px 0',
         overflow: 'hidden',
         position: 'relative',
+        background: '#070D0B',
       }}
     >
       <div style={fade('left')} />
       <div style={fade('right')} />
-      <div style={{ display: 'flex', width: 'max-content', animation: 'qf-marquee 32s linear infinite', gap: 0 }}>
+      <div style={{ display: 'flex', width: 'max-content', animation: 'qf-marquee 34s linear infinite' }}>
         <PassGroup />
         <PassGroup ariaHidden />
       </div>

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { colors, fonts, layout } from '../theme';
-import { Reveal } from './Reveal';
+import { colors, fonts, layout, EASE } from '../theme';
 import { Eyebrow } from './Eyebrow';
+import { useReveal } from '../hooks/useReveal';
 
 const chip: CSSProperties = {
   display: 'flex',
@@ -23,13 +23,19 @@ function Chip({ icon, children }: { icon: ReactNode; children: ReactNode }) {
 }
 
 export function Safety() {
+  const { ref, style } = useReveal<HTMLDivElement>({});
+
   return (
     <section
       id="safety"
       style={{ maxWidth: layout.maxWidth, margin: '0 auto', padding: '60px 28px', scrollMarginTop: 80 }}
     >
-      <Reveal
+      <div
+        ref={ref}
+        data-safety-card
         style={{
+          ...style,
+          transition: `opacity .9s ${EASE}, transform .9s ${EASE}`,
           position: 'relative',
           background: 'radial-gradient(700px 400px at 80% 0%, rgba(255,82,71,0.10), #0C1311 60%)',
           border: '1px solid rgba(255,82,71,0.22)',
@@ -38,7 +44,7 @@ export function Safety() {
           overflow: 'hidden',
         }}
       >
-        <div style={{ maxWidth: 560, position: 'relative' }}>
+        <div style={{ maxWidth: 540, position: 'relative' }}>
           <Eyebrow color={colors.danger}>When it matters most</Eyebrow>
           <h2
             style={{
@@ -54,8 +60,7 @@ export function Safety() {
           </h2>
           <p style={{ color: colors.textMuted, fontSize: 17, lineHeight: 1.6, margin: '18px 0 0', textWrap: 'pretty' }}>
             Hold the SOS for two seconds and every rider in the convoy gets your live coordinates, altitude and last
-            movement — even if you've dropped to one bar. No panic, no guesswork, no one riding back down the wrong
-            valley.
+            movement — even if you've dropped to one bar. Try it: press and hold.
           </p>
           <div style={{ display: 'flex', gap: 14, marginTop: 30, flexWrap: 'wrap' }}>
             <Chip
@@ -80,7 +85,7 @@ export function Safety() {
           </div>
         </div>
 
-        {/* big SOS button visual */}
+        {/* interactive hold-to-send SOS (wired by useLandingFx) */}
         <div
           data-sos-visual
           style={{
@@ -88,54 +93,67 @@ export function Safety() {
             right: '6%',
             top: '50%',
             transform: 'translateY(-50%)',
-            width: 160,
-            height: 160,
+            width: 200,
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            gap: 16,
           }}
         >
-          <span
+          <div
+            data-sos-btn
+            role="button"
+            tabIndex={0}
             style={{
-              position: 'absolute',
-              width: 130,
-              height: 130,
+              position: 'relative',
+              width: 168,
+              height: 168,
               borderRadius: 999,
-              border: '1.5px solid rgba(255,82,71,0.5)',
-              animation: 'qf-ping 2.6s ease-out infinite',
-            }}
-          />
-          <span
-            style={{
-              position: 'absolute',
-              width: 130,
-              height: 130,
-              borderRadius: 999,
-              border: '1.5px solid rgba(255,82,71,0.5)',
-              animation: 'qf-ping 2.6s ease-out infinite',
-              animationDelay: '1.3s',
-            }}
-          />
-          <span
-            style={{
-              width: 108,
-              height: 108,
-              borderRadius: 999,
-              background: colors.danger,
+              cursor: 'pointer',
+              userSelect: 'none',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 18px 50px rgba(255,82,71,0.4)',
-              fontFamily: fonts.display,
-              fontSize: 26,
-              fontWeight: 700,
-              color: '#1A0807',
             }}
           >
-            SOS
-          </span>
+            <span data-sos-ping style={{ position: 'absolute', width: 140, height: 140, borderRadius: 999, border: '1.5px solid rgba(255,82,71,0.5)', animation: 'qf-ping 2.6s ease-out infinite' }} />
+            <span data-sos-ping style={{ position: 'absolute', width: 140, height: 140, borderRadius: 999, border: '1.5px solid rgba(255,82,71,0.5)', animation: 'qf-ping 2.6s ease-out infinite', animationDelay: '1.3s' }} />
+            <div
+              data-sos-ring
+              style={{
+                position: 'absolute',
+                inset: 0,
+                borderRadius: 999,
+                padding: 6,
+                background: 'conic-gradient(var(--accent,#20D6A8) 0%, rgba(255,255,255,0.12) 0)',
+                WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px))',
+                mask: 'radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px))',
+              }}
+            />
+            <span
+              data-sos-core
+              style={{
+                width: 128,
+                height: 128,
+                borderRadius: 999,
+                background: colors.danger,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 18px 50px rgba(255,82,71,0.4)',
+                transition: 'transform .12s ease-out, background .3s',
+              }}
+            >
+              <span data-sos-core-text style={{ fontFamily: fonts.display, fontSize: 28, fontWeight: 700, color: '#1A0807', lineHeight: 1 }}>SOS</span>
+              <span data-sos-core-sub style={{ fontSize: 9.5, letterSpacing: '1px', textTransform: 'uppercase', color: 'rgba(26,8,7,0.7)', fontWeight: 700, marginTop: 4 }}>Hold</span>
+            </span>
+          </div>
+          <div data-sos-status style={{ fontSize: 13, color: colors.textMuted, textAlign: 'center', minHeight: 18, transition: 'color .3s' }}>
+            Press &amp; hold to broadcast
+          </div>
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

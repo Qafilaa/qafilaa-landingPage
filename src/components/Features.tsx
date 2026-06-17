@@ -6,12 +6,24 @@ import { useReveal } from '../hooks/useReveal';
 import { useHover } from '../hooks/useHover';
 
 const cardBase: CSSProperties = {
+  position: 'relative',
+  overflow: 'hidden',
   background: colors.surface,
   border: '1px solid rgba(255,255,255,0.08)',
   borderRadius: 20,
   padding: 30,
-  transition: 'transform .3s, border-color .3s',
+  willChange: 'transform',
 };
+
+const DEFAULT_GLARE = 'radial-gradient(260px 260px at 50% 0%, rgba(32,214,168,0.1), transparent 60%)';
+
+const glareLayer = (background: string): CSSProperties => ({
+  position: 'absolute',
+  inset: 0,
+  pointerEvents: 'none',
+  background,
+  opacity: 0,
+});
 
 const iconBox: CSSProperties = {
   width: 46,
@@ -36,14 +48,31 @@ interface CardProps {
   hoverBorderColor?: string;
   /** Marks the wide span-2 card so it can restack on mobile. */
   wide?: boolean;
+  /** 3D-tilt magnitude (the wide card tilts a touch less). */
+  tiltMax?: number;
+  /** The glare layer's resting gradient (the SOS card glows red). */
+  glare?: string;
 }
 
-function FeatureCard({ children, delay, style, hoverBorderColor = 'rgba(32,214,168,0.35)', wide }: CardProps) {
+function FeatureCard({
+  children,
+  delay,
+  style,
+  hoverBorderColor = 'rgba(32,214,168,0.35)',
+  wide,
+  tiltMax = 9,
+  glare = DEFAULT_GLARE,
+}: CardProps) {
   const reveal = useReveal<HTMLDivElement>({ delay, duration: 0.8 });
-  const hover = useHover({ transform: 'translateY(-4px)', borderColor: hoverBorderColor });
+  // Transform is owned by the imperative tilt engine; React only swaps the
+  // border colour on hover (the source's `style-hover`).
+  const hover = useHover({ borderColor: hoverBorderColor });
   return (
     <div
       ref={reveal.ref}
+      data-tilt
+      data-tilt-max={tiltMax}
+      data-glare-card=""
       {...(wide ? { 'data-feature-wide': '' } : {})}
       {...hover.hoverProps}
       style={{
@@ -51,12 +80,11 @@ function FeatureCard({ children, delay, style, hoverBorderColor = 'rgba(32,214,1
         ...style,
         ...reveal.style,
         ...hover.style,
-        // Match the source: opacity fades in, while transform + border-color
-        // share the snappier .3s curve used for the hover lift.
-        transition: `opacity .8s ${EASE}, transform .3s, border-color .3s`,
+        transition: `opacity .8s ${EASE}, transform .14s ease-out`,
       }}
     >
       {children}
+      <div data-glare style={glareLayer(glare)} />
     </div>
   );
 }
@@ -172,8 +200,13 @@ export function Features() {
 
       <div data-features-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 18 }}>
         {/* f1 — live convoy map (wide) */}
-        <FeatureCard wide style={{ gridColumn: 'span 2', display: 'flex', gap: 28, alignItems: 'center' }}>
-          <div style={{ flex: 1 }}>
+        <FeatureCard
+          wide
+          tiltMax={8}
+          glare="radial-gradient(300px 300px at 50% 0%, rgba(32,214,168,0.10), transparent 60%)"
+          style={{ gridColumn: 'span 2', display: 'flex', gap: 28, alignItems: 'center' }}
+        >
+          <div style={{ flex: 1, position: 'relative', zIndex: 1 }}>
             <div style={iconBox}>
               <MapIcon />
             </div>
@@ -240,6 +273,7 @@ export function Features() {
             border: '1px solid rgba(255,82,71,0.22)',
           }}
           hoverBorderColor="rgba(255,82,71,0.45)"
+          glare="radial-gradient(260px 260px at 50% 0%, rgba(255,82,71,0.12), transparent 60%)"
         >
           <div
             style={{

@@ -1,5 +1,5 @@
 import { useState, type CSSProperties, type FormEvent } from 'react';
-import { colors, EASE } from '../theme';
+import { colors } from '../theme';
 import { CheckIcon } from './icons';
 
 const inputBase: CSSProperties = {
@@ -32,7 +32,7 @@ const buttonBase: CSSProperties = {
   font: '600 16px Inter',
   cursor: 'pointer',
   whiteSpace: 'nowrap',
-  transition: `transform .16s ${EASE}, box-shadow .2s`,
+  willChange: 'transform',
 };
 
 interface WaitlistFormProps {
@@ -46,12 +46,15 @@ interface WaitlistFormProps {
   successStyle?: CSSProperties;
   /** Centre the success panel's contents (CTA variant). */
   centerSuccess?: boolean;
+  /** Override the input background (the hero's is semi-transparent). */
+  inputBackground?: string;
 }
 
 /**
  * The e-mail capture used in both the hero and the closing CTA. Submitting
  * either instance flips the whole page into its "you're on the list" state,
- * matching the prototype's shared `data-form` / `data-form-ok` toggle.
+ * matching the prototype's shared `data-form` / `data-form-ok` toggle. The
+ * submit button is magnetic — its lift is owned by the FX engine, not hover.
  */
 export function WaitlistForm({
   submitted,
@@ -61,10 +64,9 @@ export function WaitlistForm({
   formStyle,
   successStyle,
   centerSuccess = false,
+  inputBackground,
 }: WaitlistFormProps) {
   const [focused, setFocused] = useState(false);
-  const [hover, setHover] = useState(false);
-  const [active, setActive] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -74,6 +76,7 @@ export function WaitlistForm({
   if (submitted) {
     return (
       <div
+        data-form-ok
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -94,30 +97,16 @@ export function WaitlistForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, ...formStyle }}>
+    <form data-form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, ...formStyle }}>
       <input
         type="email"
         required
         placeholder="you@trailhead.com"
-        style={{ ...inputBase, ...(focused ? inputFocus : null) }}
+        style={{ ...inputBase, ...(inputBackground ? { background: inputBackground } : null), ...(focused ? inputFocus : null) }}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
       />
-      <button
-        type="submit"
-        style={{
-          ...buttonBase,
-          ...(hover ? { transform: 'translateY(-2px)', boxShadow: '0 12px 30px rgba(32,214,168,0.30)' } : null),
-          ...(active ? { transform: 'scale(0.97)' } : null),
-        }}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => {
-          setHover(false);
-          setActive(false);
-        }}
-        onMouseDown={() => setActive(true)}
-        onMouseUp={() => setActive(false)}
-      >
+      <button data-magnetic type="submit" style={buttonBase}>
         {buttonLabel}
       </button>
     </form>

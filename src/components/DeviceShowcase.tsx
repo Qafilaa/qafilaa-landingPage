@@ -1,57 +1,41 @@
-import type { CSSProperties } from 'react';
 import { colors, fonts, layout } from '../theme';
 import { Reveal } from './Reveal';
 import { Eyebrow } from './Eyebrow';
-import { ConvoyMap, type ConvoyState } from './ConvoyMap';
+import { RideScreen, type RideState } from './RideScreen';
 
 interface PhonePanelProps {
-  state: ConvoyState;
-  pill: { text: string; color: string; border: string };
+  state: RideState;
   caption: string;
   sub: string;
   delay?: number;
 }
 
-const statusPill = (color: string, border: string): CSSProperties => ({
-  position: 'absolute',
-  top: 16,
-  left: '50%',
-  transform: 'translateX(-50%)',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 7,
-  padding: '6px 13px',
-  borderRadius: 999,
-  background: color === colors.accent ? 'rgba(14,20,19,0.78)' : 'rgba(14,20,19,0.82)',
-  border: `1px solid ${border}`,
-});
-
-function PhonePanel({ state, pill, caption, sub, delay }: PhonePanelProps) {
+function PhonePanel({ state, caption, sub, delay }: PhonePanelProps) {
   return (
     <Reveal style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }} delay={delay}>
-      <div
-        style={{
-          width: 280,
-          padding: 9,
-          background: '#000',
-          borderRadius: 44,
-          boxShadow: '0 36px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05)',
-        }}
-      >
+      <div style={{ transformStyle: 'preserve-3d' }}>
         <div
           style={{
-            position: 'relative',
-            width: 262,
-            height: 560,
-            borderRadius: 36,
-            overflow: 'hidden',
-            background: colors.surfaceInset,
+            width: 280,
+            padding: 9,
+            background: '#000',
+            borderRadius: 44,
+            boxShadow: '0 36px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05)',
           }}
         >
-          <ConvoyMap state={state} />
-          <div style={statusPill(pill.color, pill.border)}>
-            <span style={{ width: 7, height: 7, borderRadius: 999, background: pill.color }} />
-            <span style={{ fontSize: 11.5, color: pill.color, fontWeight: 500 }}>{pill.text}</span>
+          <div style={{ position: 'relative', width: 262, height: 560, borderRadius: 36, overflow: 'hidden', background: '#0A1110' }}>
+            <RideScreen state={state} />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                background: 'radial-gradient(200px 200px at 30% 10%, rgba(255,255,255,0.13), transparent 60%)',
+                opacity: 0.4,
+                mixBlendMode: 'screen',
+                zIndex: 8,
+              }}
+            />
           </div>
         </div>
       </div>
@@ -83,19 +67,8 @@ export function DeviceShowcase() {
       </Reveal>
 
       <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(28px,6vw,90px)', flexWrap: 'wrap' }}>
-        <PhonePanel
-          state="live"
-          pill={{ text: 'All live · synced now', color: colors.accent, border: 'rgba(32,214,168,0.3)' }}
-          caption="In signal"
-          sub="Live pins, gaps updating second by second"
-        />
-        <PhonePanel
-          state="offline"
-          pill={{ text: 'Signal lost · last-known', color: colors.warning, border: 'rgba(255,176,32,0.35)' }}
-          caption="Past the last bar"
-          sub="Pins hold their last spot, timestamped"
-          delay={140}
-        />
+        <PhonePanel state="live" caption="In signal" sub="Live pins, gaps updating second by second" />
+        <PhonePanel state="offline" caption="Past the last bar" sub="Pins hold their last spot, timestamped" delay={140} />
       </div>
     </section>
   );

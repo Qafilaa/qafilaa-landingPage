@@ -2,7 +2,7 @@
    Qafilaa landing — global stylesheet
    Base reset, scroll behaviour, text selection, and every
    keyframe used across the page. Values transcribed 1:1 from
-   the original Qafilaa Design prototype so motion matches.
+   the updated Qafilaa Landing design so motion matches.
    ============================================================ */
 
 *,
@@ -36,7 +36,7 @@ body {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-16px);
+    transform: translateY(-14px);
   }
 }
 @keyframes qf-floats {
@@ -50,28 +50,20 @@ body {
 }
 @keyframes qf-ping {
   0% {
-    transform: scale(0.6);
-    opacity: 0.7;
+    transform: scale(0.5);
+    opacity: 0.8;
   }
   70% {
-    transform: scale(2.4);
+    transform: scale(2.6);
     opacity: 0;
   }
   100% {
     opacity: 0;
   }
 }
-@keyframes qf-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-46px, -30px, 0);
-  }
-}
 @keyframes qf-dash {
   to {
-    stroke-dashoffset: -420;
+    stroke-dashoffset: -520;
   }
 }
 @keyframes qf-spin {
@@ -90,10 +82,10 @@ body {
 @keyframes qf-glow {
   0%,
   100% {
-    opacity: 0.45;
+    opacity: 0.4;
   }
   50% {
-    opacity: 0.9;
+    opacity: 0.85;
   }
 }
 @keyframes qf-blink {
@@ -107,24 +99,116 @@ body {
 }
 @keyframes qf-sheen {
   0% {
-    transform: translateX(-130%);
+    transform: translateX(-130%) skewX(-18deg);
   }
   60%,
   100% {
-    transform: translateX(230%);
+    transform: translateX(260%) skewX(-18deg);
   }
 }
-@keyframes qf-bob {
+@keyframes qf-twinkle {
   0%,
   100% {
-    transform: translateY(0);
+    opacity: 0.25;
   }
   50% {
-    transform: translateY(4px);
+    opacity: 0.9;
+  }
+}
+@keyframes qf-aurora {
+  0% {
+    transform: translateX(-6%);
+  }
+  50% {
+    transform: translateX(6%);
+  }
+  100% {
+    transform: translateX(-6%);
+  }
+}
+@keyframes qf-scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(900%);
+  }
+}
+@keyframes qf-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  88% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-220px);
+    opacity: 0;
   }
 }
 
-/* ---- ConvoyMap keyframes ---- */
+/* ---- RideScreen (in-phone) keyframes + interactions ---- */
+@keyframes rs-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes rs-flow {
+  to {
+    stroke-dashoffset: -140;
+  }
+}
+@keyframes rs-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rs-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+@keyframes rs-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+[data-rs-pin] {
+  transition: transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1);
+  cursor: pointer;
+}
+[data-rs-pin]:hover {
+  transform: translate(-50%, -50%) scale(1.12);
+}
+[data-rs-av] {
+  transition: transform 0.16s ease, border-color 0.2s;
+  cursor: pointer;
+}
+[data-rs-av]:hover {
+  transform: translateY(-2px);
+}
+
+/* ---- ConvoyMap keyframes (legacy demo map) ---- */
 @keyframes qf-pulse {
   0% {
     transform: scale(0.7);
@@ -146,81 +230,186 @@ body {
 
 /* ============================================================
    Responsive breakpoints
-   Tablet + mobile layout collapse. These override the desktop
-   inline-style values via !important (inline styles otherwise win
-   the cascade). Breakpoints and values mirror the updated
-   Qafilaa Landing design.
+   Ported 1:1 from the updated design's JS-toggled bp-lt* rules
+   (1000 / 880 / 640 / 430 / 360). These override the desktop
+   inline-style values via !important (inline styles otherwise
+   win the cascade).
    ============================================================ */
+
+/* --- tablet (<=1000) --- */
 @media (max-width: 1000px) {
-  [data-features-grid] {
+  #qf-landing [data-features-grid] {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  [data-split] {
+  #qf-landing [data-split] {
     grid-template-columns: 1fr !important;
     gap: 34px !important;
   }
-}
-
-@media (max-width: 860px) {
-  [data-hero-grid] {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-    justify-items: start !important;
-  }
-  [data-nav-textlinks] {
+  #qf-landing [data-float-chip] {
     display: none !important;
   }
-  [data-hero] {
-    padding-top: 52px !important;
-    padding-bottom: 36px !important;
+  #qf-landing [data-side-label] {
+    display: none !important;
   }
 }
 
+/* --- stack hero (<=880) --- */
+@media (max-width: 880px) {
+  #qf-landing [data-hero-grid] {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+    justify-items: center !important;
+    text-align: center;
+  }
+  #qf-landing [data-hero-grid] > div {
+    min-width: 0 !important;
+    max-width: 600px;
+  }
+  #qf-landing [data-hero-copy] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #qf-landing [data-hero-copy] p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #qf-landing [data-nav-textlinks] {
+    display: none !important;
+  }
+  #qf-landing [data-cursor] {
+    display: none !important;
+  }
+  #qf-landing [data-hero] {
+    padding-top: 40px !important;
+    padding-bottom: 24px !important;
+    min-height: 0 !important;
+  }
+  #qf-landing [data-hero-phone-wrap] {
+    justify-content: center !important;
+    margin-top: 6px;
+  }
+  #qf-landing [data-form] {
+    flex-wrap: wrap !important;
+    justify-content: center;
+  }
+  #qf-landing [data-form] input {
+    min-width: 0 !important;
+    flex: 1 1 200px !important;
+  }
+  #qf-landing [data-form] button {
+    flex: 1 1 auto !important;
+  }
+  /* flatten the phone pose so the screen faces the user & is easy to tap */
+  #qf-landing [data-phone-pose] {
+    transform: perspective(1300px) rotateY(-6deg) rotateX(3deg) !important;
+  }
+}
+
+/* --- phone (<=640) --- */
 @media (max-width: 640px) {
   #qf-landing section {
     padding-left: 18px !important;
     padding-right: 18px !important;
   }
-  #qf-landing nav > div {
+  #qf-landing [data-hero-inner] {
     padding-left: 18px !important;
     padding-right: 18px !important;
   }
-  [data-features-grid] {
+  #qf-landing nav > div {
+    padding: 13px 16px !important;
+    gap: 10px !important;
+  }
+  #qf-landing [data-features-grid] {
     grid-template-columns: 1fr !important;
   }
-  [data-feature-wide] {
+  #qf-landing [data-feature-wide] {
     grid-column: auto !important;
     flex-direction: column !important;
     align-items: flex-start !important;
   }
-  [data-feature-wide] [data-feature-demo] {
+  #qf-landing [data-feature-wide] [data-feature-demo] {
     width: 100% !important;
     height: 120px !important;
   }
-  [data-float-chip] {
-    display: none !important;
-  }
-  [data-sos-visual] {
+  #qf-landing [data-sos-visual] {
     position: static !important;
     transform: none !important;
     margin: 30px auto 0 !important;
     right: auto !important;
     top: auto !important;
   }
-  [data-faq] {
+  #qf-landing [data-safety-card] {
+    padding: 28px 20px !important;
+  }
+  #qf-landing [data-faq] {
     padding-top: 56px !important;
+  }
+  #qf-landing [data-brand-name] {
+    font-size: 26px !important;
+  }
+  #qf-landing [data-cta-nav] {
+    padding: 0 15px !important;
+    height: 38px !important;
+    font-size: 13.5px !important;
+  }
+  #qf-landing [data-phone-pose] {
+    transform: perspective(1300px) rotateY(-4deg) rotateX(2deg) !important;
   }
 }
 
-@media (max-width: 420px) {
-  [data-phone] {
-    transform: scale(0.86) !important;
-    transform-origin: top center !important;
+/* --- small phone (<=430) --- */
+@media (max-width: 430px) {
+  #qf-landing section {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
   }
-  [data-countdown] > div {
-    min-width: 70px !important;
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+  #qf-landing [data-hero-inner] {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+  #qf-landing [data-hero-phone-wrap] {
+    justify-content: center !important;
+  }
+  #qf-landing [data-phone-pose] {
+    transform: perspective(1300px) rotateY(-4deg) rotateX(2deg) scale(0.9) !important;
+    transform-origin: top center;
+  }
+  #qf-landing [data-brand-name] {
+    font-size: 24px !important;
+  }
+  #qf-landing [data-cta-nav] {
+    padding: 0 13px !important;
+    font-size: 13px !important;
+  }
+  #qf-landing [data-countdown] {
+    gap: 7px !important;
+  }
+  #qf-landing [data-countdown] > div {
+    min-width: 0 !important;
+    flex: 1 1 0 !important;
+    padding: 14px 4px !important;
+  }
+  #qf-landing [data-countdown] > div > div:first-child {
+    font-size: 26px !important;
+  }
+  #qf-landing [data-stat] {
+    padding: 22px 18px !important;
+  }
+  #qf-landing footer > div {
+    flex-direction: column !important;
+    gap: 28px !important;
+  }
+}
+
+/* --- tiny (<=360) --- */
+@media (max-width: 360px) {
+  #qf-landing [data-phone-pose] {
+    transform: perspective(1300px) rotateY(-3deg) rotateX(1.5deg) scale(0.8) !important;
+    transform-origin: top center;
+  }
+  #qf-landing h1 {
+    font-size: 38px !important;
   }
 }
 

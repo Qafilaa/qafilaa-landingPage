@@ -1,14 +1,34 @@
-import type { CSSProperties } from 'react';
-import { colors, fonts, layout } from '../theme';
+import type { CSSProperties, ReactNode } from 'react';
+import { colors, fonts, layout, EASE } from '../theme';
 import { Reveal } from './Reveal';
 import { Eyebrow } from './Eyebrow';
+import { useReveal } from '../hooks/useReveal';
+import { useHover } from '../hooks/useHover';
 
 const card: CSSProperties = {
   background: colors.surface,
   border: '1px solid rgba(255,255,255,0.08)',
   borderRadius: 20,
   padding: 30,
+  willChange: 'transform',
 };
+
+/** A "how it works" step that reveals on scroll and tilts under the pointer. */
+function StepCard({ delay, children }: { delay?: number; children: ReactNode }) {
+  const reveal = useReveal<HTMLDivElement>({ delay, duration: 0.8 });
+  const hover = useHover({ borderColor: 'rgba(32,214,168,0.3)' });
+  return (
+    <div
+      ref={reveal.ref}
+      data-tilt
+      data-tilt-max="8"
+      {...hover.hoverProps}
+      style={{ ...card, ...reveal.style, ...hover.style, transition: `opacity .8s ${EASE}, transform .14s ease-out` }}
+    >
+      {children}
+    </div>
+  );
+}
 
 const numberBadge: CSSProperties = {
   fontFamily: fonts.display,
@@ -91,14 +111,14 @@ export function HowItWorks() {
         }}
       >
         {steps.map((step) => (
-          <Reveal key={step.n} style={card} delay={step.delay} duration={0.8}>
+          <StepCard key={step.n} delay={step.delay}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
               <span style={numberBadge}>{step.n}</span>
               <span style={stepLabel}>{step.label}</span>
             </div>
             <h3 style={stepTitle}>{step.title}</h3>
             <p style={stepBody}>{step.body}</p>
-          </Reveal>
+          </StepCard>
         ))}
       </div>
     </section>

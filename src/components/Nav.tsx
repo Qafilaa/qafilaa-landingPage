@@ -1,9 +1,8 @@
 import type { CSSProperties } from 'react';
-import { colors, fonts, layout, EASE } from '../theme';
+import { colors, fonts, layout } from '../theme';
 import { navLinks, site } from '../content';
 import { Logo } from './icons';
 import { HoverLink } from './HoverLink';
-import { useHover } from '../hooks/useHover';
 
 const navLinkStyle: CSSProperties = {
   color: colors.textMuted,
@@ -25,16 +24,11 @@ const ctaStyle: CSSProperties = {
   fontSize: 14.5,
   fontWeight: 600,
   textDecoration: 'none',
-  transition: `transform .16s ${EASE}, box-shadow .2s`,
-  boxShadow: '0 0 0 0 rgba(32,214,168,0.0)',
+  whiteSpace: 'nowrap',
+  willChange: 'transform',
 };
 
 export function Nav() {
-  const cta = useHover({
-    transform: 'translateY(-2px)',
-    boxShadow: '0 10px 26px rgba(32,214,168,0.28)',
-  });
-
   return (
     <nav
       style={{
@@ -75,6 +69,7 @@ export function Nav() {
             <Logo size={22} />
           </div>
           <span
+            data-brand-name
             style={{
               fontFamily: fonts.display,
               fontSize: 22,
@@ -99,11 +94,7 @@ export function Nav() {
               </HoverLink>
             ))}
           </div>
-          <a
-            href="#waitlist"
-            style={{ ...ctaStyle, whiteSpace: 'nowrap', ...cta.style }}
-            {...cta.hoverProps}
-          >
+          <a data-magnetic data-cta-nav href="#waitlist" style={ctaStyle}>
             Join the waitlist
           </a>
         </div>

@@ -38,20 +38,22 @@ export function OfflineSpotlight() {
 
   return (
     <section style={{ maxWidth: layout.maxWidth, margin: '0 auto', padding: '60px 28px' }}>
-      <Reveal
-        style={{
-          background: colors.surface,
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 24,
-          padding: 'clamp(28px,4vw,52px)',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: 48,
-          alignItems: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        <div>
+      <Reveal>
+        <div
+          data-split
+          style={{
+            background: colors.surface,
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 24,
+            padding: 'clamp(28px,4vw,52px)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 48,
+            alignItems: 'center',
+            overflow: 'hidden',
+          }}
+        >
+          <div>
           <Eyebrow>Where it earns its keep</Eyebrow>
           <h2
             style={{
@@ -134,6 +136,7 @@ export function OfflineSpotlight() {
               <span style={{ width: 9, height: 9, borderRadius: 999, background: colors.stale }} />
             </div>
           </div>
+        </div>
         </div>
       </Reveal>
     </section>
