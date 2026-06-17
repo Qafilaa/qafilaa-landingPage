@@ -34,7 +34,10 @@ export default function App() {
         background: colors.bg,
         color: colors.text,
         fontFamily: 'Inter, system-ui, sans-serif',
-        overflowX: 'hidden',
+        // `clip` (not `hidden`) avoids the spec rule that coerces overflow-y to
+        // `auto`, which would turn this into a nested scroll container and
+        // produce a second vertical scrollbar.
+        overflowX: 'clip',
         WebkitFontSmoothing: 'antialiased',
       }}
     >

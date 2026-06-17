@@ -20,7 +20,9 @@ body {
   background: #070d0b;
   color: #f2f6f5;
   font-family: Inter, system-ui, sans-serif;
-  overflow-x: hidden;
+  /* `clip` rather than `hidden`: `hidden` coerces overflow-y to `auto`, making
+     the body a scroll container and adding a second vertical scrollbar. */
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 

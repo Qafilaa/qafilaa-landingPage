@@ -6,13 +6,13 @@
 
 export const site = {
   brand: 'Qafilaa',
-  launchLabel: 'Public beta · Summer 2026',
+  launchLabel: 'Public beta · Monsoon 2026',
   /** Raw number; rendered as a locale string with a trailing "+". */
-  waitlistCount: 4200,
+  waitlistCount: 50,
   heroSub:
     'Qafilaa keeps your whole group on one live map — gaps, rally points, last-known positions, and one-tap SOS. Built for rides where the road runs out of signal before it runs out of mountain.',
   /** Launch instant the countdown ticks toward. */
-  launchDate: new Date('2026-08-01T09:00:00'),
+  launchDate: new Date('2026-07-20T09:00:00'),
 } as const;
 
 export const navLinks = [
