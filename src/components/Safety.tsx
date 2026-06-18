@@ -60,7 +60,7 @@ export function Safety() {
           </h2>
           <p style={{ color: colors.textMuted, fontSize: 17, lineHeight: 1.6, margin: '18px 0 0', textWrap: 'pretty' }}>
             Hold the SOS for two seconds and every rider in the convoy gets your live coordinates, altitude and last
-            movement — even if you've dropped to one bar. Try it: press and hold.
+            movement, even if you've dropped to one bar. Try it: press and hold.
           </p>
           <div style={{ display: 'flex', gap: 14, marginTop: 30, flexWrap: 'wrap' }}>
             <Chip
@@ -104,7 +104,7 @@ export function Safety() {
             data-sos-btn
             role="button"
             tabIndex={0}
-            aria-label="Demo SOS — press and hold for two seconds to preview the convoy alert. This is a demo and does not contact emergency services."
+            aria-label="Demo SOS, press and hold for two seconds to preview the convoy alert. This is a demo and does not contact emergency services."
             style={{
               position: 'relative',
               width: 168,
@@ -151,7 +151,7 @@ export function Safety() {
             </span>
           </div>
           <div data-sos-status aria-live="polite" style={{ fontSize: 13, color: colors.textMuted, textAlign: 'center', minHeight: 18, transition: 'color .3s' }}>
-            Press &amp; hold for two seconds
+            Press &amp; hold for 2s
           </div>
         </div>
       </div>

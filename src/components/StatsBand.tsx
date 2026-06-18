@@ -59,15 +59,15 @@ export function StatsBand() {
       >
         <StatCard>
           <div style={numberStyle}>{highestPass}</div>
-          <div style={labelStyle}>metres — highest pass tracked</div>
+          <div style={labelStyle}>metres, highest pass tracked</div>
         </StatCard>
         <StatCard>
           <div style={numberStyle}>{offline}</div>
-          <div style={labelStyle}>offline-ready — works past the last bar</div>
+          <div style={labelStyle}>offline-ready, works past the last bar</div>
         </StatCard>
         <StatCard>
           <div style={{ ...numberStyle, color: colors.accent }}>{leftBehind}</div>
-          <div style={labelStyle}>riders left behind — the whole point</div>
+          <div style={labelStyle}>riders left behind, the whole point</div>
         </StatCard>
         <StatCard>
           <div style={numberStyle}>{passes}</div>

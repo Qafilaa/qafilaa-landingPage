@@ -1,6 +1,6 @@
 import { colors } from '../theme';
 
-/** Qafilaa convoy mark — two nodes linked by an S-curve route. */
+/** Qafilaa convoy mark, two nodes linked by an S-curve route. */
 export function Logo({ size = 22 }: { size?: number }) {
   return (
     <svg

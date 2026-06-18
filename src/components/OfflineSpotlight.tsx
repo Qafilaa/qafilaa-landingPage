@@ -77,12 +77,12 @@ export function OfflineSpotlight() {
               textWrap: 'pretty',
             }}
           >
-            Live vs. last-known is always unmistakable. When a rider drops off, their pin doesn't vanish — it greys out
+            Live vs. last-known is always unmistakable. When a rider drops off, their pin doesn't vanish, it greys out
             at the spot you last saw them, with a timestamp, so you always know where to start looking.
           </p>
           <div style={{ display: 'flex', gap: 24, marginTop: 30, flexWrap: 'wrap' }}>
-            {legendItem(colors.accent, 'Teal — live & synced')}
-            {legendItem(colors.stale, 'Grey — last-known')}
+            {legendItem(colors.accent, 'Teal, live & synced')}
+            {legendItem(colors.stale, 'Grey, last-known')}
           </div>
         </div>
 

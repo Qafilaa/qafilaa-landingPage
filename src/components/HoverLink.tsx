@@ -10,7 +10,7 @@ interface HoverLinkProps {
 }
 
 /**
- * Anchor that swaps in `hoverStyle` while hovered — the inline-style equivalent
+ * Anchor that swaps in `hoverStyle` while hovered, the inline-style equivalent
  * of the prototype's `style-hover` attribute.
  */
 export function HoverLink({ href, children, style, hoverStyle, onClick }: HoverLinkProps) {

@@ -53,7 +53,7 @@ function Privacy() {
     <div>
       <div style={noteAmber}>
         <span style={{ fontSize: 12.5, color: '#E0B96A', lineHeight: 1.55 }}>
-          This is a starter draft and not legal advice — please have a qualified Indian legal professional review it
+          This is a starter draft and not legal advice, please have a qualified Indian legal professional review it
           before publishing.
         </span>
       </div>
@@ -93,7 +93,7 @@ function Privacy() {
       <ul style={list}>
         <li style={li}>Account details you provide (such as name and email).</li>
         <li style={li}>A display name or initials shown to other riders in a ride.</li>
-        <li style={li}>Location data — your live position, altitude, and movement — while a ride is active.</li>
+        <li style={li}>Location data, your live position, altitude, and movement, while a ride is active.</li>
         <li style={li}>
           Device and diagnostic data needed to run the service, such as device identifiers, app version, and crash
           logs.
@@ -184,7 +184,7 @@ function Privacy() {
         <li style={li}>Correct, complete, or update inaccurate or incomplete data.</li>
         <li style={li}>Erase your personal data where it is no longer needed.</li>
         <li style={li}>Withdraw consent at any time (this will not affect processing already carried out).</li>
-        <li style={li}>Grievance redressal — raise a complaint with us about how your data is handled.</li>
+        <li style={li}>Grievance redressal, raise a complaint with us about how your data is handled.</li>
         <li style={li}>Nominate another individual to exercise your rights in the event of death or incapacity.</li>
       </ul>
       <p style={para}>
@@ -250,7 +250,7 @@ function Terms() {
     <div>
       <div style={noteAmber}>
         <span style={{ fontSize: 12.5, color: '#E0B96A', lineHeight: 1.55 }}>
-          This is a starter draft and not legal advice — please have a qualified Indian legal professional review it
+          This is a starter draft and not legal advice, please have a qualified Indian legal professional review it
           before publishing.
         </span>
       </div>
@@ -263,7 +263,7 @@ function Terms() {
         “us”). By accessing or using the Service, you agree to these Terms. If you do not agree, do not use the Service.
       </p>
 
-      <h3 style={{ ...h3, color: '#FF8A80' }}>2. Important safety notice — please read</h3>
+      <h3 style={{ ...h3, color: '#FF8A80' }}>2. Important safety notice, please read</h3>
       <div style={{ padding: '14px 16px', borderRadius: 12, background: 'rgba(255,82,71,0.07)', border: '1px solid rgba(255,82,71,0.22)', margin: '0 0 8px' }}>
         <p style={para}>
           <strong style={strong}>

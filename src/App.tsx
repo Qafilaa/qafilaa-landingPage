@@ -18,7 +18,7 @@ import { LegalModal, type LegalDoc } from './components/LegalModal';
 
 export default function App() {
   // Submitting either waitlist form flips the whole page into its success
-  // state — mirrors the prototype's shared data-form / data-form-ok toggle.
+  // state, mirrors the prototype's shared data-form / data-form-ok toggle.
   const [submitted, setSubmitted] = useState(false);
   const handleSubmit = () => setSubmitted(true);
 

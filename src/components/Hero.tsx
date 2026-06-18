@@ -181,12 +181,12 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               }}
             >
               <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.06em' }}>
-                <HeadlineWord>Ride&nbsp;</HeadlineWord>
-                <HeadlineWord delay={70}>together.</HeadlineWord>
+                <HeadlineWord>Built&nbsp;</HeadlineWord>
+                <HeadlineWord delay={70}>by&nbsp;rider.</HeadlineWord>
               </span>
               <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '0.06em' }}>
-                <HeadlineWord delay={150} color={colors.accent}>No&nbsp;one&nbsp;</HeadlineWord>
-                <HeadlineWord delay={220}>left&nbsp;behind.</HeadlineWord>
+                <HeadlineWord delay={150} color={colors.accent}>For&nbsp;fellow&nbsp;</HeadlineWord>
+                <HeadlineWord delay={220}>riders.</HeadlineWord>
               </span>
             </h1>
 
@@ -201,7 +201,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               <WaitlistForm
                 submitted={submitted}
                 onSubmit={onSubmit}
-                buttonLabel="Get early access"
+                buttonLabel="Join the waitlist"
                 successLabel="You're on the list. We'll call you before the first ride."
                 inputBackground="rgba(14,20,19,0.9)"
               />

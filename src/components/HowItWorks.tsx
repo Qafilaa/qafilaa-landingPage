@@ -68,14 +68,14 @@ const steps = [
     n: '2',
     label: 'Gather',
     title: 'Everyone joins',
-    body: 'Share one link. Riders tap in and appear on the map instantly — no app store, no accounts to wrangle at the trailhead.',
+    body: 'Share one link. Riders tap in and appear on the map instantly, no app store, no accounts to wrangle at the trailhead.',
     delay: 120,
   },
   {
     n: '3',
     label: 'Ride',
     title: 'No one left behind',
-    body: 'Gaps, rally points, last-known pins and SOS keep the convoy whole — from the first switchback to the final descent.',
+    body: 'Gaps, rally points, last-known pins and SOS keep the convoy whole, from the first switchback to the final descent.',
     delay: 240,
   },
 ];

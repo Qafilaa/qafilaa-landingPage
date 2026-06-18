@@ -5,14 +5,14 @@
  */
 
 export const colors = {
-  /** Page background — near-black forest green. */
+  /** Page background, near-black forest green. */
   bg: '#070D0B',
   /** Primary teal accent. */
   accent: '#20D6A8',
   /** Headline / primary text. */
   text: '#F2F6F5',
   /** Muted body text. */
-  textMuted: '#9FB0AC',
+  textMuted: '#B8C2BE',
   /** Dim label / caption text. */
   textDim: '#6B7C78',
   /** Raised card surface. */

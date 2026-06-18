@@ -20,15 +20,15 @@ const faqs = [
   },
   {
     q: 'Does it really work without internet?',
-    a: 'Mostly — with one honest limit. Qafilaa caches the last-known position of every rider, so the map never goes fully blank. But if two riders are both out of signal, neither sees the other move until one of you gets a bar back and the positions sync. No app can beam live GPS through a mountain without a satellite link — what we promise is that you always know each rider\'s last confirmed spot and the time it was logged.',
+    a: 'Mostly, with one honest limit. Qafilaa caches the last-known position of every rider, so the map never goes fully blank. But if two riders are both out of signal, neither sees the other move until one of you gets a bar back and the positions sync. No app can beam live GPS through a mountain without a satellite link, what we promise is that you always know each rider\'s last confirmed spot and the time it was logged.',
   },
   {
     q: 'Is it only for motorcycles?',
-    a: "No. It's built for any group moving together where staying together matters — bikes, 4x4 convoys, cycling pelotons, trekking groups and expeditions.",
+    a: "No. It's built for any group moving together where staying together matters, bikes, 4x4 convoys, cycling pelotons, trekking groups and expeditions.",
   },
   {
     q: 'Do I need an account to join a ride?',
-    a: 'No. Joining a ride takes one shared link — no account, no setup at the trailhead. The email field above is only for the launch waitlist, so we can send your crew\'s invite when a spot opens.',
+    a: 'No. Joining a ride takes one shared link, no account, no setup at the trailhead. The email field above is only for the launch waitlist, so we can send your crew\'s invite when a spot opens.',
   },
   {
     q: 'Who can see my location?',

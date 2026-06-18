@@ -134,7 +134,7 @@ export function Waitlist({ submitted, onSubmit }: WaitlistProps) {
         <WaitlistForm
           submitted={submitted}
           onSubmit={onSubmit}
-          buttonLabel="Reserve my spot"
+          buttonLabel="Join the waitlist"
           successLabel="Spot reserved. See you at the trailhead."
           centerSuccess
           formStyle={{ maxWidth: 460, margin: '30px auto 0' }}

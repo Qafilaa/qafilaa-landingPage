@@ -86,7 +86,7 @@ export function Footer({ onOpenLegal }: FooterProps) {
             <span style={{ fontFamily: fonts.display, fontSize: 20, fontWeight: 600 }}>Qafilaa</span>
           </div>
           <p style={{ color: colors.textDim, fontSize: 14, lineHeight: 1.55, margin: '16px 0 0' }}>
-            Built for the rides where the road runs out of signal before it runs out of mountain.
+            Built by rider. For fellow riders.
           </p>
         </div>
 

@@ -22,7 +22,7 @@ interface RevealResult<T extends HTMLElement> {
  * Entrance animation that mirrors the prototype's `data-reveal` treatment:
  * elements start at `opacity:0; translateY(28px)` and ease to their resting
  * position shortly after load. The source design reveals everything on a timed
- * cascade (its `_reveals`) rather than on scroll — so we do the same here. This
+ * cascade (its `_reveals`) rather than on scroll, so we do the same here. This
  * also guarantees no section can ever be left stuck hidden if an async
  * IntersectionObserver callback never fires.
  */

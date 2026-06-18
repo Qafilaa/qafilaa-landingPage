@@ -341,8 +341,8 @@ export function RideScreen({ state = 'live' }: RideScreenProps) {
           <div style={{ fontSize: 11, color: '#9FB0AC', marginTop: 2, marginBottom: 14 }}>One tap · everyone hears you</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <BroadcastOption onClick={send('Broadcast: “Stopping for fuel” · sent')} emoji="⛽">Stopping for fuel</BroadcastOption>
-            <BroadcastOption onClick={send('Broadcast: “Pushing ahead” · sent')} emoji="🏍️">Pushing ahead — catch up</BroadcastOption>
-            <BroadcastOption onClick={send('Broadcast: “Need a minute” · sent')} emoji="✋">Need a minute — hold up</BroadcastOption>
+            <BroadcastOption onClick={send('Broadcast: “Pushing ahead” · sent')} emoji="🏍️">Pushing ahead, catch up</BroadcastOption>
+            <BroadcastOption onClick={send('Broadcast: “Need a minute” · sent')} emoji="✋">Need a minute, hold up</BroadcastOption>
             <BroadcastOption onClick={send('Broadcast: “Regroup at next rally” · sent')} emoji="📍">Regroup at next rally</BroadcastOption>
           </div>
           <button onClick={() => setPanel(null)} style={sheetCancel}>Cancel</button>

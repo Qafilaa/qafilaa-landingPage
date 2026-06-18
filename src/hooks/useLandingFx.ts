@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { colors } from '../theme';
 
 /**
- * Imperative motion engine for the landing page — a faithful port of the
+ * Imperative motion engine for the landing page, a faithful port of the
  * prototype's `_tilts`, `_sos` and `_scene` routines. It runs once on mount and
  * drives behaviour directly on the live DOM (by `data-*` attributes under
  * `#qf-landing`), exactly as the source design did, so the parallax diorama,
@@ -85,8 +85,8 @@ export function useLandingFx() {
         setRing(0);
         if (core) core.style.transform = 'scale(1)';
         if (status) {
-          status.textContent = 'Press & hold for two seconds';
-          status.style.color = '#9FB0AC';
+          status.textContent = 'Press & hold for 2s';
+          status.style.color = '#B8C2BE';
         }
         if (coreSub) coreSub.textContent = 'Hold';
       };

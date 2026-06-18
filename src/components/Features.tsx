@@ -199,7 +199,7 @@ export function Features() {
       </Reveal>
 
       <div data-features-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 18 }}>
-        {/* f1 — live convoy map (wide) */}
+        {/* f1, live convoy map (wide) */}
         <FeatureCard
           wide
           tiltMax={8}
@@ -212,26 +212,26 @@ export function Features() {
             </div>
             <h3 style={title}>Live convoy map</h3>
             <p style={{ ...body, maxWidth: 340 }}>
-              Every rider on one dark, battery-light map. Lead, sweep, and everyone between — moving in real time along
+              Every rider on one dark, battery-light map. Lead, sweep, and everyone between, moving in real time along
               the route you set.
             </p>
           </div>
           <MapDemo />
         </FeatureCard>
 
-        {/* f2 — gap tracking */}
+        {/* f2, gap tracking */}
         <FeatureCard delay={80}>
           <div style={iconBox}>
             <GapIcon />
           </div>
           <h3 style={title}>Gap tracking</h3>
           <p style={body}>
-            Know exactly how far back each rider is. Distances update the second they move — so you stop guessing and
+            Know exactly how far back each rider is. Distances update the second they move, so you stop guessing and
             start waiting in the right place.
           </p>
         </FeatureCard>
 
-        {/* f3 — rally points */}
+        {/* f3, rally points */}
         <FeatureCard>
           <div style={iconBox}>
             <RallyIcon />
@@ -243,7 +243,7 @@ export function Features() {
           </p>
         </FeatureCard>
 
-        {/* f4 — offline-first */}
+        {/* f4, offline-first */}
         <FeatureCard delay={80}>
           <div style={iconBox}>
             <WifiOffIcon />
@@ -255,18 +255,18 @@ export function Features() {
           </p>
         </FeatureCard>
 
-        {/* f5 — sweep & roles */}
+        {/* f5, sweep & roles */}
         <FeatureCard delay={160}>
           <div style={iconBox}>
             <ShieldCheckIcon />
           </div>
           <h3 style={title}>Sweep &amp; roles</h3>
           <p style={body}>
-            Assign a lead and a sweep before you roll. The ride isn't marked done until the sweep is in — by design.
+            Assign a lead and a sweep before you roll. The ride isn't marked done until the sweep is in, by design.
           </p>
         </FeatureCard>
 
-        {/* f6 — one-tap SOS */}
+        {/* f6, one-tap SOS */}
         <FeatureCard
           style={{
             background: 'linear-gradient(180deg, rgba(255,82,71,0.08), #0C1311)',
@@ -297,7 +297,7 @@ export function Features() {
           <h3 style={title}>One-tap SOS</h3>
           <p style={body}>
             Hold for two seconds to alert the whole convoy with your live location and altitude. Help heads straight to
-            you — no shouting into a dead radio.
+            you, no shouting into a dead radio.
           </p>
         </FeatureCard>
       </div>

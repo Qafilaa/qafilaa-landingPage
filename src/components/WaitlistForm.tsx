@@ -54,7 +54,7 @@ interface WaitlistFormProps {
  * The e-mail capture used in both the hero and the closing CTA. Submitting
  * either instance flips the whole page into its "you're on the list" state,
  * matching the prototype's shared `data-form` / `data-form-ok` toggle. The
- * submit button is magnetic — its lift is owned by the FX engine, not hover.
+ * submit button is magnetic, its lift is owned by the FX engine, not hover.
  */
 export function WaitlistForm({
   submitted,
@@ -98,6 +98,15 @@ export function WaitlistForm({
 
   return (
     <form data-form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, ...formStyle }}>
+      {/* honeypot, bots fill this hidden field; humans never see it */}
+      <input
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: 'absolute', left: -9999, width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+      />
       <input
         type="email"
         required

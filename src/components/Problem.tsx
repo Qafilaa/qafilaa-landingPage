@@ -18,7 +18,7 @@ export function Problem() {
             textWrap: 'balance',
           }}
         >
-          On a real ride, the lead can't see the sweep — and the group chat dies the moment the signal does.
+          On a real ride, the lead can't see the sweep, and the group chat dies the moment the signal does.
         </h2>
         <p
           style={{
