@@ -31,7 +31,7 @@ export function Problem() {
           }}
         >
           Someone takes a wrong fork. Someone stops for a photo. Bars vanish behind the ridge. Twenty minutes later half
-          the convoy is waiting at a junction with no way to know if the others are five minutes back or in trouble.
+          the ride is waiting at a junction with no way to know if the others are five minutes back or in trouble.
           Qafilaa is built for exactly that gap.
         </p>
       </Reveal>

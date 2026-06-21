@@ -60,8 +60,12 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
       data-hero
       style={{ position: 'relative', padding: '80px 0 70px', overflow: 'hidden', minHeight: '82vh' }}
     >
-      {/* low-poly faceted mountain backdrop */}
+      {/* real 3D terrain flythrough (lazy-loaded by useTerrain) over low-poly SVG fallback */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        <canvas
+          data-terrain
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, transition: 'opacity 1.4s ease' }}
+        />
         <div
           style={{
             position: 'absolute',
@@ -85,9 +89,10 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
           }}
         />
         <svg
+          data-terrain-svg
           viewBox="0 0 1440 760"
           preserveAspectRatio="xMidYMax slice"
-          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, width: '100%', height: '84%' }}
+          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, width: '100%', height: '84%', transition: 'opacity 1.4s ease' }}
         >
           {/* far / mid-ground range (faded, behind content) */}
           <g stroke="rgba(120,210,184,0.10)" strokeWidth="1" strokeLinejoin="round">

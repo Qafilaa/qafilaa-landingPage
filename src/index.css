@@ -238,9 +238,48 @@ body {
    win the cascade).
    ============================================================ */
 
+/* --- global hardening (no breakpoint): overflow, touch, safe areas --- */
+#qf-landing,
+#qf-landing section,
+#qf-landing footer,
+#qf-landing nav {
+  max-width: 100%;
+}
+#qf-landing img,
+#qf-landing svg,
+#qf-landing canvas {
+  max-width: 100%;
+}
+#qf-landing {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+#qf-landing nav > div {
+  padding-left: max(28px, env(safe-area-inset-left));
+  padding-right: max(28px, env(safe-area-inset-right));
+}
+#qf-landing footer {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+#qf-landing [data-progress-chip] {
+  left: max(18px, env(safe-area-inset-left));
+}
+/* TRY-A-RIDE & device-showcase phones scale to fit small screens */
+#qf-landing [data-demo-phone] > div {
+  transform-origin: center top;
+  transition: transform 0.25s ease;
+}
+#qf-landing [data-showcase-phone] {
+  transform-origin: center top;
+}
+
 /* --- tablet (<=1000) --- */
 @media (max-width: 1000px) {
   #qf-landing [data-features-grid] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #qf-landing [data-plan-grid] {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   #qf-landing [data-split] {
@@ -306,6 +345,30 @@ body {
   #qf-landing [data-phone-pose] {
     transform: perspective(1300px) rotateY(-6deg) rotateX(3deg) !important;
   }
+  /* TRY-A-RIDE: stack the step rail under the phone */
+  #qf-landing [data-demo-grid] {
+    grid-template-columns: 1fr !important;
+    gap: 36px !important;
+    justify-items: center;
+  }
+  #qf-landing [data-demo-grid] > div:first-child {
+    order: 2;
+    max-width: 520px;
+  }
+  #qf-landing [data-demo-phone] {
+    order: 1;
+  }
+  /* SOS visual overlaps the safety copy between 640–880 — stack it earlier */
+  #qf-landing [data-sos-visual] {
+    position: static !important;
+    transform: none !important;
+    margin: 34px auto 0 !important;
+    right: auto !important;
+    top: auto !important;
+  }
+  #qf-landing [data-safety-card] > div:first-child {
+    max-width: 100% !important;
+  }
 }
 
 /* --- phone (<=640) --- */
@@ -324,6 +387,12 @@ body {
   }
   #qf-landing [data-features-grid] {
     grid-template-columns: 1fr !important;
+  }
+  #qf-landing [data-plan-grid] {
+    grid-template-columns: 1fr !important;
+  }
+  #qf-landing [data-progress-chip] {
+    display: none !important;
   }
   #qf-landing [data-feature-wide] {
     grid-column: auto !important;
@@ -351,8 +420,8 @@ body {
     font-size: 26px !important;
   }
   #qf-landing [data-cta-nav] {
-    padding: 0 15px !important;
-    height: 38px !important;
+    padding: 0 16px !important;
+    height: 44px !important;
     font-size: 13.5px !important;
   }
   #qf-landing [data-phone-pose] {
@@ -387,9 +456,10 @@ body {
   #qf-landing [data-countdown] {
     gap: 7px !important;
   }
+  /* never let 4 tiles overflow; wrap to 2×2 cleanly */
   #qf-landing [data-countdown] > div {
     min-width: 0 !important;
-    flex: 1 1 0 !important;
+    flex: 1 1 calc(50% - 7px) !important;
     padding: 14px 4px !important;
   }
   #qf-landing [data-countdown] > div > div:first-child {
@@ -402,6 +472,17 @@ body {
     flex-direction: column !important;
     gap: 28px !important;
   }
+  /* ease the hero headline min size on small phones */
+  #qf-landing h1 {
+    font-size: 42px !important;
+  }
+  /* scale the playable demo phone to fit */
+  #qf-landing [data-demo-phone] > div {
+    transform: scale(0.9) !important;
+  }
+  #qf-landing [data-demo-phone] {
+    margin-block: -24px;
+  }
 }
 
 /* --- tiny (<=360) --- */
@@ -412,6 +493,38 @@ body {
   }
   #qf-landing h1 {
     font-size: 38px !important;
+  }
+  #qf-landing section,
+  #qf-landing [data-hero-inner] {
+    padding-left: 13px !important;
+    padding-right: 13px !important;
+  }
+  #qf-landing [data-stat] {
+    padding: 20px 16px !important;
+  }
+  #qf-landing [data-safety-card] {
+    padding: 24px 16px !important;
+  }
+  /* scale the playable demo phone further on tiny screens */
+  #qf-landing [data-demo-phone] > div {
+    transform: scale(0.8) !important;
+  }
+  #qf-landing [data-demo-phone] {
+    margin-block: -60px;
+  }
+  /* guard the device-showcase phones at the very small end */
+  #qf-landing [data-showcase-phone] {
+    transform: scale(0.86) !important;
+    margin-bottom: -44px;
+  }
+}
+
+/* --- short / landscape viewports: don't force a tall hero --- */
+@media (max-height: 560px) and (orientation: landscape) {
+  #qf-landing [data-hero] {
+    min-height: 0 !important;
+    padding-top: 32px !important;
+    padding-bottom: 28px !important;
   }
 }
 

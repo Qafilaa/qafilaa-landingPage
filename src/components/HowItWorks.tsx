@@ -75,7 +75,7 @@ const steps = [
     n: '3',
     label: 'Ride',
     title: 'No one left behind',
-    body: 'Gaps, rally points, last-known pins and SOS keep the convoy whole, from the first switchback to the final descent.',
+    body: 'Gaps, rally points, last-known pins and SOS keep the ride together, from the first switchback to the final descent.',
     delay: 240,
   },
 ];

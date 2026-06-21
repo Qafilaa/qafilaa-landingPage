@@ -98,7 +98,7 @@ export function useLandingFx() {
           core.style.transform = 'scale(1)';
         }
         if (coreText) coreText.textContent = 'SENT';
-        if (coreSub) coreSub.textContent = 'Convoy alerted';
+        if (coreSub) coreSub.textContent = 'Ride alerted';
         if (status) {
           status.textContent = '✓ Alert broadcast · 4 riders responding';
           status.style.color = accent;
@@ -164,6 +164,117 @@ export function useLandingFx() {
         btn.removeEventListener('keydown', keydown);
         btn.removeEventListener('keyup', reset);
       });
+    })();
+
+    /* ---- scroll = your position on the route ---- */
+    (() => {
+      const bar = root.querySelector<HTMLElement>('[data-progress]');
+      if (!bar) return;
+      const chip = root.querySelector<HTMLElement>('[data-progress-chip]');
+      const km = root.querySelector<HTMLElement>('[data-progress-km]');
+      const next = root.querySelector<HTMLElement>('[data-progress-next]');
+      const TOTAL = 128;
+      const rallies = [
+        { at: 0.28, name: 'Rally 1 ahead' },
+        { at: 0.55, name: 'Rally 2 ahead' },
+        { at: 0.82, name: 'Rally 3 ahead' },
+        { at: 1.01, name: 'Summit ahead' },
+      ];
+      const update = () => {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - window.innerHeight || 1;
+        const p = Math.max(0, Math.min(1, (window.scrollY || doc.scrollTop || 0) / max));
+        bar.style.width = (p * 100).toFixed(2) + '%';
+        if (km) km.textContent = (p * TOTAL).toFixed(1) + ' km';
+        const r = rallies.find((x) => x.at > p) || rallies[rallies.length - 1];
+        if (next) next.textContent = r.name;
+        if (chip) {
+          const show = p > 0.04 && p < 0.985;
+          chip.style.opacity = show ? '1' : '0';
+          chip.style.transform = show ? 'translateY(0)' : 'translateY(12px)';
+        }
+      };
+      update();
+      window.addEventListener('scroll', update, { passive: true });
+      const iv = window.setInterval(update, 250);
+      cleanups.push(() => {
+        window.removeEventListener('scroll', update);
+        window.clearInterval(iv);
+      });
+    })();
+
+    /* ---- interactive live vs last-known signal toggle ---- */
+    (() => {
+      const wrap = root.querySelector<HTMLElement>('[data-sig]');
+      if (!wrap) return;
+      const btn = wrap.querySelector<HTMLElement>('[data-sig-toggle]');
+      const knob = wrap.querySelector<HTMLElement>('[data-sig-knob]');
+      const onL = wrap.querySelector<HTMLElement>('[data-sig-on]');
+      const offL = wrap.querySelector<HTMLElement>('[data-sig-off]');
+      const sigTitle = wrap.querySelector<HTMLElement>('[data-sig-title]');
+      const hint = wrap.querySelector<HTMLElement>('[data-sig-hint]');
+      const banner = wrap.querySelector<HTMLElement>('[data-sig-banner]');
+      const bDot = wrap.querySelector<HTMLElement>('[data-sig-banner-dot]');
+      const bTxt = wrap.querySelector<HTMLElement>('[data-sig-banner-text]');
+      const rows = [...wrap.querySelectorAll<HTMLElement>('[data-sig-row]')];
+      const grey = '#5A6B67';
+      const amber = '#FFB020';
+      const green = '#36D399';
+      let live = true;
+
+      const apply = () => {
+        if (knob) {
+          knob.style.transform = live ? 'translateX(0)' : 'translateX(64px)';
+          knob.style.background = live ? accent : grey;
+        }
+        if (btn) {
+          btn.style.background = live ? 'rgba(32,214,168,0.12)' : 'rgba(90,107,103,0.16)';
+          btn.style.borderColor = live ? 'rgba(32,214,168,0.45)' : 'rgba(90,107,103,0.5)';
+          btn.setAttribute('aria-checked', String(live));
+        }
+        if (onL) onL.style.opacity = live ? '1' : '0';
+        if (offL) offL.style.opacity = live ? '0' : '1';
+        if (sigTitle) {
+          sigTitle.textContent = live ? 'Signal: all live' : 'Signal lost · last-known';
+          sigTitle.style.color = live ? '#F2F6F5' : amber;
+        }
+        if (hint)
+          hint.textContent = live
+            ? 'Flip it — drop the signal behind the ridge.'
+            : 'Pins hold their last spot, timestamped — nothing vanishes.';
+        if (banner) {
+          banner.style.background = live ? 'rgba(54,211,153,0.10)' : 'rgba(255,176,32,0.10)';
+          banner.style.borderColor = live ? 'rgba(54,211,153,0.28)' : 'rgba(255,176,32,0.28)';
+        }
+        if (bDot) bDot.style.background = live ? green : amber;
+        if (bTxt) {
+          bTxt.textContent = live ? 'All live · 5 of 5 accounted for' : '3 of 5 live · 2 holding last-known';
+          bTxt.style.color = live ? green : amber;
+        }
+        rows.forEach((r) => {
+          const lostTxt = r.getAttribute('data-sig-lost');
+          const liveTxt = r.getAttribute('data-sig-live');
+          if (!lostTxt) return; // lead stays live
+          const st = r.querySelector<HTMLElement>('[data-sig-status]');
+          const dot = r.querySelector<HTMLElement>('[data-sig-dot]');
+          r.style.opacity = live ? '1' : '0.6';
+          if (st) {
+            st.textContent = live ? liveTxt || '' : lostTxt;
+            st.style.color = live ? accent : '#6B7C78';
+          }
+          if (dot) dot.style.background = live ? green : grey;
+        });
+        wrap.style.filter = live ? 'none' : 'saturate(0.35)';
+      };
+      apply();
+      const flip = () => {
+        live = !live;
+        apply();
+      };
+      if (btn) {
+        btn.addEventListener('click', flip);
+        cleanups.push(() => btn.removeEventListener('click', flip));
+      }
     })();
 
     /* ---- unified scene engine: parallax + cursor + magnetic + particles ---- */

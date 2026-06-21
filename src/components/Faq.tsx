@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: 'Is it only for motorcycles?',
-    a: "No. It's built for any group moving together where staying together matters, bikes, 4x4 convoys, cycling pelotons, trekking groups and expeditions.",
+    a: "No. It's built for any group moving together where staying together matters, bikes, 4x4 groups, cycling pelotons, trekking groups and expeditions.",
   },
   {
     q: 'Do I need an account to join a ride?',

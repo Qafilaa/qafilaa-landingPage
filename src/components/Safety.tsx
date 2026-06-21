@@ -59,7 +59,7 @@ export function Safety() {
             An SOS that actually knows where you are.
           </h2>
           <p style={{ color: colors.textMuted, fontSize: 17, lineHeight: 1.6, margin: '18px 0 0', textWrap: 'pretty' }}>
-            Hold the SOS for two seconds and every rider in the convoy gets your live coordinates, altitude and last
+            Hold the SOS for two seconds and every rider on the ride gets your live coordinates, altitude and last
             movement, even if you've dropped to one bar. Try it: press and hold.
           </p>
           <div style={{ display: 'flex', gap: 14, marginTop: 30, flexWrap: 'wrap' }}>
@@ -104,7 +104,7 @@ export function Safety() {
             data-sos-btn
             role="button"
             tabIndex={0}
-            aria-label="Demo SOS, press and hold for two seconds to preview the convoy alert. This is a demo and does not contact emergency services."
+            aria-label="Demo SOS, press and hold for two seconds to preview the ride alert. This is a demo and does not contact emergency services."
             style={{
               position: 'relative',
               width: 168,

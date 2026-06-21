@@ -13,7 +13,7 @@ interface PhonePanelProps {
 function PhonePanel({ state, caption, sub, delay }: PhonePanelProps) {
   return (
     <Reveal style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }} delay={delay}>
-      <div style={{ transformStyle: 'preserve-3d' }}>
+      <div data-showcase-phone style={{ transformStyle: 'preserve-3d' }}>
         <div
           style={{
             width: 280,

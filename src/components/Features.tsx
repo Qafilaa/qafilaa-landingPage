@@ -138,6 +138,38 @@ const SosIcon = () => (
     <path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
   </svg>
 );
+const CrashIcon = () => (
+  <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke={colors.danger} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 17 8 8h8l3 9" />
+    <circle cx="7.5" cy="17.5" r="2" />
+    <circle cx="16.5" cy="17.5" r="2" />
+    <path d="M11 8V5" />
+  </svg>
+);
+
+/** Red-gradient danger card (shared by Crash detection and One-tap SOS). */
+const dangerCardStyle: CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(255,82,71,0.08), #0C1311)',
+  border: '1px solid rgba(255,82,71,0.22)',
+};
+const dangerIconBox: CSSProperties = {
+  ...iconBox,
+  background: 'rgba(255,82,71,0.14)',
+  border: '1px solid rgba(255,82,71,0.32)',
+  position: 'relative',
+};
+const dangerGlare = 'radial-gradient(260px 260px at 50% 0%, rgba(255,82,71,0.12), transparent 60%)';
+const PingRing = () => (
+  <span
+    style={{
+      position: 'absolute',
+      inset: 0,
+      borderRadius: 13,
+      border: '1px solid rgba(255,82,71,0.5)',
+      animation: 'qf-ping 2.4s ease-out infinite',
+    }}
+  />
+);
 
 function MapDemo() {
   return (
@@ -194,12 +226,12 @@ export function Features() {
             margin: '16px 0 0',
           }}
         >
-          Six tools. One whole convoy.
+          Everything for the road.
         </h2>
       </Reveal>
 
       <div data-features-grid style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 18 }}>
-        {/* f1, live convoy map (wide) */}
+        {/* f1, live ride map (wide) */}
         <FeatureCard
           wide
           tiltMax={8}
@@ -210,7 +242,7 @@ export function Features() {
             <div style={iconBox}>
               <MapIcon />
             </div>
-            <h3 style={title}>Live convoy map</h3>
+            <h3 style={title}>Live ride map</h3>
             <p style={{ ...body, maxWidth: 340 }}>
               Every rider on one dark, battery-light map. Lead, sweep, and everyone between, moving in real time along
               the route you set.
@@ -238,7 +270,7 @@ export function Features() {
           </div>
           <h3 style={title}>Rally points</h3>
           <p style={body}>
-            Drop a regroup point and the whole convoy gets the same pin, distance and ETA. The next stop is never a
+            Drop a regroup point and the whole ride gets the same pin, distance and ETA. The next stop is never a
             debate.
           </p>
         </FeatureCard>
@@ -266,37 +298,36 @@ export function Features() {
           </p>
         </FeatureCard>
 
-        {/* f6, one-tap SOS */}
+        {/* f6, crash detection */}
         <FeatureCard
-          style={{
-            background: 'linear-gradient(180deg, rgba(255,82,71,0.08), #0C1311)',
-            border: '1px solid rgba(255,82,71,0.22)',
-          }}
+          style={dangerCardStyle}
           hoverBorderColor="rgba(255,82,71,0.45)"
-          glare="radial-gradient(260px 260px at 50% 0%, rgba(255,82,71,0.12), transparent 60%)"
+          glare={dangerGlare}
         >
-          <div
-            style={{
-              ...iconBox,
-              background: 'rgba(255,82,71,0.14)',
-              border: '1px solid rgba(255,82,71,0.32)',
-              position: 'relative',
-            }}
-          >
-            <span
-              style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: 13,
-                border: '1px solid rgba(255,82,71,0.5)',
-                animation: 'qf-ping 2.4s ease-out infinite',
-              }}
-            />
+          <div style={dangerIconBox}>
+            <PingRing />
+            <CrashIcon />
+          </div>
+          <h3 style={title}>Crash detection</h3>
+          <p style={body}>
+            Automatic. A hard impact starts a countdown and, if you can't cancel it, alerts the crew and your emergency
+            contacts with your exact location and altitude.
+          </p>
+        </FeatureCard>
+
+        {/* f7, one-tap SOS */}
+        <FeatureCard
+          style={dangerCardStyle}
+          hoverBorderColor="rgba(255,82,71,0.45)"
+          glare={dangerGlare}
+        >
+          <div style={dangerIconBox}>
+            <PingRing />
             <SosIcon />
           </div>
           <h3 style={title}>One-tap SOS</h3>
           <p style={body}>
-            Hold for two seconds to alert the whole convoy with your live location and altitude. Help heads straight to
+            Hold for two seconds to alert the whole ride with your live location and altitude. Help heads straight to
             you, no shouting into a dead radio.
           </p>
         </FeatureCard>
