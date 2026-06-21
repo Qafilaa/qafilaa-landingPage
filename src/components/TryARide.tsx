@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { colors, fonts, layout, EASE } from '../theme';
 import { Eyebrow } from './Eyebrow';
-import { RideScreen } from './RideScreen';
+import { QafilaaDemo } from './QafilaaDemo';
 import { useReveal } from '../hooks/useReveal';
 
 interface Step {
@@ -126,7 +126,7 @@ export function TryARide() {
               <path d="m9 18 6-6-6-6" />
             </svg>
             <span style={{ fontSize: 14, color: colors.text, fontWeight: 500 }}>
-              Tap into the phone — explore the live map freely.
+              Tap into the phone — take the guided tour or explore freely.
             </span>
           </div>
         </div>
@@ -141,7 +141,7 @@ export function TryARide() {
             <div style={{ position: 'absolute', left: '50%', bottom: -30, width: 240, height: 60, transform: 'translateX(-50%)', background: 'radial-gradient(ellipse, rgba(32,214,168,0.22), transparent 70%)', filter: 'blur(16px)', borderRadius: 999, zIndex: 0, pointerEvents: 'none' }} />
             <div style={{ position: 'relative', zIndex: 1, width: 340, padding: 10, background: '#000', borderRadius: 48, boxShadow: '0 50px 110px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)' }}>
               <div style={{ position: 'relative', width: 320, height: 712, borderRadius: 40, overflow: 'hidden', background: colors.surfaceInset }}>
-                <RideScreen state="live" />
+                <QafilaaDemo />
               </div>
             </div>
           </div>

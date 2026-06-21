@@ -59,7 +59,7 @@ const gapLabel = (left: string, top: string, display: string): CSSProperties => 
   borderRadius: 999,
   background: 'rgba(14,20,19,0.82)',
   border: '1px solid rgba(255,255,255,0.10)',
-  color: colors.textMuted,
+  color: '#9FB0AC',
   fontSize: 11,
   fontWeight: 500,
   whiteSpace: 'nowrap',
@@ -282,7 +282,7 @@ export function ConvoyMap({ state = 'live' }: ConvoyMapProps) {
         left="66%"
         top="13%"
         size={42}
-        initials="AK"
+        initials="VC"
         ringColor={v.ring}
         statusColor={colors.success}
         label={{ text: 'Lead', bg: 'rgba(32,214,168,0.14)', color: colors.accent }}
@@ -291,7 +291,7 @@ export function ConvoyMap({ state = 'live' }: ConvoyMapProps) {
         left="51%"
         top="32%"
         size={40}
-        initials="RS"
+        initials="AJ"
         ringColor={v.ring}
         statusColor={colors.warning}
         display={v.others}
@@ -300,7 +300,7 @@ export function ConvoyMap({ state = 'live' }: ConvoyMapProps) {
         left="59%"
         top="51%"
         size={46}
-        initials="JP"
+        initials="YT"
         ringColor={v.ring}
         statusColor=""
         you
@@ -311,7 +311,7 @@ export function ConvoyMap({ state = 'live' }: ConvoyMapProps) {
         left="33%"
         top="67%"
         size={40}
-        initials="MD"
+        initials="TH"
         ringColor={v.ring}
         statusColor={colors.success}
         display={v.others}
@@ -320,7 +320,7 @@ export function ConvoyMap({ state = 'live' }: ConvoyMapProps) {
         left="25%"
         top="83%"
         size={42}
-        initials="VT"
+        initials="GH"
         ringColor={v.ring}
         statusColor={colors.success}
         display={v.others}
