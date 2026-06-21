@@ -1,6 +1,7 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { colors, fonts, layout } from '../theme';
 import { site } from '../content';
+import { getWaitlistCount } from '../api';
 import { RideScreen } from './RideScreen';
 import { WaitlistForm } from './WaitlistForm';
 import { useReveal } from '../hooks/useReveal';
@@ -54,6 +55,23 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
   const sub = useReveal({ delay: 300, duration: 0.8, from: 'translateY(22px)' });
   const form = useReveal({ delay: 380, duration: 0.8, from: 'translateY(22px)' });
   const phone = useReveal({ delay: 180, duration: 1, from: 'translateY(26px)' });
+
+  // Social-proof count: the base (50) plus real signups from the backend. Starts at the base so the
+  // prerendered/SSR markup is right, then climbs once the live count loads (fails silently to base).
+  const [waitingCount, setWaitingCount] = useState<number>(site.waitlistCount);
+  useEffect(() => {
+    let active = true;
+    getWaitlistCount()
+      .then((count) => {
+        if (active) {
+          setWaitingCount(site.waitlistCount + count);
+        }
+      })
+      .catch(() => {/* keep the base count */});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <section
@@ -206,6 +224,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
               <WaitlistForm
                 submitted={submitted}
                 onSubmit={onSubmit}
+                source="hero"
                 buttonLabel="Join the waitlist"
                 successLabel="You're on the list. We'll call you before the first ride."
                 inputBackground="rgba(14,20,19,0.9)"
@@ -218,7 +237,7 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
                   <div style={{ ...avatarBase, marginLeft: -9, background: 'rgba(32,214,168,0.18)', color: colors.accent }}>+</div>
                 </div>
                 <span style={{ fontSize: 14, color: colors.textMuted }}>
-                  <span style={{ color: colors.text, fontWeight: 600 }}>{site.waitlistCount.toLocaleString()}+</span>{' '}
+                  <span style={{ color: colors.text, fontWeight: 600 }}>{waitingCount.toLocaleString()}+</span>{' '}
                   riders already waiting for the gate to open
                 </span>
               </div>

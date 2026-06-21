@@ -7,7 +7,7 @@
 export const site = {
   brand: 'Qafilaa',
   launchLabel: 'Public beta · Monsoon 2026',
-  /** Raw number; rendered as a locale string with a trailing "+". */
+  /** Display base for the social-proof line; real backend signups are added on top of this. */
   waitlistCount: 50,
   heroSub:
     'Qafilaa keeps your whole group on one live map, gaps, rally points, last-known positions, and one-tap SOS. Built for rides where the road runs out of signal before it runs out of mountain.',

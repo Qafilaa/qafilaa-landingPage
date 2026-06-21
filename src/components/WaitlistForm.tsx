@@ -1,6 +1,7 @@
 import { useState, type CSSProperties, type FormEvent } from 'react';
 import { colors } from '../theme';
 import { CheckIcon } from './icons';
+import { joinWaitlist } from '../api';
 
 const inputBase: CSSProperties = {
   flex: 1,
@@ -40,6 +41,8 @@ interface WaitlistFormProps {
   onSubmit: () => void;
   buttonLabel: string;
   successLabel: string;
+  /** Which form this is — tags the signup ("hero" / "cta") for conversion analytics. */
+  source?: string;
   /** Extra styles applied to the <form>. */
   formStyle?: CSSProperties;
   /** Extra styles applied to the success panel. */
@@ -61,16 +64,34 @@ export function WaitlistForm({
   onSubmit,
   buttonLabel,
   successLabel,
+  source,
   formStyle,
   successStyle,
   centerSuccess = false,
   inputBackground,
 }: WaitlistFormProps) {
   const [focused, setFocused] = useState(false);
+  const [email, setEmail] = useState('');
+  // Honeypot value — humans never see/fill this; a non-empty value flags a bot.
+  const [company, setCompany] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    onSubmit();
+    if (submitting) {
+      return;
+    }
+    setSubmitting(true);
+    setError(null);
+    try {
+      await joinWaitlist({ email, source, company });
+      onSubmit();
+    } catch {
+      setError("Couldn't reach the trailhead — please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -97,27 +118,39 @@ export function WaitlistForm({
   }
 
   return (
-    <form data-form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10, ...formStyle }}>
-      {/* honeypot, bots fill this hidden field; humans never see it */}
-      <input
-        type="text"
-        name="company"
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        style={{ position: 'absolute', left: -9999, width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
-      />
-      <input
-        type="email"
-        required
-        placeholder="you@trailhead.com"
-        style={{ ...inputBase, ...(inputBackground ? { background: inputBackground } : null), ...(focused ? inputFocus : null) }}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-      />
-      <button data-magnetic type="submit" style={buttonBase}>
-        {buttonLabel}
-      </button>
-    </form>
+    <div style={formStyle}>
+      <form data-form onSubmit={handleSubmit} style={{ display: 'flex', gap: 10 }}>
+        {/* honeypot, bots fill this hidden field; humans never see it */}
+        <input
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+          style={{ position: 'absolute', left: -9999, width: 1, height: 1, opacity: 0, pointerEvents: 'none' }}
+        />
+        <input
+          type="email"
+          required
+          placeholder="you@trailhead.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={submitting}
+          style={{ ...inputBase, ...(inputBackground ? { background: inputBackground } : null), ...(focused ? inputFocus : null) }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+        />
+        <button data-magnetic type="submit" disabled={submitting} style={{ ...buttonBase, ...(submitting ? { opacity: 0.7, cursor: 'default' } : null) }}>
+          {submitting ? 'Joining…' : buttonLabel}
+        </button>
+      </form>
+      {error ? (
+        <p role="alert" style={{ margin: '10px 2px 0', fontSize: 13, color: '#F87171' }}>
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }
