@@ -1,8 +1,27 @@
 import type { CSSProperties } from 'react';
 import { colors, fonts, layout } from '../theme';
-import { Logo } from './icons';
+import {
+  Logo,
+  InstagramIcon,
+  WhatsappIcon,
+  PhoneIcon,
+  XIcon,
+  FacebookIcon,
+  LinkedinIcon,
+} from './icons';
 import { HoverLink } from './HoverLink';
+import { useHover } from '../hooks/useHover';
+import { socials } from '../content';
 import type { LegalDoc } from './LegalModal';
+
+const socialIcons = {
+  instagram: InstagramIcon,
+  whatsapp: WhatsappIcon,
+  phone: PhoneIcon,
+  x: XIcon,
+  facebook: FacebookIcon,
+  linkedin: LinkedinIcon,
+} as const;
 
 interface FooterProps {
   /** Opens the Privacy / Terms legal modal. */
@@ -52,6 +71,38 @@ const legalLink: CSSProperties = {
   cursor: 'pointer',
 };
 
+function SocialButton({ social }: { social: (typeof socials)[number] }) {
+  const Icon = socialIcons[social.id];
+  const { hovered, hoverProps } = useHover({});
+  const external = social.href.startsWith('http');
+  return (
+    <a
+      href={social.href}
+      aria-label={social.live ? social.label : `${social.label} (coming soon)`}
+      title={social.live ? social.label : `${social.label} — coming soon`}
+      {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      {...(social.live ? {} : { onClick: (e) => e.preventDefault() })}
+      {...hoverProps}
+      style={{
+        width: 38,
+        height: 38,
+        borderRadius: 10,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: colors.surfaceInset,
+        border: `1px solid ${hovered ? 'rgba(32,214,168,0.5)' : 'rgba(255,255,255,0.08)'}`,
+        color: hovered && social.live ? colors.accent : colors.textMuted,
+        transition: 'color .2s, border-color .2s',
+        cursor: social.live ? 'pointer' : 'default',
+        opacity: social.live ? 1 : 0.55,
+      }}
+    >
+      <Icon size={18} />
+    </a>
+  );
+}
+
 export function Footer({ onOpenLegal }: FooterProps) {
   return (
     <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 60 }}>
@@ -88,6 +139,11 @@ export function Footer({ onOpenLegal }: FooterProps) {
           <p style={{ color: colors.textDim, fontSize: 14, lineHeight: 1.55, margin: '16px 0 0' }}>
             Built by rider. For fellow riders.
           </p>
+          <div style={{ display: 'flex', gap: 10, marginTop: 22, flexWrap: 'wrap' }}>
+            {socials.map((social) => (
+              <SocialButton key={social.id} social={social} />
+            ))}
+          </div>
         </div>
 
         <div style={{ display: 'flex', gap: 64, flexWrap: 'wrap' }}>
