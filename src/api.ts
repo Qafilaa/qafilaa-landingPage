@@ -13,12 +13,25 @@ export interface JoinWaitlistInput {
   company?: string;
 }
 
+export interface JoinWaitlistResult {
+  /** `false` when the email was already on the list — the backend never stores a duplicate. */
+  created: boolean;
+}
+
 /**
- * Submits a waitlist signup. Resolves on success — including when the email was already on the list,
- * which the backend reports as a non-error — and rejects on a network or validation failure so the
- * form can surface an inline message instead of falsely showing the success state.
+ * Accepts an email only if it looks valid. Mirrors the backend's FluentValidation `.EmailAddress()`
+ * so we reject bad input before hitting the network and show an inline message instead.
  */
-export async function joinWaitlist(input: JoinWaitlistInput): Promise<void> {
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+/**
+ * Submits a waitlist signup and reports whether it was newly added. Resolves with `created: false`
+ * when the email was already on the list (the backend treats that as a non-error), and rejects on a
+ * network or validation failure so the form can surface an inline message.
+ */
+export async function joinWaitlist(input: JoinWaitlistInput): Promise<JoinWaitlistResult> {
   const response = await fetch(`${API_BASE}/api/v1/waitlist`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -28,6 +41,9 @@ export async function joinWaitlist(input: JoinWaitlistInput): Promise<void> {
   if (!response.ok) {
     throw new Error(`Waitlist signup failed (${response.status})`);
   }
+
+  const data: { created: boolean } = await response.json();
+  return { created: data.created };
 }
 
 /**

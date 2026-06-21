@@ -57,9 +57,35 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
   const phone = useReveal({ delay: 180, duration: 1, from: 'translateY(26px)' });
 
   // Social-proof count: the base (50) plus real signups from the backend. Starts at the base so the
-  // prerendered/SSR markup is right, then climbs once the live count loads (fails silently to base).
+  // prerendered/SSR markup is right, then tracks the live count — refreshed on load, on a poll, and
+  // the moment a signup lands — so the number climbs in real time (fails silently to the base).
   const [waitingCount, setWaitingCount] = useState<number>(site.waitlistCount);
   useEffect(() => {
+    let active = true;
+
+    const refresh = () =>
+      getWaitlistCount()
+        .then((count) => {
+          if (active) {
+            setWaitingCount(site.waitlistCount + count);
+          }
+        })
+        .catch(() => {/* keep the last good count */});
+
+    refresh();
+    // Poll so the count stays live as other riders join.
+    const poll = window.setInterval(refresh, 15000);
+    return () => {
+      active = false;
+      window.clearInterval(poll);
+    };
+  }, []);
+
+  // A fresh signup just landed — pull the new total immediately rather than waiting for the next poll.
+  useEffect(() => {
+    if (!submitted) {
+      return;
+    }
     let active = true;
     getWaitlistCount()
       .then((count) => {
@@ -67,11 +93,11 @@ export function Hero({ submitted, onSubmit }: HeroProps) {
           setWaitingCount(site.waitlistCount + count);
         }
       })
-      .catch(() => {/* keep the base count */});
+      .catch(() => {/* keep the last good count */});
     return () => {
       active = false;
     };
-  }, []);
+  }, [submitted]);
 
   return (
     <section

@@ -1,7 +1,7 @@
 import { useState, type CSSProperties, type FormEvent } from 'react';
 import { colors } from '../theme';
 import { CheckIcon } from './icons';
-import { joinWaitlist } from '../api';
+import { joinWaitlist, isValidEmail } from '../api';
 
 const inputBase: CSSProperties = {
   flex: 1,
@@ -82,11 +82,21 @@ export function WaitlistForm({
     if (submitting) {
       return;
     }
+    // Reject a malformed address before hitting the network.
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
-      await joinWaitlist({ email, source, company });
-      onSubmit();
+      const { created } = await joinWaitlist({ email, source, company });
+      if (created) {
+        onSubmit();
+      } else {
+        // The backend rejected it as a duplicate — never add the same email twice.
+        setError("You're already on the waitlist with this email.");
+      }
     } catch {
       setError("Couldn't reach the trailhead — please try again.");
     } finally {
@@ -136,7 +146,12 @@ export function WaitlistForm({
           required
           placeholder="you@trailhead.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) {
+              setError(null);
+            }
+          }}
           disabled={submitting}
           style={{ ...inputBase, ...(inputBackground ? { background: inputBackground } : null), ...(focused ? inputFocus : null) }}
           onFocus={() => setFocused(true)}
