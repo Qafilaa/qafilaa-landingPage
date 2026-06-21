@@ -25,9 +25,9 @@ export const socials = [
   { id: 'instagram', label: 'Instagram', href: 'https://instagram.com/qafilaa.in', live: true },
   { id: 'whatsapp', label: 'WhatsApp', href: `https://wa.me/${site.phone}`, live: true },
   { id: 'phone', label: 'Call', href: `tel:+${site.phone}`, live: true },
-  { id: 'x', label: 'X', href: '#', live: false },
+  { id: 'x', label: 'X', href: 'https://x.com/Qafilaa', live: true },
   { id: 'facebook', label: 'Facebook', href: '#', live: false },
-  { id: 'linkedin', label: 'LinkedIn', href: '#', live: false },
+  { id: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/qafilaa/', live: true },
 ] as const;
 
 export const navLinks = [
