@@ -1,44 +1,30 @@
-import { useEffect, type CSSProperties, type ReactNode } from 'react';
-import { colors, fonts } from '../theme';
+import type { CSSProperties, ReactNode } from 'react';
+import { colors, fonts, layout } from '../theme';
 import { Logo } from './icons';
+import { Footer } from './Footer';
 
-export type LegalDoc = 'privacy' | 'terms' | null;
-
-interface LegalModalProps {
-  /** Which document to show, or null when the modal is closed. */
-  legal: LegalDoc;
-  onClose: () => void;
-}
+export type LegalDoc = 'privacy' | 'terms';
 
 const h3: CSSProperties = {
   fontFamily: fonts.display,
-  fontSize: 16,
+  fontSize: 18,
   fontWeight: 600,
   color: colors.text,
-  margin: '26px 0 8px',
+  margin: '32px 0 10px',
 };
-const para: CSSProperties = { color: colors.textMuted, fontSize: 14.5, lineHeight: 1.65, margin: '0 0 8px' };
+const para: CSSProperties = { color: colors.textMuted, fontSize: 15, lineHeight: 1.7, margin: '0 0 10px' };
 const paraTight: CSSProperties = { ...para, margin: '0 0 4px' };
 const list: CSSProperties = {
-  margin: '6px 0 8px',
+  margin: '8px 0 10px',
   paddingLeft: 20,
   color: colors.textMuted,
-  fontSize: 14.5,
-  lineHeight: 1.65,
+  fontSize: 15,
+  lineHeight: 1.7,
 };
-const li: CSSProperties = { margin: '0 0 5px' };
+const li: CSSProperties = { margin: '0 0 6px' };
 const strong: CSSProperties = { color: colors.text, fontWeight: 600 };
 const linkStyle: CSSProperties = { color: colors.accent, textDecoration: 'none' };
-const noteAmber: CSSProperties = {
-  display: 'flex',
-  gap: 10,
-  padding: '12px 14px',
-  borderRadius: 12,
-  background: 'rgba(255,176,32,0.07)',
-  border: '1px solid rgba(255,176,32,0.22)',
-  margin: '0 0 18px',
-};
-const dateLine: CSSProperties = { fontSize: 13, color: colors.textDim, margin: '0 0 22px' };
+const dateLine: CSSProperties = { fontSize: 13.5, color: colors.textDim, margin: '0 0 26px' };
 
 function Mail({ children }: { children: ReactNode }) {
   return (
@@ -51,15 +37,9 @@ function Mail({ children }: { children: ReactNode }) {
 function Privacy() {
   return (
     <div>
-      <div style={noteAmber}>
-        <span style={{ fontSize: 12.5, color: '#E0B96A', lineHeight: 1.55 }}>
-          This is a starter draft and not legal advice, please have a qualified Indian legal professional review it
-          before publishing.
-        </span>
-      </div>
       <p style={dateLine}>Last updated: 20/07/2026</p>
 
-      <h3 style={h3}>1. Who we are</h3>
+      <h3 style={{ ...h3, marginTop: 0 }}>1. Who we are</h3>
       <p style={para}>
         Qafilaa (“Qafilaa”, “we”, “us”, “our”) is a group-ride coordination service operated by Qafilaa.in, with its
         registered office at Yashree, Plot no. 41 &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur,
@@ -120,9 +100,7 @@ function Privacy() {
       </p>
 
       <h3 style={h3}>4. How location data is shared</h3>
-      <p style={paraTight}>
-        Location sharing is the core of Qafilaa, and we have designed it to be tightly scoped:
-      </p>
+      <p style={paraTight}>Location sharing is the core of Qafilaa, and we have designed it to be tightly scoped:</p>
       <ul style={list}>
         <li style={li}>
           Your live location is shared only with the other riders in your active ride, and only while that ride is
@@ -160,9 +138,7 @@ function Privacy() {
       <h3 style={h3}>6. Data retention</h3>
       <p style={paraTight}>We keep personal data only as long as needed for the purposes above:</p>
       <ul style={list}>
-        <li style={li}>
-          Waitlist emails are retained until you ask us to remove them or until the waitlist purpose ends.
-        </li>
+        <li style={li}>Waitlist emails are retained until you ask us to remove them or until the waitlist purpose ends.</li>
         <li style={li}>
           Ride and location data is retained for the limited period needed to operate the feature and is not kept as a
           permanent location history beyond what the service requires.
@@ -248,15 +224,9 @@ function Privacy() {
 function Terms() {
   return (
     <div>
-      <div style={noteAmber}>
-        <span style={{ fontSize: 12.5, color: '#E0B96A', lineHeight: 1.55 }}>
-          This is a starter draft and not legal advice, please have a qualified Indian legal professional review it
-          before publishing.
-        </span>
-      </div>
       <p style={dateLine}>Effective date: 20/07/2026</p>
 
-      <h3 style={h3}>1. Agreement to these terms</h3>
+      <h3 style={{ ...h3, marginTop: 0 }}>1. Agreement to these terms</h3>
       <p style={para}>
         These Terms of Use (“Terms”) govern your access to and use of the Qafilaa website, waitlist, and, on launch, the
         Qafilaa application and related services (together, the “Service”), operated by Qafilaa.in (“Qafilaa”, “we”,
@@ -264,7 +234,15 @@ function Terms() {
       </p>
 
       <h3 style={{ ...h3, color: '#FF8A80' }}>2. Important safety notice, please read</h3>
-      <div style={{ padding: '14px 16px', borderRadius: 12, background: 'rgba(255,82,71,0.07)', border: '1px solid rgba(255,82,71,0.22)', margin: '0 0 8px' }}>
+      <div
+        style={{
+          padding: '14px 16px',
+          borderRadius: 12,
+          background: 'rgba(255,82,71,0.07)',
+          border: '1px solid rgba(255,82,71,0.22)',
+          margin: '0 0 8px',
+        }}
+      >
         <p style={para}>
           <strong style={strong}>
             Qafilaa is a coordination tool to help a group stay together. It is not an emergency, rescue, medical, or
@@ -410,118 +388,133 @@ function Terms() {
   );
 }
 
-export function LegalModal({ legal, onClose }: LegalModalProps) {
-  useEffect(() => {
-    if (!legal) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [legal, onClose]);
+const META: Record<LegalDoc, { title: string; eyebrow: string }> = {
+  privacy: { title: 'Privacy Policy', eyebrow: 'Your data, handled with care' },
+  terms: { title: 'Terms of Service', eyebrow: 'The agreement between you and Qafilaa' },
+};
 
-  const title = legal === 'terms' ? 'Terms of Service' : 'Privacy Policy';
-
+/** Slim header for legal pages, logo links back to the landing page. */
+function LegalHeader() {
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
+    <header
       style={{
-        display: legal ? 'flex' : 'none',
-        position: 'fixed',
-        inset: 0,
-        zIndex: 200,
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        padding: 'clamp(18px,5vh,60px) 18px',
-        overflowY: 'auto',
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        background: 'rgba(7,13,11,0.72)',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
       }}
     >
       <div
-        onClick={onClose}
         style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(3,7,6,0.82)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
-        }}
-      />
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          width: '100%',
-          maxWidth: 720,
-          background: colors.surface,
-          border: '1px solid rgba(255,255,255,0.10)',
-          borderRadius: 22,
-          boxShadow: '0 40px 100px rgba(0,0,0,0.6)',
-          overflow: 'hidden',
+          maxWidth: layout.maxWidth,
+          margin: '0 auto',
+          padding: '16px 28px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 24,
         }}
       >
-        <div
-          style={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 16,
-            padding: '20px 26px',
-            background: 'rgba(12,19,17,0.97)',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div
-              style={{
-                width: 34,
-                height: 34,
-                borderRadius: 10,
-                background: colors.surfaceInset,
-                border: '1px solid rgba(32,214,168,0.4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <Logo size={18} />
-            </div>
-            <h2 style={{ fontFamily: fonts.display, fontSize: 21, fontWeight: 600, margin: 0, letterSpacing: '-0.01em' }}>
-              {title}
-            </h2>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 13, textDecoration: 'none' }}>
+          <span
             style={{
-              width: 38,
-              height: 38,
-              flexShrink: 0,
-              borderRadius: 11,
-              border: '1px solid rgba(255,255,255,0.10)',
-              background: '#121b18',
-              color: colors.textMuted,
-              cursor: 'pointer',
+              width: 40,
+              height: 40,
+              borderRadius: 12,
+              background: colors.surfaceInset,
+              border: '1px solid rgba(32,214,168,0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'color .2s, border-color .2s',
+              boxShadow: '0 0 0 4px rgba(32,214,168,0.06)',
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <path d="M6 6l12 12M18 6 6 18" />
-            </svg>
-          </button>
-        </div>
-        <div style={{ padding: '26px 28px 36px' }}>{legal === 'terms' ? <Terms /> : <Privacy />}</div>
+            <Logo size={22} />
+          </span>
+          <span style={{ fontFamily: fonts.display, fontSize: 22, fontWeight: 600, letterSpacing: '-0.01em', color: colors.text }}>
+            Qafilaa
+          </span>
+        </a>
+        <a
+          href="/"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            color: colors.textMuted,
+            textDecoration: 'none',
+            fontSize: 14.5,
+            fontWeight: 500,
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back to home
+        </a>
       </div>
+    </header>
+  );
+}
+
+export function LegalPage({ doc }: { doc: LegalDoc }) {
+  const meta = META[doc];
+  return (
+    <div
+      style={{
+        position: 'relative',
+        background: colors.bg,
+        color: colors.text,
+        fontFamily: fonts.body,
+        minHeight: '100vh',
+        WebkitFontSmoothing: 'antialiased',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <LegalHeader />
+
+      <main style={{ flex: 1 }}>
+        {/* Title band */}
+        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ maxWidth: 820, margin: '0 auto', padding: '56px 28px 40px' }}>
+            <p
+              style={{
+                fontSize: 12.5,
+                letterSpacing: '1.6px',
+                textTransform: 'uppercase',
+                color: colors.accent,
+                fontWeight: 600,
+                margin: '0 0 14px',
+              }}
+            >
+              {meta.eyebrow}
+            </p>
+            <h1
+              style={{
+                fontFamily: fonts.display,
+                fontSize: 'clamp(30px, 5vw, 44px)',
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+                margin: 0,
+                color: colors.text,
+              }}
+            >
+              {meta.title}
+            </h1>
+          </div>
+        </div>
+
+        {/* Document body */}
+        <article style={{ maxWidth: 820, margin: '0 auto', padding: '36px 28px 72px' }}>
+          {doc === 'terms' ? <Terms /> : <Privacy />}
+        </article>
+      </main>
+
+      <Footer />
     </div>
   );
 }

@@ -12,7 +12,7 @@ import {
 import { HoverLink } from './HoverLink';
 import { useHover } from '../hooks/useHover';
 import { socials } from '../content';
-import type { LegalDoc } from './LegalModal';
+import { routePaths } from '../routes';
 
 const socialIcons = {
   instagram: InstagramIcon,
@@ -22,11 +22,6 @@ const socialIcons = {
   facebook: FacebookIcon,
   linkedin: LinkedinIcon,
 } as const;
-
-interface FooterProps {
-  /** Opens the Privacy / Terms legal modal. */
-  onOpenLegal: (doc: Exclude<LegalDoc, null>) => void;
-}
 
 const colTitle: CSSProperties = {
   fontSize: 12,
@@ -103,7 +98,7 @@ function SocialButton({ social }: { social: (typeof socials)[number] }) {
   );
 }
 
-export function Footer({ onOpenLegal }: FooterProps) {
+export function Footer() {
   return (
     <footer style={{ borderTop: '1px solid rgba(255,255,255,0.07)', marginTop: 60 }}>
       <div
@@ -180,26 +175,10 @@ export function Footer({ onOpenLegal }: FooterProps) {
         >
           <span style={{ fontSize: 13, color: colors.textDim }}>© 2026 Qafilaa · Made for the mountains.</span>
           <div style={{ display: 'flex', gap: 18 }}>
-            <HoverLink
-              href="#"
-              style={legalLink}
-              hoverStyle={{ color: colors.text }}
-              onClick={(e) => {
-                e.preventDefault();
-                onOpenLegal('privacy');
-              }}
-            >
+            <HoverLink href={routePaths.privacy} style={legalLink} hoverStyle={{ color: colors.text }}>
               Privacy
             </HoverLink>
-            <HoverLink
-              href="#"
-              style={legalLink}
-              hoverStyle={{ color: colors.text }}
-              onClick={(e) => {
-                e.preventDefault();
-                onOpenLegal('terms');
-              }}
-            >
+            <HoverLink href={routePaths.terms} style={legalLink} hoverStyle={{ color: colors.text }}>
               Terms
             </HoverLink>
           </div>
