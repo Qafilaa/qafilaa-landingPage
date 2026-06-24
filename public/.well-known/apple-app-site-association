@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "5SG6FX2G2W.app.qafilaa",
+        "paths": ["/join", "/join/*"]
+      }
+    ]
+  }
+}

@@ -10,7 +10,7 @@
 // Each non-home route reuses the built index.html as a template but swaps in
 // its own <title>, canonical, description and Open Graph / Twitter tags, and
 // drops the home-only structured-data block.
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -90,4 +90,14 @@ for (const page of PAGES) {
   mkdirSync(dirname(outPath), { recursive: true });
   writeFileSync(outPath, html);
   console.log(`prerender: ${page.route} -> ${page.out} (${appHtml.length} bytes of markup)`);
+}
+
+// Safety net: ensure the app deep-link association files land in dist/ even if
+// the bundler ever skips dot-directories under public/. These must be served at
+// https://qafilaa.in/.well-known/{assetlinks.json,apple-app-site-association}.
+const wellKnownSrc = resolve(root, 'public/.well-known');
+const wellKnownDst = resolve(root, 'dist/.well-known');
+if (existsSync(wellKnownSrc)) {
+  cpSync(wellKnownSrc, wellKnownDst, { recursive: true });
+  console.log('prerender: copied public/.well-known -> dist/.well-known');
 }

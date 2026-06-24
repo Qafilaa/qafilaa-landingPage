@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.qafilaa",
+      "sha256_cert_fingerprints": [
+        "4A:AC:E0:E6:FB:06:C8:72:91:52:8E:5C:C6:72:8A:B8:07:1F:8F:3F:B2:E6:13:24:8B:5F:AE:72:80:E4:A1:7F"
+      ]
+    }
+  }
+]

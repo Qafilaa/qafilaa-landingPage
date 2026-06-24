@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070D0B" />
+    <!-- This is a deep-link bounce page, not marketing content. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Join a ride on Qafilaa</title>
+    <link rel="icon" type="image/png" href="/qafilaa-icon.png" />
+    <link rel="apple-touch-icon" href="/qafilaa-icon.png" />
+
+    <!-- Rich preview when the invite link is pasted into WhatsApp / iMessage. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Qafilaa" />
+    <meta property="og:title" content="Join my ride on Qafilaa" />
+    <meta
+      property="og:description"
+      content="Qafilaa keeps a riding group safe — live convoy tracking and an automatic SOS if someone goes down where there is no signal. Tap to join."
+    />
+    <meta property="og:url" content="https://qafilaa.in/join" />
+    <meta property="og:image" content="https://qafilaa.in/og-image.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #070d0b;
+        --surface: #0c1311;
+        --surface-inset: #0e1413;
+        --border: #1c2723;
+        --accent: #20d6a8;
+        --accent-ink: #042019;
+        --text: #f2f6f5;
+        --text-muted: #b8c2be;
+        --text-dim: #6b7c78;
+        --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: radial-gradient(120% 80% at 50% -10%, #0b1714 0%, var(--bg) 60%);
+        color: var(--text);
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 32px 24px 28px;
+        text-align: center;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+        animation: rise 0.6s var(--ease) both;
+      }
+      @keyframes rise {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 22px;
+      }
+      .brand img { width: 34px; height: 34px; border-radius: 9px; }
+      .brand span {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 600;
+        font-size: 19px;
+        letter-spacing: 0.2px;
+      }
+      h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 1.25;
+        margin: 0 0 8px;
+      }
+      .pitch {
+        color: var(--text-muted);
+        font-size: 14.5px;
+        line-height: 1.55;
+        margin: 0 auto 24px;
+        max-width: 340px;
+      }
+      .code-card {
+        background: var(--surface-inset);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 12px 14px;
+        margin-bottom: 22px;
+      }
+      .code-label {
+        font-size: 11px;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+      }
+      .code {
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: 8px;
+        margin-left: 8px; /* optically center the tracked text */
+        color: var(--text);
+        word-break: break-all;
+      }
+      .code.empty { font-size: 20px; letter-spacing: 0; color: var(--text-dim); }
+      .copy {
+        margin-top: 10px;
+        background: none;
+        border: none;
+        color: var(--accent);
+        font: inherit;
+        font-size: 13px;
+        cursor: pointer;
+        padding: 4px 8px;
+      }
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 15px 18px;
+        border-radius: 14px;
+        font: inherit;
+        font-weight: 600;
+        font-size: 15.5px;
+        text-decoration: none;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: transform 0.15s var(--ease), opacity 0.15s var(--ease);
+      }
+      .btn:active { transform: scale(0.985); }
+      .btn-primary { background: var(--accent); color: var(--accent-ink); }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text);
+        border-color: var(--border);
+        margin-top: 12px;
+      }
+      .status {
+        min-height: 18px;
+        margin-top: 18px;
+        font-size: 12.5px;
+        color: var(--text-dim);
+      }
+      .status a { color: var(--accent); }
+      .foot {
+        margin-top: 22px;
+        font-size: 12px;
+        color: var(--text-dim);
+        line-height: 1.5;
+      }
+      .foot a { color: var(--text-muted); }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="brand">
+        <img src="/qafilaa-icon.png" alt="" />
+        <span>Qafilaa</span>
+      </div>
+
+      <h1>You're invited to a ride</h1>
+      <p class="pitch">
+        Qafilaa keeps your group safe on the road — everyone on one live map,
+        rally points, and an automatic SOS if a rider goes down where there's no
+        signal.
+      </p>
+
+      <div class="code-card">
+        <div class="code-label">Join code</div>
+        <div id="code" class="code empty">—</div>
+        <button id="copy" class="copy" hidden>Copy code</button>
+      </div>
+
+      <a id="open" class="btn btn-primary" href="#">Open in Qafilaa</a>
+      <a id="store" class="btn btn-ghost" href="#">Get the app</a>
+
+      <div id="status" class="status"></div>
+
+      <p class="foot">
+        Already have the app? Open it and enter the code under
+        <strong>Join a trip</strong>.<br />
+        <a href="https://qafilaa.in/">What is Qafilaa?</a>
+      </p>
+    </main>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // ---- store links (edit when the listings go live) --------------------
+        var PLAY_URL = 'https://play.google.com/store/apps/details?id=app.qafilaa';
+        // TODO: replace with the real App Store listing once published, e.g.
+        //   https://apps.apple.com/app/qafilaa/id0000000000
+        // Until then, iOS users fall back to the marketing site.
+        var APPSTORE_URL = 'https://qafilaa.in/';
+
+        // ---- read the invite code -------------------------------------------
+        // Canonical form is /join?c=CODE; also accept ?code= and a /join/CODE
+        // trailing path segment for resilience.
+        var params = new URLSearchParams(window.location.search);
+        // Path-segment fallback (/join/CODE) — but ignore the literal "join"
+        // segment so a bare /join with no code doesn't read as code "JOIN".
+        var seg = window.location.pathname.split('/').filter(Boolean).pop() || '';
+        if (seg.toLowerCase() === 'join') seg = '';
+        var raw = params.get('c') || params.get('code') || decodeURIComponent(seg);
+        var code = (raw || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+
+        var ua = navigator.userAgent || '';
+        var isAndroid = /android/i.test(ua);
+        var isIOS =
+          /iphone|ipad|ipod/i.test(ua) ||
+          (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+        var isMobile = isAndroid || isIOS;
+        var storeUrl = isIOS ? APPSTORE_URL : PLAY_URL;
+
+        // ---- render the code -------------------------------------------------
+        var codeEl = document.getElementById('code');
+        var copyBtn = document.getElementById('copy');
+        if (code) {
+          codeEl.textContent = code;
+          codeEl.classList.remove('empty');
+          copyBtn.hidden = false;
+          copyBtn.addEventListener('click', function () {
+            navigator.clipboard &&
+              navigator.clipboard.writeText(code).then(function () {
+                copyBtn.textContent = 'Copied ✓';
+                setTimeout(function () {
+                  copyBtn.textContent = 'Copy code';
+                }, 1600);
+              });
+          });
+        } else {
+          codeEl.textContent = 'No code in this link';
+        }
+
+        // ---- "Open in app" ---------------------------------------------------
+        // Android: an intent:// URL opens the app if installed and otherwise
+        // bounces to the Play Store automatically (browser_fallback_url).
+        // iOS: a verified Universal Link would already have opened the app, so
+        // a visit here usually means it isn't installed → use the custom scheme
+        // (a no-op error at worst) and fall through to the store.
+        function androidIntentUrl() {
+          var q = code ? 'join?c=' + encodeURIComponent(code) : 'join';
+          return (
+            'intent://' +
+            q +
+            '#Intent;scheme=qafilaa;package=app.qafilaa;S.browser_fallback_url=' +
+            encodeURIComponent(PLAY_URL) +
+            ';end'
+          );
+        }
+        function appSchemeUrl() {
+          return 'qafilaa:///join' + (code ? '?c=' + encodeURIComponent(code) : '');
+        }
+
+        var openBtn = document.getElementById('open');
+        var storeBtn = document.getElementById('store');
+        var statusEl = document.getElementById('status');
+        storeBtn.href = storeUrl;
+        storeBtn.textContent = isIOS ? 'Get it on the App Store' : 'Get it on Google Play';
+
+        function openApp() {
+          if (isAndroid) {
+            window.location.href = androidIntentUrl();
+            return;
+          }
+          // iOS / other: try the app, then the store.
+          var t = setTimeout(function () {
+            window.location.href = storeUrl;
+          }, 1200);
+          var cancel = function () {
+            clearTimeout(t);
+          };
+          document.addEventListener('visibilitychange', function () {
+            if (document.hidden) cancel();
+          });
+          window.addEventListener('pagehide', cancel);
+          window.location.href = appSchemeUrl();
+        }
+
+        openBtn.href = isAndroid ? androidIntentUrl() : '#';
+        openBtn.addEventListener('click', function (e) {
+          if (!isAndroid) {
+            e.preventDefault();
+            openApp();
+          }
+        });
+
+        // ---- auto-route on mobile -------------------------------------------
+        // Give the card a moment to be seen, then try to open the app / install.
+        if (isMobile && code) {
+          statusEl.innerHTML = isIOS
+            ? 'Opening Qafilaa…'
+            : 'Opening Qafilaa…';
+          setTimeout(openApp, 900);
+          // Manual escape hatch if the auto-open is blocked.
+          setTimeout(function () {
+            statusEl.innerHTML =
+              'Not redirected? <a href="' + storeUrl + '">Get the app →</a>';
+          }, 3200);
+        } else if (!isMobile) {
+          statusEl.innerHTML = 'Open this link on your phone to join the ride.';
+        }
+      })();
+    </script>
+  </body>
+</html>
