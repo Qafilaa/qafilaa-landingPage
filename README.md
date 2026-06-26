@@ -101,22 +101,22 @@ This project is a **statically prerendered SPA** — there is no Node server at 
 
 ## What's on the page
 
-The page is composed top-to-bottom in [src/App.tsx](src/App.tsx) (plus a global cursor scout-light and the `LegalModal`):
+The page is composed top-to-bottom in [src/App.tsx](src/App.tsx) (plus a global cursor scout-light). Legal content (`/privacy-policy`, `/terms-and-conditions`) is rendered as prerendered **routes** via `components/LegalPage.tsx`, not a modal:
 
 | Section | Highlights |
 | --- | --- |
 | **Nav** | Sticky, blurred bar with the convoy logo and a waitlist CTA |
-| **Hero** | Floating phone running the live `ConvoyMap`, drifting topographic terrain, traveling GPS dots, a cursor-following glow, floating telemetry chips, and the e-mail capture |
+| **Hero** | Floating phone running `RideScreen` (the live convoy view; `ConvoyMap.tsx` is a legacy/demo map component), drifting topographic terrain, traveling GPS dots, a cursor-following glow, floating telemetry chips, and the e-mail capture |
 | **Route marquee** | Infinitely scrolling band of legendary high-altitude passes |
 | **Stats band** | Count-up numbers that animate on scroll |
 | **Problem** | The "lead can't see the sweep" narrative |
 | **Features** | Six tools — live map, gap tracking, rally points, offline-first, sweep & roles, one-tap SOS — with hover lift and a live mini-demo |
-| **Offline spotlight** | A self-cycling connectivity banner (live → weak → lost → syncing) and live/last-known rider rows |
+| **Offline spotlight** | A user-toggled live vs last-known signal switch (wired imperatively by `useLandingFx`) and live/last-known rider rows |
 | **How it works** | Three steps from gate to summit |
 | **Safety** | The red one-tap SOS section with a pulsing button |
 | **Device showcase** | In-signal vs. past-the-last-bar phones |
 | **Waitlist** | Coming-soon CTA with a live countdown to launch and a working form success state |
-| **FAQ + Footer** | Answers, footer, and legal modal |
+| **FAQ + Footer** | Answers, footer, and links to the legal pages (`/privacy-policy`, `/terms-and-conditions`) |
 
 ---
 
@@ -145,8 +145,8 @@ The page is composed top-to-bottom in [src/App.tsx](src/App.tsx) (plus a global 
     │   ├── useReveal.ts        Scroll-triggered entrance animation (IntersectionObserver)
     │   ├── useCountUp.ts       Eased count-up for the stat band
     │   ├── useCountdown.ts     Live countdown to the launch instant
-    │   ├── useCyclingBanner.ts Connectivity-status state machine
     │   ├── usePointerGlow.ts   Cursor-following hero glow
+    │   ├── useTerrain.ts       Drifting topographic terrain layer
     │   └── useHover.ts         Inline-style :hover / :focus helper
     └── components/             One file per section + shared primitives
         └── ConvoyMap.tsx       Reusable SVG phone map (live / stale / offline / solo)
@@ -159,9 +159,10 @@ The page is composed top-to-bottom in [src/App.tsx](src/App.tsx) (plus a global 
 The page is fully responsive across desktop, tablet and mobile. Breakpoints live in [src/index.css](src/index.css) and target `data-*` hooks on the relevant elements (they use `!important` to override the desktop inline styles):
 
 - **≤1000px** — feature grid drops to 2 columns.
-- **≤860px** — hero collapses to a single column, nav text links hide (the waitlist CTA stays), hero padding tightens.
-- **≤640px** — section gutters shrink to 18px, feature grid goes single-column, the wide feature card restacks vertically, floating hero chips hide, and the SOS visual recenters below its copy.
-- **≤420px** — the hero phone scales down and the countdown tiles compress.
+- **≤880px** — hero collapses to a single column, nav text links hide (the waitlist CTA stays), hero padding tightens.
+- **≤640px** — section gutters shrink, feature grid goes single-column, the wide feature card restacks vertically, floating hero chips hide, and the SOS visual recenters below its copy.
+- **≤430px** — the hero phone scales down and the countdown tiles compress.
+- **≤360px** — tightest mobile pass; plus a landscape `max-height: 560` rule.
 
 The stat band, offline spotlight and how-it-works grids use intrinsic `auto-fit` / `minmax` tracks, so they reflow without explicit breakpoints.
 
@@ -185,7 +186,7 @@ Section-specific copy (FAQ answers, feature blurbs, etc.) lives inside each comp
 
 [src/components/WaitlistForm.tsx](src/components/WaitlistForm.tsx) is shared by the hero and the closing CTA. Submitting either instance flips the whole page into its "you're on the list" success state (a shared `submitted` flag lifted to `App`). It includes a hidden honeypot field (`name="company"`) for bot filtering.
 
-> The form currently captures and toggles UI state on submit; wire `onSubmit` to your backend / email provider to actually persist signups.
+> The form already persists signups to the live backend via [src/api.ts](src/api.ts) (`joinWaitlist` → `POST /api/v1/waitlist`, `getWaitlistCount` → `GET /api/v1/waitlist/count`). API base is `VITE_API_BASE_URL` (defaults to `https://api.qafilaa.in`). It handles duplicates, client-side email validation (mirroring the backend), and a silent-fallback live count.
 
 ---
 
