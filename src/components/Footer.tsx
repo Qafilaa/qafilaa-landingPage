@@ -181,6 +181,11 @@ export function Footer() {
             <HoverLink href={routePaths.terms} style={legalLink} hoverStyle={{ color: colors.text }}>
               Terms
             </HoverLink>
+            {/* Play expects the deletion page to be discoverable from the site,
+                not just reachable if you already know the URL. */}
+            <HoverLink href={routePaths.deleteAccount} style={legalLink} hoverStyle={{ color: colors.text }}>
+              Delete account
+            </HoverLink>
           </div>
         </div>
       </div>

@@ -13,5 +13,6 @@ export default function App({ route }: { route?: Route }) {
 
   if (active === 'privacy') return <LegalPage doc="privacy" />;
   if (active === 'terms') return <LegalPage doc="terms" />;
+  if (active === 'deleteAccount') return <LegalPage doc="deleteAccount" />;
   return <Landing />;
 }

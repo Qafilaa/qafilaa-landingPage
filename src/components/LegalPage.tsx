@@ -3,7 +3,7 @@ import { colors, fonts, layout } from '../theme';
 import { Logo } from './icons';
 import { Footer } from './Footer';
 
-export type LegalDoc = 'privacy' | 'terms';
+export type LegalDoc = 'privacy' | 'terms' | 'deleteAccount';
 
 const h3: CSSProperties = {
   fontFamily: fonts.display,
@@ -391,7 +391,118 @@ function Terms() {
 const META: Record<LegalDoc, { title: string; eyebrow: string }> = {
   privacy: { title: 'Privacy Policy', eyebrow: 'Your data, handled with care' },
   terms: { title: 'Terms of Service', eyebrow: 'The agreement between you and Qafilaa' },
+  deleteAccount: { title: 'Delete your account', eyebrow: 'Your data, on your terms' },
 };
+
+/**
+ * Google Play requires a publicly reachable page describing how to delete an
+ * account and what happens to the data — reachable *without* installing the app,
+ * which is why the in-app flow alone does not satisfy the policy.
+ *
+ * Everything below is checked against what `DeleteAccountAsync` in the backend
+ * actually does (Qafilaa.Infrastructure/Modules/Identity/IdentityService.cs).
+ * If that method changes, change this page in the same commit — a deletion
+ * promise the code does not keep is worse than no page at all.
+ */
+function DeleteAccount() {
+  return (
+    <div>
+      <p style={{ ...para, marginBottom: 26 }}>
+        You can delete your Qafilaa account at any time. Deletion is permanent and immediate — there is no
+        recovery window and no way for us to restore an account once it is gone.
+      </p>
+
+      <h3 style={{ ...h3, marginTop: 0 }}>Delete from inside the app</h3>
+      <p style={para}>This is the fastest route and the one we recommend:</p>
+      <ol style={list}>
+        <li style={li}>Open Qafilaa and go to the <span style={strong}>Settings</span> tab.</li>
+        <li style={li}>
+          Tap <span style={strong}>Account</span>, then scroll to <span style={strong}>Danger zone</span>.
+        </li>
+        <li style={li}>
+          Tap <span style={strong}>Delete account</span> and press and hold to confirm.
+        </li>
+      </ol>
+
+      <h3 style={h3}>Delete without the app</h3>
+      <p style={para}>
+        If you have lost access to your phone or have already uninstalled Qafilaa, email{' '}
+        <Mail>admin@qafilaa.in</Mail> from the email address on your account, with the subject{' '}
+        <span style={strong}>“Delete my account”</span>. We may ask you to confirm the phone number the
+        account was registered with, so that nobody else can delete it. We action verified requests within{' '}
+        <span style={strong}>30 days</span>, and normally within a few working days.
+      </p>
+
+      <h3 style={h3}>What is deleted</h3>
+      <p style={para}>
+        Everything below is removed from our systems, in a single transaction — it either all goes or none of
+        it does, so an account is never left half-erased:
+      </p>
+      <ul style={list}>
+        <li style={li}>Your profile, phone number, email address and any connected Google or Apple sign-in.</li>
+        <li style={li}>
+          Your <span style={strong}>medical card</span>, emergency contacts, driving licence details and saved
+          documents.
+        </li>
+        <li style={li}>Your bikes, and the photos attached to them.</li>
+        <li style={li}>
+          Your location history: every position ping, ride track and route we hold for you.
+        </li>
+        <li style={li}>Your ride history, statistics and photo journal, including the stored image files.</li>
+        <li style={li}>
+          Your trip notes, checklists, reminders, expenses and settlements, and your membership of every trip.
+        </li>
+        <li style={li}>Any safety alert raised by you, along with its escalation records.</li>
+        <li style={li}>
+          Your sign-in sessions and the credentials your device used to send its position, so nothing can
+          reconnect afterwards.
+        </li>
+        <li style={li}>
+          Trips and groups that only ever had you in them are deleted outright, along with everything planned
+          inside them.
+        </li>
+      </ul>
+
+      <h3 style={h3}>What is not deleted, and why</h3>
+      <p style={para}>
+        Qafilaa is a group product, so a small amount of information necessarily belongs to other riders as
+        well as to you. We keep only what would otherwise damage their records:
+      </p>
+      <ul style={list}>
+        <li style={li}>
+          <span style={strong}>Trips still shared with other riders</span> continue to exist for them. Your
+          membership and your personal rows are removed from them.
+        </li>
+        <li style={li}>
+          <span style={strong}>Safety alerts about other riders</span> that you responded to or marked
+          resolved are kept as part of their safety record, but the reference back to your account is cleared
+          — the entry no longer identifies you.
+        </li>
+        <li style={li}>
+          <span style={strong}>Content other people wrote</span> — their notes, their expenses, their photos —
+          is theirs, and stays with them.
+        </li>
+        <li style={li}>
+          Routine backups and server logs age out on their own schedule, within 30 days.
+        </li>
+      </ul>
+
+      <h3 style={h3}>Want a copy first?</h3>
+      <p style={para}>
+        Deletion cannot be undone, so if you want your data before it goes, use{' '}
+        <span style={strong}>Settings → Account → Export my data</span> in the app first, or email{' '}
+        <Mail>admin@qafilaa.in</Mail>. We will send a downloadable copy to your registered email address.
+      </p>
+
+      <h3 style={h3}>Questions</h3>
+      <p style={para}>
+        Contact our Grievance Officer at <Mail>admin@qafilaa.in</Mail>. Your rights under the Digital Personal
+        Data Protection Act, 2023 — including erasure, correction and grievance redressal — are described in
+        our <a href="/privacy-policy" style={linkStyle}>Privacy Policy</a>.
+      </p>
+    </div>
+  );
+}
 
 /** Slim header for legal pages, logo links back to the landing page. */
 function LegalHeader() {
@@ -510,7 +621,7 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
 
         {/* Document body */}
         <article style={{ maxWidth: 820, margin: '0 auto', padding: '36px 28px 72px' }}>
-          {doc === 'terms' ? <Terms /> : <Privacy />}
+          {doc === 'terms' ? <Terms /> : doc === 'deleteAccount' ? <DeleteAccount /> : <Privacy />}
         </article>
       </main>
 

@@ -80,6 +80,17 @@ const PAGES = [
     description:
       'The terms that govern your use of the Qafilaa website, waitlist and app, including the important safety notice, eligibility and limitations of liability.',
   },
+  {
+    // Google Play requires this URL to resolve for anyone, without installing the
+    // app. It must stay in this list: the site is statically prerendered, so a
+    // route that is not built here is a 404 to the reviewer checking the listing.
+    route: 'deleteAccount',
+    out: 'dist/delete-account/index.html',
+    url: 'https://qafilaa.in/delete-account',
+    title: 'Delete your account | Qafilaa',
+    description:
+      'How to permanently delete your Qafilaa account and what happens to your data, including your location history, medical card and ride records.',
+  },
 ];
 
 for (const page of PAGES) {
