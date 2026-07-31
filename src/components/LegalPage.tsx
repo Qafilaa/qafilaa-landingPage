@@ -37,7 +37,7 @@ function Mail({ children }: { children: ReactNode }) {
 function Privacy() {
   return (
     <div>
-      <p style={dateLine}>Last updated: 20/07/2026</p>
+      <p style={dateLine}>Last updated: 31/07/2026</p>
 
       <h3 style={{ ...h3, marginTop: 0 }}>1. Who we are</h3>
       <p style={para}>
@@ -68,19 +68,69 @@ function Privacy() {
         </li>
       </ul>
       <p style={paraTight}>
-        <strong style={strong}>When you use the Qafilaa app (on launch)</strong>
+        <strong style={strong}>When you use the Qafilaa app</strong>
       </p>
       <ul style={list}>
-        <li style={li}>Account details you provide (such as name and email).</li>
-        <li style={li}>A display name or initials shown to other riders in a ride.</li>
-        <li style={li}>Location data, your live position, altitude, and movement, while a ride is active.</li>
         <li style={li}>
-          Device and diagnostic data needed to run the service, such as device identifiers, app version, and crash
-          logs.
+          <strong style={strong}>Account details:</strong> your phone number, email address, display name, photo,
+          and — if you use them — your Google or Apple sign-in identifier. Optionally your date of birth and
+          address.
         </li>
-        <li style={li}>Content you create, such as ride names, rally points, and pins.</li>
+        <li style={li}>
+          <strong style={strong}>Location:</strong> your live position, altitude, speed and heading, collected
+          continuously while a ride is active — including in the background, when the app is closed or not in use,
+          and with the screen off. This is what lets your crew see you and what lets help reach you if you go down.
+          Collection stops when the ride ends.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Health information</strong> (sensitive): the medical card you choose to fill in —
+          blood group, allergies, medications and any notes you add. This is optional, and you can delete it at any
+          time.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Emergency contacts:</strong> the name, phone number, email and relationship of the
+          people you nominate. These are <em>other people&rsquo;s</em> details — see Section 4a.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Contacts access:</strong> if you allow it, we read your phonebook only so you can
+          pick an emergency contact from it. We do not upload your address book.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Motion and accelerometer data:</strong> read from your phone&rsquo;s sensors to
+          detect a hard impact and start the SOS countdown. These samples are processed{' '}
+          <strong style={strong}>on your device only</strong> and are never uploaded — only the resulting alert is.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Camera and photos:</strong> images you choose to add — trip photos, bike photos,
+          and scans of documents such as your driving licence and permits.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Ride history:</strong> your route, distance, duration, altitude and speed
+          statistics for each riding day, kept as your own record.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Content you create:</strong> trips, itineraries, rally points, notes, checklists,
+          expenses and settlements.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Notifications:</strong> a push token identifying your device, so crash and SOS
+          alerts can reach it.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Diagnostics:</strong> app version, platform and crash reports, through Google
+          Firebase Crashlytics. Crash reports carry no identifier for you and no request contents.
+        </li>
       </ul>
-      <p style={para}>We do not knowingly collect more than we need to run the service.</p>
+      <p style={para}>
+        We do not knowingly collect more than we need to run the service. There is no advertising or
+        cross-app-tracking software in the Qafilaa app.
+      </p>
+      <p style={para}>
+        <strong style={strong}>Where your medical card is stored.</strong> Your medical card is held securely on
+        Qafilaa&rsquo;s servers, not only on your phone. That is deliberate: a medical card that exists only on your
+        device is unreachable in exactly the situation it is for — your phone destroyed, out of battery, or under
+        the bike. It is shown to fellow riders only during an active alert.
+      </p>
 
       <h3 style={h3}>3. Why we use your data and our legal basis</h3>
       <p style={paraTight}>
@@ -117,6 +167,31 @@ function Privacy() {
         </li>
       </ul>
 
+      <h3 style={h3}>4a. Emergency contacts — other people&rsquo;s data</h3>
+      <p style={para}>
+        When you nominate an emergency contact, you give us that person&rsquo;s name, phone number and email
+        address. They have not signed up to Qafilaa, so we treat their details with particular care:
+      </p>
+      <ul style={list}>
+        <li style={li}>
+          We contact them <strong style={strong}>only during a genuine safety escalation</strong> — never for
+          marketing, product updates or anything else.
+        </li>
+        <li style={li}>
+          Before we will message them, you confirm in the app that they have agreed to be listed. Please do ask
+          them first.
+        </li>
+        <li style={li}>
+          When an alert is escalated, they receive the fact of the alert, your name, and your last-known location,
+          so they can help or direct help.
+        </li>
+        <li style={li}>Removing a contact in the app deletes their details from our systems.</li>
+      </ul>
+      <p style={para}>
+        If you are an emergency contact and want your details removed, email <Mail>admin@qafilaa.in</Mail> and we
+        will remove them.
+      </p>
+
       <h3 style={h3}>5. Who we share data with</h3>
       <p style={paraTight}>We may share personal data with:</p>
       <ul style={list}>
@@ -138,13 +213,33 @@ function Privacy() {
       <h3 style={h3}>6. Data retention</h3>
       <p style={paraTight}>We keep personal data only as long as needed for the purposes above:</p>
       <ul style={list}>
-        <li style={li}>Waitlist emails are retained until you ask us to remove them or until the waitlist purpose ends.</li>
         <li style={li}>
-          Ride and location data is retained for the limited period needed to operate the feature and is not kept as a
-          permanent location history beyond what the service requires.
+          <strong style={strong}>Raw location traces</strong> — the minute-by-minute record of where you rode — are
+          deleted automatically after <strong style={strong}>90 days</strong>. You can shorten that to as little as
+          7 days in Settings → Privacy &amp; sharing.
         </li>
+        <li style={li}>
+          <strong style={strong}>Your ride history</strong> — routes, statistics and your photo journal — is kept as
+          your own record until you delete it, because it is what the Ride history and recap screens show you. If
+          you would rather it expired too, switch off &ldquo;Keep my ride history&rdquo; in the same screen and it
+          will follow the window above.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Your account data</strong>, including your medical card and emergency contacts, is
+          kept until you delete the item or your account.
+        </li>
+        <li style={li}>
+          <strong style={strong}>Server logs and routine backups</strong> age out within 30 days.
+        </li>
+        <li style={li}>Waitlist emails are retained until you ask us to remove them or until the waitlist purpose ends.</li>
         <li style={li}>We may retain certain data longer where required for legal, security, or accounting reasons.</li>
       </ul>
+      <p style={para}>
+        Deleting your account erases all of the above immediately and irreversibly, including the stored image and
+        document files, not just the database records. See{' '}
+        <a href="/delete-account" style={linkStyle}>Delete your account</a> for exactly what goes and what
+        necessarily stays because it belongs to other riders too.
+      </p>
 
       <h3 style={h3}>7. Security</h3>
       <p style={para}>
