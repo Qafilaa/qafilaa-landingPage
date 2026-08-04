@@ -53,7 +53,7 @@ const columns = [
     links: [
       { href: '#faq', label: 'FAQ' },
       { href: '#waitlist', label: 'Waitlist' },
-      { href: 'mailto:hello@qafilaa.in', label: 'Contact' },
+      { href: 'mailto:admin@qafilaa.in', label: 'Contact' },
     ],
   },
 ];

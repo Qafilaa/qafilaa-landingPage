@@ -259,7 +259,7 @@ function Privacy() {
         <li style={li}>Nominate another individual to exercise your rights in the event of death or incapacity.</li>
       </ul>
       <p style={para}>
-        To exercise any of these, email <Mail>hello@qafilaa.in</Mail>. We may need to verify your identity before
+        To exercise any of these, email <Mail>admin@qafilaa.in</Mail>. We may need to verify your identity before
         acting on a request.
       </p>
 
@@ -309,7 +309,7 @@ function Privacy() {
 
       <h3 style={h3}>14. Contact us</h3>
       <p style={para}>
-        Questions about this policy or your data? Email <Mail>hello@qafilaa.in</Mail> or write to Qafilaa.in, Yashree,
+        Questions about this policy or your data? Email <Mail>admin@qafilaa.in</Mail> or write to Qafilaa.in, Yashree,
         Plot no. 41 &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur, Maharashtra 416011, India.
       </p>
     </div>
@@ -476,7 +476,7 @@ function Terms() {
 
       <h3 style={h3}>16. Contact</h3>
       <p style={para}>
-        Questions about these Terms? Email <Mail>hello@qafilaa.in</Mail> or write to Qafilaa.in, Yashree, Plot no. 41
+        Questions about these Terms? Email <Mail>admin@qafilaa.in</Mail> or write to Qafilaa.in, Yashree, Plot no. 41
         &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur, Maharashtra 416011, India.
       </p>
     </div>
