@@ -3,6 +3,10 @@
     "apps": [],
     "details": [
       {
+        "appID": "BC3242NDTG.in.qafilaa.app",
+        "paths": ["/join", "/join/*"]
+      },
+      {
         "appID": "5SG6FX2G2W.app.qafilaa",
         "paths": ["/join", "/join/*"]
       }
