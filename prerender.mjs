@@ -91,6 +91,17 @@ const PAGES = [
     description:
       'How to permanently delete your Qafilaa account and what happens to your data, including your location history, medical card and ride records.',
   },
+  {
+    // The second URL the Data safety form asks for — deleting *some* data without
+    // closing the account. Same prerender rule as above: a route missing from this
+    // list is a 404 to the reviewer who clicks it on the listing.
+    route: 'deleteData',
+    out: 'dist/delete-data/index.html',
+    url: 'https://qafilaa.in/delete-data',
+    title: 'Delete your data | Qafilaa',
+    description:
+      'How to delete your Qafilaa data — location history, ride records, medical card, photos and documents — without closing your account.',
+  },
 ];
 
 for (const page of PAGES) {

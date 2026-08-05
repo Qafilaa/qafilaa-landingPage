@@ -6,7 +6,7 @@
  * browser loaded. `pathToRoute` maps a URL pathname to a route so the server
  * and client agree on what to render (no hydration mismatch).
  */
-export type Route = 'home' | 'privacy' | 'terms' | 'deleteAccount';
+export type Route = 'home' | 'privacy' | 'terms' | 'deleteAccount' | 'deleteData';
 
 /** Public URL path for each non-home route. */
 export const routePaths: Record<Exclude<Route, 'home'>, string> = {
@@ -16,6 +16,12 @@ export const routePaths: Record<Exclude<Route, 'home'>, string> = {
   // WITHOUT installing the app, so the in-app "Delete account" flow does not
   // satisfy it on its own. A missing URL is a store-listing rejection.
   deleteAccount: '/delete-account',
+  // The SECOND deletion URL Play asks for, and a different question from the one
+  // above: "can a user delete some of their data WITHOUT closing their account?".
+  // Answering no there prints "Developer hasn't provided a way to request data
+  // deletion" on the public Data safety card, which is both untrue of this app
+  // and a poor look on a listing whose whole subject is trust.
+  deleteData: '/delete-data',
 };
 
 export function pathToRoute(pathname: string): Route {
@@ -24,5 +30,6 @@ export function pathToRoute(pathname: string): Route {
   if (p === routePaths.privacy) return 'privacy';
   if (p === routePaths.terms) return 'terms';
   if (p === routePaths.deleteAccount) return 'deleteAccount';
+  if (p === routePaths.deleteData) return 'deleteData';
   return 'home';
 }

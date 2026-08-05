@@ -3,7 +3,7 @@ import { colors, fonts, layout } from '../theme';
 import { Logo } from './icons';
 import { Footer } from './Footer';
 
-export type LegalDoc = 'privacy' | 'terms' | 'deleteAccount';
+export type LegalDoc = 'privacy' | 'terms' | 'deleteAccount' | 'deleteData';
 
 const h3: CSSProperties = {
   fontFamily: fonts.display,
@@ -487,6 +487,7 @@ const META: Record<LegalDoc, { title: string; eyebrow: string }> = {
   privacy: { title: 'Privacy Policy', eyebrow: 'Your data, handled with care' },
   terms: { title: 'Terms of Service', eyebrow: 'The agreement between you and Qafilaa' },
   deleteAccount: { title: 'Delete your account', eyebrow: 'Your data, on your terms' },
+  deleteData: { title: 'Delete your data', eyebrow: 'Keep the account, drop the data' },
 };
 
 /**
@@ -587,6 +588,121 @@ function DeleteAccount() {
         Deletion cannot be undone, so if you want your data before it goes, use{' '}
         <span style={strong}>Settings → Account → Export my data</span> in the app first, or email{' '}
         <Mail>admin@qafilaa.in</Mail>. We will send a downloadable copy to your registered email address.
+      </p>
+
+      <h3 style={h3}>Questions</h3>
+      <p style={para}>
+        Contact our Grievance Officer at <Mail>admin@qafilaa.in</Mail>. Your rights under the Digital Personal
+        Data Protection Act, 2023 — including erasure, correction and grievance redressal — are described in
+        our <a href="/privacy-policy" style={linkStyle}>Privacy Policy</a>.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The SECOND deletion page Google Play asks for, and a different question from
+ * `DeleteAccount` above: "can a user delete *some* of their data without closing
+ * their account?".
+ *
+ * Answering no to that on the Data safety form prints "Developer hasn't provided
+ * a way to request data deletion" on the public listing card — untrue of this app,
+ * and a poor thing to say on a listing whose entire subject is trust.
+ *
+ * Same rule as the account page: every claim here must match what the app and the
+ * backend actually do. If a delete affordance moves, moves screen, or stops
+ * existing, change this page in the same commit.
+ */
+function DeleteData() {
+  return (
+    <div>
+      <p style={dateLine}>Last updated August 2026.</p>
+
+      <p style={{ ...para, marginBottom: 26 }}>
+        You do not have to close your Qafilaa account to get rid of something. Most of what Qafilaa holds
+        about you can be deleted item by item, from inside the app, without asking anyone. What is left is
+        listed below with the address to write to.
+      </p>
+
+      <h3 style={{ ...h3, marginTop: 0 }}>Delete it yourself, in the app</h3>
+      <p style={para}>
+        These take effect immediately and need no request. Deletion is permanent — there is no bin to restore
+        from.
+      </p>
+      <ul style={list}>
+        <li style={li}>
+          <span style={strong}>Emergency contacts, bikes, documents and permits</span> — open the list in{' '}
+          <span style={strong}>Settings</span> and swipe a row away, or use the delete icon on the item.
+        </li>
+        <li style={li}>
+          <span style={strong}>Your medical card</span> — <span style={strong}>Settings → Medical card</span>,
+          clear the fields and save. Saving it empty removes it from our systems and from what your crew can
+          see at a scene.
+        </li>
+        <li style={li}>
+          <span style={strong}>Photos, notes, checklists, reminders and expenses</span> — open the item inside
+          the trip and delete it.
+        </li>
+        <li style={li}>
+          <span style={strong}>A whole trip you host</span> — open the trip and delete it. A trip the crew has
+          already ridden can be archived rather than deleted, because the routes, photos and money of every
+          other rider hang off it.
+        </li>
+        <li style={li}>
+          <span style={strong}>Your UPI ID</span> —{' '}
+          <span style={strong}>Settings → Profile</span>, clear the field and save.
+        </li>
+      </ul>
+
+      <h3 style={h3}>Ask us to delete the rest</h3>
+      <p style={para}>
+        Two things have no self-serve button yet. Email <Mail>admin@qafilaa.in</Mail> from the address on your
+        account, with the subject <span style={strong}>“Delete my data”</span>, and say which of these you
+        want removed:
+      </p>
+      <ul style={list}>
+        <li style={li}>
+          <span style={strong}>Your location history</span> — every position ping we hold for you, across all
+          trips.
+        </li>
+        <li style={li}>
+          <span style={strong}>Your ride history</span> — recorded rides, route tracks and the statistics
+          derived from them.
+        </li>
+      </ul>
+      <p style={para}>
+        We may ask you to confirm the phone number the account was registered with, so that nobody else can
+        delete your data. We action verified requests within <span style={strong}>30 days</span>, and normally
+        within a few working days. Your account, trips and everything else stay exactly as they are.
+      </p>
+
+      <h3 style={h3}>What we cannot remove, and why</h3>
+      <p style={para}>
+        Qafilaa is a group product, so a little of what you see belongs to other riders too:
+      </p>
+      <ul style={list}>
+        <li style={li}>
+          <span style={strong}>Content other people wrote</span> — their notes, their expenses, their photos —
+          is theirs, and stays with them even if it names you.
+        </li>
+        <li style={li}>
+          <span style={strong}>Money already settled</span> stays on the trip's ledger. Deleting one side of a
+          settled debt would silently change what another rider is owed.
+        </li>
+        <li style={li}>
+          <span style={strong}>Safety alerts about other riders</span> that you responded to remain part of
+          their safety record, with the reference back to your account cleared.
+        </li>
+        <li style={li}>
+          Routine backups and server logs age out on their own schedule, within{' '}
+          <span style={strong}>30 days</span>.
+        </li>
+      </ul>
+
+      <h3 style={h3}>Want all of it gone instead?</h3>
+      <p style={para}>
+        Closing the account removes everything in one transaction, including the two items above that need an
+        email. See <a href="/delete-account" style={linkStyle}>Delete your account</a>.
       </p>
 
       <h3 style={h3}>Questions</h3>
@@ -716,7 +832,15 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
 
         {/* Document body */}
         <article style={{ maxWidth: 820, margin: '0 auto', padding: '36px 28px 72px' }}>
-          {doc === 'terms' ? <Terms /> : doc === 'deleteAccount' ? <DeleteAccount /> : <Privacy />}
+          {doc === 'terms' ? (
+            <Terms />
+          ) : doc === 'deleteAccount' ? (
+            <DeleteAccount />
+          ) : doc === 'deleteData' ? (
+            <DeleteData />
+          ) : (
+            <Privacy />
+          )}
         </article>
       </main>
 
