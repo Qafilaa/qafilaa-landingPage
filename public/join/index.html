@@ -210,10 +210,11 @@
 
         // ---- store links (edit when the listings go live) --------------------
         var PLAY_URL = 'https://play.google.com/store/apps/details?id=app.qafilaa';
-        // TODO: replace with the real App Store listing once published, e.g.
-        //   https://apps.apple.com/app/qafilaa/id0000000000
-        // Until then, iOS users fall back to the marketing site.
-        var APPSTORE_URL = 'https://qafilaa.in/';
+        // The App Store id (6798303654) is assigned when the app record is created, NOT when the
+        // listing is approved — so this link is correct to hard-code now. Before approval it lands
+        // on "App Not Available", which is still a truer answer for an invited iOS rider than the
+        // marketing homepage this used to send them to.
+        var APPSTORE_URL = 'https://apps.apple.com/app/qafilaa/id6798303654';
 
         // ---- read the invite code -------------------------------------------
         // Canonical form is /join?c=CODE; also accept ?code= and a /join/CODE

@@ -15,5 +15,6 @@ export default function App({ route }: { route?: Route }) {
   if (active === 'terms') return <LegalPage doc="terms" />;
   if (active === 'deleteAccount') return <LegalPage doc="deleteAccount" />;
   if (active === 'deleteData') return <LegalPage doc="deleteData" />;
+  if (active === 'support') return <LegalPage doc="support" />;
   return <Landing />;
 }

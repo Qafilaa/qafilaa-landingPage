@@ -102,6 +102,18 @@ const PAGES = [
     description:
       'How to delete your Qafilaa data — location history, ride records, medical card, photos and documents — without closing your account.',
   },
+  {
+    // The App Store's required Support URL, and it is stricter than Play's: a marketing
+    // homepage does not satisfy it, the link has to reach somewhere a user can get help.
+    // Same prerender rule as the two above — a route missing from this list is a 404 to
+    // the reviewer who clicks it, and that is a metadata rejection.
+    route: 'support',
+    out: 'dist/support/index.html',
+    url: 'https://qafilaa.in/support',
+    title: 'Support | Qafilaa',
+    description:
+      'Get help with Qafilaa — contact the team by email or phone, report content, manage your account and data, and fix a rider position that has stopped updating.',
+  },
 ];
 
 for (const page of PAGES) {

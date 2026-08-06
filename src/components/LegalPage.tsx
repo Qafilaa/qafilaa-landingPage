@@ -3,7 +3,7 @@ import { colors, fonts, layout } from '../theme';
 import { Logo } from './icons';
 import { Footer } from './Footer';
 
-export type LegalDoc = 'privacy' | 'terms' | 'deleteAccount' | 'deleteData';
+export type LegalDoc = 'privacy' | 'terms' | 'deleteAccount' | 'deleteData' | 'support';
 
 const h3: CSSProperties = {
   fontFamily: fonts.display,
@@ -488,6 +488,7 @@ const META: Record<LegalDoc, { title: string; eyebrow: string }> = {
   terms: { title: 'Terms of Service', eyebrow: 'The agreement between you and Qafilaa' },
   deleteAccount: { title: 'Delete your account', eyebrow: 'Your data, on your terms' },
   deleteData: { title: 'Delete your data', eyebrow: 'Keep the account, drop the data' },
+  support: { title: 'Support', eyebrow: 'We answer, and a person reads it' },
 };
 
 /**
@@ -782,6 +783,81 @@ function LegalHeader() {
   );
 }
 
+/**
+ * The App Store requires a Support URL, and it must lead somewhere a user can actually get help —
+ * a marketing homepage does not satisfy it. This is that page. It is deliberately concrete: an
+ * address, a phone number, a response time, and where the in-app route is, because "contact us"
+ * with no commitment is what reviewers and users both discount.
+ */
+function Support() {
+  return (
+    <div>
+      <p style={{ ...para, marginTop: 0 }}>
+        Something broken, confusing, or missing? Tell us and a person will read it. Qafilaa is a safety app —
+        if a rider is relying on it right now, say so in the first line and we will treat it that way.
+      </p>
+
+      <h3 style={{ ...h3, marginTop: 28 }}>Reach us</h3>
+      <p style={paraTight}>
+        <strong style={strong}>Email</strong> — <Mail>admin@qafilaa.in</Mail>
+      </p>
+      <p style={paraTight}>
+        <strong style={strong}>Phone</strong> —{' '}
+        <a href="tel:+918830997757" style={linkStyle}>
+          +91 88309 97757
+        </a>
+      </p>
+      <p style={para}>
+        We aim to respond within one working day. We are a small team in Kolhapur, Maharashtra, so replies
+        outside Indian working hours may take longer.
+      </p>
+
+      <h3 style={h3}>From inside the app</h3>
+      <p style={para}>
+        The fastest route is <strong style={strong}>Settings → Help &amp; support</strong>. It has answers to
+        common questions, and “Contact us” opens a thread we reply to in the app, so you can follow the
+        conversation without digging through email. Reporting a problem from there also tells us which screen
+        and which ride you were on, which usually saves a round trip.
+      </p>
+
+      <h3 style={h3}>Reporting content or a rider</h3>
+      <p style={para}>
+        Trip notes, checklists and photos are visible only to the crew of a trip you joined — never publicly.
+        If someone in a trip posts something objectionable, the trip host can delete it and remove that rider.
+        You can also report it to us directly from the note, or by emailing <Mail>admin@qafilaa.in</Mail>. We
+        act on reports about a real person’s safety first.
+      </p>
+
+      <h3 style={h3}>Your account and data</h3>
+      <p style={para}>
+        You can delete your account at any time from <strong style={strong}>Settings → Account</strong>, or
+        without installing the app at{' '}
+        <a href="/delete-account" style={linkStyle}>
+          qafilaa.in/delete-account
+        </a>
+        . To remove specific data but keep the account, see{' '}
+        <a href="/delete-data" style={linkStyle}>
+          qafilaa.in/delete-data
+        </a>
+        . What we collect and why is in the{' '}
+        <a href="/privacy-policy" style={linkStyle}>
+          Privacy Policy
+        </a>
+        .
+      </p>
+
+      <h3 style={h3}>Before you write in about location</h3>
+      <p style={para}>
+        Qafilaa needs “Always” location so it can keep sharing your position with your crew while your phone
+        is pocketed and the screen is off, and so the crash detector can attach a location to an SOS. It runs
+        only while you are on a trip and stops when the ride ends. If your position has stopped updating for
+        the crew, the usual cause is that location permission dropped back to “While Using” after an OS
+        update — check <strong style={strong}>Settings → App permissions</strong> in the app.
+      </p>
+    </div>
+  );
+}
+
 export function LegalPage({ doc }: { doc: LegalDoc }) {
   const meta = META[doc];
   return (
@@ -838,6 +914,8 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
             <DeleteAccount />
           ) : doc === 'deleteData' ? (
             <DeleteData />
+          ) : doc === 'support' ? (
+            <Support />
           ) : (
             <Privacy />
           )}
