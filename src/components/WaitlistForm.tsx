@@ -98,7 +98,7 @@ export function WaitlistForm({
         setError("You're already on the waitlist with this email.");
       }
     } catch {
-      setError("Couldn't reach the trailhead — please try again.");
+      setError("Couldn't reach the trailhead. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -158,7 +158,7 @@ export function WaitlistForm({
           onBlur={() => setFocused(false)}
         />
         <button data-magnetic type="submit" disabled={submitting} style={{ ...buttonBase, ...(submitting ? { opacity: 0.7, cursor: 'default' } : null) }}>
-          {submitting ? 'Joining…' : buttonLabel}
+          {submitting ? 'Joining...' : buttonLabel}
         </button>
       </form>
       {error ? (

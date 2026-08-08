@@ -74,7 +74,7 @@ function SocialButton({ social }: { social: (typeof socials)[number] }) {
     <a
       href={social.href}
       aria-label={social.live ? social.label : `${social.label} (coming soon)`}
-      title={social.live ? social.label : `${social.label} — coming soon`}
+      title={social.live ? social.label : `${social.label}. Coming soon`}
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       {...(social.live ? {} : { onClick: (e) => e.preventDefault() })}
       {...hoverProps}

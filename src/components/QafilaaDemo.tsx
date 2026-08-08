@@ -67,11 +67,11 @@ interface Rider {
 }
 
 const RIDERS: Rider[] = [
-  { id: 'vc', init: 'VC', name: 'Viren C', role: 'Lead', gap: '0.0 km · ahead', eta: '—', speed: '78 km/h', batt: '84%', alt: '4,720 m', bike: 'RE Himalayan 450', left: '66%', top: '13%' },
+  { id: 'vc', init: 'VC', name: 'Viren C', role: 'Lead', gap: '0.0 km · ahead', eta: '-', speed: '78 km/h', batt: '84%', alt: '4,720 m', bike: 'RE Himalayan 450', left: '66%', top: '13%' },
   { id: 'aj', init: 'AJ', name: 'Akash J', role: 'Rider', gap: '0.9 km back', eta: '4 min', speed: '71 km/h', batt: '19% low', alt: '4,610 m', bike: 'RE Scram 411', left: '51%', top: '32%' },
-  { id: 'yt', init: 'YT', name: 'You · Yash T', role: 'You', gap: 'mid-pack', eta: '—', speed: '74 km/h', batt: '76%', alt: '4,551 m', bike: 'RE Himalayan 411', left: '59%', top: '51%', you: true },
+  { id: 'yt', init: 'YT', name: 'You · Yash T', role: 'You', gap: 'mid-pack', eta: '-', speed: '74 km/h', batt: '76%', alt: '4,551 m', bike: 'RE Himalayan 411', left: '59%', top: '51%', you: true },
   { id: 'th', init: 'TH', name: 'Tejas H', role: 'Rider', gap: '2.1 km back', eta: '9 min', speed: '69 km/h', batt: '61%', alt: '4,480 m', bike: 'RE Classic 350', left: '33%', top: '67%' },
-  { id: 'gh', init: 'GH', name: 'Gaurav Hendre', role: 'Sweep', gap: '5.6 km back', eta: '22 min', speed: '—', batt: 'stale', alt: '4,390 m', bike: 'RE Meteor 350', left: '25%', top: '83%' },
+  { id: 'gh', init: 'GH', name: 'Gaurav Hendre', role: 'Sweep', gap: '5.6 km back', eta: '22 min', speed: '-', batt: 'stale', alt: '4,390 m', bike: 'RE Meteor 350', left: '25%', top: '83%' },
 ];
 const LOST = new Set(['gh', 'th']);
 const LOST_MIN: Record<string, string> = { gh: '6m', th: '3m' };
@@ -87,13 +87,13 @@ interface Beat {
 
 const BEATS: Beat[] = [
   { phase: 'create', title: 'Create the ride', hint: 'Spiti loop, Day 4: Kaza → Chandratal on a Royal Enfield. Tap Create ride.' },
-  { phase: 'invite', title: 'Invite your riders', hint: 'Share one code. Riders tap in and land on the map — no accounts at the trailhead.' },
+  { phase: 'invite', title: 'Invite your riders', hint: 'Share one code. Riders tap in and land on the map, no accounts at the trailhead.' },
   { phase: 'lobby', title: 'Lobby: lead & sweep', hint: 'Viren leads, Gaurav sweeps. Run the readiness check, then Start ride.' },
-  { phase: 'ride', title: 'Live ride map', signal: 'live', ready5: true, hint: 'Everyone on one map. Tap a rider — try Gaurav, the sweep — for gap, ETA, speed and battery.' },
+  { phase: 'ride', title: 'Live ride map', signal: 'live', ready5: true, hint: 'Everyone on one map. Tap a rider (try Gaurav, the sweep) for gap, ETA, speed and battery.' },
   { phase: 'ride', title: 'Drop a rally point', hint: 'Tap the rally button. Every rider gets the same pin, distance and ETA.' },
-  { phase: 'ride', title: 'Signal lost', signal: 'offline', hint: 'Behind the ridge the bars die. Pins hold their last-known spot, timestamped — and a rally fallback appears.' },
+  { phase: 'ride', title: 'Signal lost', signal: 'offline', hint: 'Behind the ridge the bars die. Pins hold their last-known spot, timestamped, and a rally fallback appears.' },
   { phase: 'sos', title: 'Manual SOS', hint: 'Press and hold the SOS for 2s. It broadcasts to riders and emergency contacts, even on one bar.' },
-  { phase: 'crash', title: 'Automatic crash detection', hint: 'No need to reach your phone — a hard impact is sensed and a countdown auto-escalates. Tap “I’m OK” to cancel.' },
+  { phase: 'crash', title: 'Automatic crash detection', hint: 'No need to reach your phone. A hard impact is sensed and a countdown auto-escalates. Tap "I’m OK" to cancel.' },
   { phase: 'allclear', title: 'No one left behind', signal: 'live', rally: true, hint: 'Resolved, signal back, all 5 regrouped at the rally. That’s the whole point.' },
 ];
 
@@ -443,7 +443,7 @@ export function QafilaaDemo() {
             </div>
             <div style={{ fontSize: 11.5, color: C.dim, marginTop: 8 }}>qafilaa.in/r/spiti-4k9</div>
           </div>
-          <div style={{ ...labelCss, marginBottom: 9 }}>{s.joinCount >= 5 ? '5 riders joined' : `${s.joinCount} of 5 joined…`}</div>
+          <div style={{ ...labelCss, marginBottom: 9 }}>{s.joinCount >= 5 ? '5 riders joined' : `${s.joinCount} of 5 joined...`}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1, overflow: 'hidden' }}>
             {RIDERS.slice(0, s.joinCount).map((r) => (
               <div
@@ -502,7 +502,7 @@ export function QafilaaDemo() {
               cursor: s.joinCount >= 5 ? 'pointer' : 'default',
             }}
           >
-            {s.joinCount >= 5 ? "Everyone's in →" : 'Waiting for riders…'}
+            {s.joinCount >= 5 ? "Everyone's in →" : 'Waiting for riders...'}
           </button>
         </Sheetish>
       )}
@@ -644,7 +644,7 @@ export function QafilaaDemo() {
                   <path d="M2 2l20 20" />
                   <path d="M5 12.5a11 11 0 0 1 4-2.6M12 5c2.5 0 5 .9 7 2.5" />
                 </svg>
-                <span style={{ fontSize: 12, color: '#FF8079', flex: 1 }}>No signal — positions cached</span>
+                <span style={{ fontSize: 12, color: '#FF8079', flex: 1 }}>No signal. Positions cached</span>
                 <span style={{ fontSize: 10.5, color: C.dim }}>4m ago</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '12px 13px', borderRadius: 14, background: 'rgba(36,52,48,0.95)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,176,32,0.45)' }}>
@@ -704,9 +704,9 @@ export function QafilaaDemo() {
                 {fr.role} · {fLost ? `last seen ${LOST_MIN[fr.id] || ''} ago` : fr.gap}
               </div>
               <div style={{ display: 'flex', gap: 9, marginTop: 5, fontSize: 10.5, color: fLost ? C.dim : C.muted }}>
-                <span>ETA {fLost ? '—' : fr.eta}</span>
+                <span>ETA {fLost ? '-' : fr.eta}</span>
                 <span>·</span>
-                <span>{fLost ? '—' : fr.speed}</span>
+                <span>{fLost ? '-' : fr.speed}</span>
                 <span>·</span>
                 <span>{fr.batt}</span>
               </div>
@@ -820,10 +820,10 @@ export function QafilaaDemo() {
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
                   <Stat k="Gap" v={fr.gap} />
-                  <Stat k="ETA to rally" v={fLost ? '—' : fr.eta} />
+                  <Stat k="ETA to rally" v={fLost ? '-' : fr.eta} />
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                  <Stat k="Speed" v={fLost ? '—' : fr.speed} />
+                  <Stat k="Speed" v={fLost ? '-' : fr.speed} />
                   <Stat k="Battery" v={fr.batt} />
                   <Stat k="Altitude" v={fr.alt} />
                 </div>
@@ -868,8 +868,8 @@ export function QafilaaDemo() {
                 <div style={{ fontSize: 11, color: C.muted, margin: '2px 0 12px' }}>One tap · everyone hears you</div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   <BcBtn onClick={() => bc('Stopping for fuel')} icon={<FuelIcon />}>Stopping for fuel</BcBtn>
-                  <BcBtn onClick={() => bc('Pushing ahead — catch up')} icon={<ArrowRightIcon />}>Pushing ahead — catch up</BcBtn>
-                  <BcBtn onClick={() => bc('Need a minute — hold up')} icon={<ClockIcon />}>Need a minute — hold up</BcBtn>
+                  <BcBtn onClick={() => bc('Pushing ahead, catch up')} icon={<ArrowRightIcon />}>Pushing ahead, catch up</BcBtn>
+                  <BcBtn onClick={() => bc('Need a minute, hold up')} icon={<ClockIcon />}>Need a minute, hold up</BcBtn>
                   <BcBtn onClick={() => bc('Regroup at next rally')} icon={<Pin size={17} />}>Regroup at next rally</BcBtn>
                 </div>
               </>
@@ -1059,7 +1059,7 @@ export function QafilaaDemo() {
             style={{ width: '100%', height: 54, border: 'none', borderRadius: 15, background: C.green, color: C.bg, font: '600 16px Inter', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9 }}
           >
             <Check size={20} color={C.bg} w={2.6} />
-            {s.crashSent ? 'Continue' : "I'm OK — cancel"}
+            {s.crashSent ? 'Continue' : "I'm OK. Cancel"}
           </button>
         </div>
       )}
@@ -1072,12 +1072,12 @@ export function QafilaaDemo() {
           </div>
           <div style={{ fontFamily: DISPLAY, fontSize: 23, fontWeight: 600, marginTop: 14, textAlign: 'center' }}>Send an SOS</div>
           <div style={{ fontSize: 12.5, color: C.muted, marginTop: 8, lineHeight: 1.5, textAlign: 'center', maxWidth: 250 }}>
-            For a breakdown, medical issue, or a dead zone — not a crash. Hold so it can't fire by accident.
+            For a breakdown, medical issue, or a dead zone, not a crash. Hold so it can't fire by accident.
           </div>
           <SosHold onFired={onSosFired} />
           <div style={{ width: '100%', background: C.panel, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
             <InfoRow icon={<PeopleIcon />}>Notifies fellow riders nearby</InfoRow>
-            <InfoRow icon={<PhoneIcon />}>Alerts your emergency contacts — even on one bar</InfoRow>
+            <InfoRow icon={<PhoneIcon />}>Alerts your emergency contacts, even on one bar</InfoRow>
           </div>
         </div>
       )}
@@ -1104,7 +1104,7 @@ export function QafilaaDemo() {
               </div>
             </div>
             <div style={{ height: 1, background: 'rgba(255,255,255,0.06)' }} />
-            <div style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.5 }}>Minor fall, rider is okay. Bike rideable — continuing at a slower pace.</div>
+            <div style={{ fontSize: 12.5, color: C.muted, lineHeight: 1.5 }}>Minor fall, rider is okay. Bike rideable. Continuing at a slower pace.</div>
           </div>
           <button className="qd-tap" onClick={() => restart()} style={{ width: '100%', marginTop: 18, height: 52, border: '1px solid rgba(255,255,255,0.12)', borderRadius: 14, background: C.panel, color: C.text, font: "600 14px 'Space Grotesk',Inter", cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.text} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -1187,7 +1187,7 @@ export function QafilaaDemo() {
           </div>
           <div style={{ fontFamily: DISPLAY, fontSize: 21, fontWeight: 600 }}>Run a real ride</div>
           <div style={{ fontSize: 12.5, lineHeight: 1.55, color: C.body, maxWidth: 240, margin: '8px 0 22px' }}>
-            Spiti loop, Day 4. Create the ride, watch your crew join, lose signal, hit a crash, send an SOS — the actual app, in your hands.
+            Spiti loop, Day 4. Create the ride, watch your crew join, lose signal, hit a crash, send an SOS. The actual app, in your hands.
           </div>
           <button
             className="qd-tap"
@@ -1213,7 +1213,7 @@ export function QafilaaDemo() {
 
   function bc(msg: string) {
     patch({ sheet: null });
-    showToast(`Broadcast · “${msg}”`);
+    showToast(`Broadcast · "${msg}"`);
   }
 }
 
@@ -1438,7 +1438,7 @@ function SosHold({ onFired }: { onFired: () => void }) {
     if (done.current) return;
     stop();
     start.current = performance.now();
-    setHint('Keep holding…');
+    setHint('Keep holding...');
     iv.current = setInterval(() => {
       const p = Math.min(1, (performance.now() - start.current) / HOLD);
       setOffset(LEN * (1 - p));

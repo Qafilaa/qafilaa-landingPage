@@ -79,7 +79,7 @@ export function RideScreen({ state = 'live' }: RideScreenProps) {
 
   const acc = live
     ? { bg: 'rgba(54,211,153,0.16)', stroke: '#36D399', text: '5 of 5 · all accounted for', synced: 'synced now', icon: <path d="M5 12.5 10 17 19 7" /> }
-    : { bg: 'rgba(255,176,32,0.16)', stroke: '#FFB020', text: '4 of 5 live · 1 last-known', synced: 'updating…', icon: (<><path d="M12 8v5" /><path d="M12 16.5v.01" /></>) };
+    : { bg: 'rgba(255,176,32,0.16)', stroke: '#FFB020', text: '4 of 5 live · 1 last-known', synced: 'updating...', icon: (<><path d="M12 8v5" /><path d="M12 16.5v.01" /></>) };
 
   const routeColor = m.route;
   const ringColor = m.ring;
@@ -340,10 +340,10 @@ export function RideScreen({ state = 'live' }: RideScreenProps) {
           <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 15, fontWeight: 600 }}>Broadcast to convoy</div>
           <div style={{ fontSize: 11, color: '#9FB0AC', marginTop: 2, marginBottom: 14 }}>One tap · everyone hears you</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <BroadcastOption onClick={send('Broadcast: “Stopping for fuel” · sent')} emoji="⛽">Stopping for fuel</BroadcastOption>
-            <BroadcastOption onClick={send('Broadcast: “Pushing ahead” · sent')} emoji="🏍️">Pushing ahead, catch up</BroadcastOption>
-            <BroadcastOption onClick={send('Broadcast: “Need a minute” · sent')} emoji="✋">Need a minute, hold up</BroadcastOption>
-            <BroadcastOption onClick={send('Broadcast: “Regroup at next rally” · sent')} emoji="📍">Regroup at next rally</BroadcastOption>
+            <BroadcastOption onClick={send('Broadcast: "Stopping for fuel" · sent')} emoji="⛽">Stopping for fuel</BroadcastOption>
+            <BroadcastOption onClick={send('Broadcast: "Pushing ahead" · sent')} emoji="🏍️">Pushing ahead, catch up</BroadcastOption>
+            <BroadcastOption onClick={send('Broadcast: "Need a minute" · sent')} emoji="✋">Need a minute, hold up</BroadcastOption>
+            <BroadcastOption onClick={send('Broadcast: "Regroup at next rally" · sent')} emoji="📍">Regroup at next rally</BroadcastOption>
           </div>
           <button onClick={() => setPanel(null)} style={sheetCancel}>Cancel</button>
         </div>

@@ -42,7 +42,7 @@ export const navLinks = [
 export const passes = [
   'Spiti Loop',
   'Khardung La',
-  'Leh–Manali',
+  'Leh-Manali',
   'Zanskar',
   'Sach Pass',
   'Umling La',

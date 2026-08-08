@@ -18,7 +18,7 @@ const steps: Step[] = [
     n: '01',
     color: colors.accent,
     title: 'Start a ride & share one link',
-    body: 'Name the ride and route, pick the bike. Your crew taps in and lands on the map — no accounts.',
+    body: 'Name the ride and route, pick the bike. Your crew taps in and lands on the map, no accounts.',
   },
   {
     n: '02',
@@ -29,7 +29,7 @@ const steps: Step[] = [
   {
     n: '03',
     color: colors.warning,
-    title: 'Lose signal — hold the last-known',
+    title: 'Lose signal. Hold the last-known',
     body: 'Behind the ridge, pins grey out and freeze with a timestamp instead of vanishing.',
   },
   {
@@ -78,7 +78,7 @@ export function TryARide() {
         </h2>
         <p style={{ color: colors.textMuted, fontSize: 18, lineHeight: 1.6, margin: '18px 0 0', maxWidth: 560, textWrap: 'pretty' }}>
           This is the real product, not a video. Start a ride, watch your crew join, lose the signal behind a ridge,
-          fire an SOS, and regroup — all right here, before you ever download.
+          fire an SOS, and regroup. All right here, before you ever download.
         </p>
       </div>
 
@@ -126,7 +126,7 @@ export function TryARide() {
               <path d="m9 18 6-6-6-6" />
             </svg>
             <span style={{ fontSize: 14, color: colors.text, fontWeight: 500 }}>
-              Tap into the phone — take the guided tour or explore freely.
+              Tap into the phone. Take the guided tour or explore freely.
             </span>
           </div>
         </div>

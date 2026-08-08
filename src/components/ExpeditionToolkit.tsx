@@ -83,11 +83,11 @@ interface PlanItem {
 const items: PlanItem[] = [
   { Icon: ItineraryIcon, title: 'Day-wise itinerary', body: 'Each day broken into legs with rally points, distances and a night stop.' },
   { Icon: StaysIcon, title: 'Stays', body: 'Lock the night halt for each leg so the whole crew knows where it sleeps.' },
-  { Icon: DocsIcon, title: 'Documents & permits', body: 'ILP, RC, insurance — carried for every rider, ready at the checkpoint.' },
-  { Icon: ExpensesIcon, title: 'Expenses, split', body: 'Fuel, food, fixes — log it once, settle up Splitwise-style at the end.' },
-  { Icon: ChecklistIcon, title: 'Checklists', body: 'Packing, spares, readiness — shared lists so nothing gets left at home.' },
-  { Icon: ReminderIcon, title: 'Reminders', body: 'Service due, permit cut-offs, early starts — nudged before they bite.' },
-  { Icon: MedicalIcon, title: 'Medical card', body: 'Blood group, allergies, emergency contacts — shared with the crew for the worst case.', danger: true },
+  { Icon: DocsIcon, title: 'Documents & permits', body: 'ILP, RC, insurance. Carried for every rider, ready at the checkpoint.' },
+  { Icon: ExpensesIcon, title: 'Expenses, split', body: 'Fuel, food, fixes. Log it once, settle up Splitwise-style at the end.' },
+  { Icon: ChecklistIcon, title: 'Checklists', body: 'Packing, spares, readiness. Shared lists so nothing gets left at home.' },
+  { Icon: ReminderIcon, title: 'Reminders', body: 'Service due, permit cut-offs, early starts. Nudged before they bite.' },
+  { Icon: MedicalIcon, title: 'Medical card', body: 'Blood group, allergies, emergency contacts. Shared with the crew for the worst case.', danger: true },
   { Icon: DlIcon, title: 'DL verification', body: 'Scan a licence once to earn a verified badge the whole ride can trust.' },
 ];
 
@@ -144,7 +144,7 @@ export function ExpeditionToolkit() {
           The whole expedition, not just the ride.
         </h2>
         <p style={{ color: colors.textMuted, fontSize: 17, lineHeight: 1.6, margin: '16px 0 0', maxWidth: 600, textWrap: 'pretty' }}>
-          Plan the route, sort the paperwork, and settle up after — all in the same app the ride already lives in.
+          Plan the route, sort the paperwork, and settle up after. All in the same app the ride already lives in.
         </p>
       </Reveal>
 

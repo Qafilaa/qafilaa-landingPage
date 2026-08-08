@@ -16,7 +16,7 @@
     <meta property="og:title" content="Join my ride on Qafilaa" />
     <meta
       property="og:description"
-      content="Qafilaa keeps a riding group safe — live convoy tracking and an automatic SOS if someone goes down where there is no signal. Tap to join."
+      content="Qafilaa keeps a riding group safe. Live convoy tracking and an automatic SOS if someone goes down where there is no signal. Tap to join."
     />
     <meta property="og:url" content="https://qafilaa.in/join" />
     <meta property="og:image" content="https://qafilaa.in/og-image.png" />
@@ -179,14 +179,14 @@
 
       <h1>You're invited to a ride</h1>
       <p class="pitch">
-        Qafilaa keeps your group safe on the road — everyone on one live map,
+        Qafilaa keeps your group safe on the road. Everyone on one live map,
         rally points, and an automatic SOS if a rider goes down where there's no
         signal.
       </p>
 
       <div class="code-card">
         <div class="code-label">Join code</div>
-        <div id="code" class="code empty">—</div>
+        <div id="code" class="code empty">, </div>
         <button id="copy" class="copy" hidden>Copy code</button>
       </div>
 
@@ -196,7 +196,7 @@
       <div id="status" class="status"></div>
 
       <p class="foot">
-        Entering this code sends a join request — the host approves it and
+        Entering this code sends a join request. The host approves it and
         you're in.<br />
         Already have the app? Open it and enter the code under
         <strong>Join a trip</strong>.<br />
@@ -312,8 +312,8 @@
         // Give the card a moment to be seen, then try to open the app / install.
         if (isMobile && code) {
           statusEl.innerHTML = isIOS
-            ? 'Opening Qafilaa…'
-            : 'Opening Qafilaa…';
+            ? 'Opening Qafilaa...'
+            : 'Opening Qafilaa...';
           setTimeout(openApp, 900);
           // Manual escape hatch if the auto-open is blocked.
           setTimeout(function () {

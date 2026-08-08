@@ -41,7 +41,7 @@ function Privacy() {
 
       <h3 style={{ ...h3, marginTop: 0 }}>1. Who we are</h3>
       <p style={para}>
-        Qafilaa (“Qafilaa”, “we”, “us”, “our”) is a group-ride coordination service operated by Qafilaa.in, with its
+        Qafilaa ("Qafilaa", "we", "us", "our") is a group-ride coordination service operated by Qafilaa.in, with its
         registered office at Yashree, Plot no. 41 &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur,
         Maharashtra 416011, India. We are the Data Fiduciary responsible for the personal data described in this policy.
       </p>
@@ -73,23 +73,23 @@ function Privacy() {
       <ul style={list}>
         <li style={li}>
           <strong style={strong}>Account details:</strong> your phone number, email address, display name, photo,
-          and — if you use them — your Google or Apple sign-in identifier. Optionally your date of birth and
+          and, if you use them, your Google or Apple sign-in identifier. Optionally your date of birth and
           address.
         </li>
         <li style={li}>
           <strong style={strong}>Location:</strong> your live position, altitude, speed and heading, collected
-          continuously while a ride is active — including in the background, when the app is closed or not in use,
+          continuously while a ride is active, including in the background, when the app is closed or not in use,
           and with the screen off. This is what lets your crew see you and what lets help reach you if you go down.
           Collection stops when the ride ends.
         </li>
         <li style={li}>
-          <strong style={strong}>Health information</strong> (sensitive): the medical card you choose to fill in —
+          <strong style={strong}>Health information</strong> (sensitive): the medical card you choose to fill in. B
           blood group, allergies, medications and any notes you add. This is optional, and you can delete it at any
           time.
         </li>
         <li style={li}>
           <strong style={strong}>Emergency contacts:</strong> the name, phone number, email and relationship of the
-          people you nominate. These are <em>other people&rsquo;s</em> details — see Section 4a.
+          people you nominate. These are <em>other people&rsquo;s</em> details. See Section 4a.
         </li>
         <li style={li}>
           <strong style={strong}>Contacts access:</strong> if you allow it, we read your phonebook only so you can
@@ -98,10 +98,10 @@ function Privacy() {
         <li style={li}>
           <strong style={strong}>Motion and accelerometer data:</strong> read from your phone&rsquo;s sensors to
           detect a hard impact and start the SOS countdown. These samples are processed{' '}
-          <strong style={strong}>on your device only</strong> and are never uploaded — only the resulting alert is.
+          <strong style={strong}>on your device only</strong> and are never uploaded, only the resulting alert is.
         </li>
         <li style={li}>
-          <strong style={strong}>Camera and photos:</strong> images you choose to add — trip photos, bike photos,
+          <strong style={strong}>Camera and photos:</strong> images you choose to add. Trip photos, bike photos,
           and scans of documents such as your driving licence and permits.
         </li>
         <li style={li}>
@@ -128,7 +128,7 @@ function Privacy() {
       <p style={para}>
         <strong style={strong}>Where your medical card is stored.</strong> Your medical card is held securely on
         Qafilaa&rsquo;s servers, not only on your phone. That is deliberate: a medical card that exists only on your
-        device is unreachable in exactly the situation it is for — your phone destroyed, out of battery, or under
+        device is unreachable in exactly the situation it is for. Your phone destroyed, out of battery, or under
         the bike. It is shown to fellow riders only during an active alert.
       </p>
 
@@ -167,14 +167,14 @@ function Privacy() {
         </li>
       </ul>
 
-      <h3 style={h3}>4a. Emergency contacts — other people&rsquo;s data</h3>
+      <h3 style={h3}>4a. Emergency contacts. Other people&rsquo;s data</h3>
       <p style={para}>
         When you nominate an emergency contact, you give us that person&rsquo;s name, phone number and email
         address. They have not signed up to Qafilaa, so we treat their details with particular care:
       </p>
       <ul style={list}>
         <li style={li}>
-          We contact them <strong style={strong}>only during a genuine safety escalation</strong> — never for
+          We contact them <strong style={strong}>only during a genuine safety escalation</strong>, never for
           marketing, product updates or anything else.
         </li>
         <li style={li}>
@@ -214,12 +214,12 @@ function Privacy() {
       <p style={paraTight}>We keep personal data only as long as needed for the purposes above:</p>
       <ul style={list}>
         <li style={li}>
-          <strong style={strong}>Raw location traces</strong> — the minute-by-minute record of where you rode — are
+          <strong style={strong}>Raw location traces</strong>, the minute-by-minute record of where you rode, are
           deleted automatically after <strong style={strong}>90 days</strong>. You can shorten that to as little as
           7 days in Settings → Privacy &amp; sharing.
         </li>
         <li style={li}>
-          <strong style={strong}>Your ride history</strong> — routes, statistics and your photo journal — is kept as
+          <strong style={strong}>Your ride history</strong>, routes, statistics and your photo journal, is kept as
           your own record until you delete it, because it is what the Ride history and recap screens show you. If
           you would rather it expired too, switch off &ldquo;Keep my ride history&rdquo; in the same screen and it
           will follow the window above.
@@ -302,8 +302,8 @@ function Privacy() {
 
       <h3 style={h3}>13. Changes to this policy</h3>
       <p style={para}>
-        We may update this policy from time to time. We will post the updated version here with a revised “Last
-        updated” date, and where appropriate we will notify you. Continued use of the service after changes means you
+        We may update this policy from time to time. We will post the updated version here with a revised "Last
+        updated" date, and where appropriate we will notify you. Continued use of the service after changes means you
         accept the updated policy.
       </p>
 
@@ -323,9 +323,9 @@ function Terms() {
 
       <h3 style={{ ...h3, marginTop: 0 }}>1. Agreement to these terms</h3>
       <p style={para}>
-        These Terms of Use (“Terms”) govern your access to and use of the Qafilaa website, waitlist, and, on launch, the
-        Qafilaa application and related services (together, the “Service”), operated by Qafilaa.in (“Qafilaa”, “we”,
-        “us”). By accessing or using the Service, you agree to these Terms. If you do not agree, do not use the Service.
+        These Terms of Use ("Terms") govern your access to and use of the Qafilaa website, waitlist, and, on launch, the
+        Qafilaa application and related services (together, the "Service"), operated by Qafilaa.in ("Qafilaa", "we",
+        "us"). By accessing or using the Service, you agree to these Terms. If you do not agree, do not use the Service.
       </p>
 
       <h3 style={{ ...h3, color: '#FF8A80' }}>2. Important safety notice, please read</h3>
@@ -379,7 +379,7 @@ function Terms() {
         Qafilaa lets a group share a live map, track gaps between riders, set rally points, assign roles such as lead
         and sweep, hold last-known positions when signal drops, and broadcast a one-tap SOS to the group. Features
         described on our website are subject to change, and during the public beta the Service is provided on an
-        evolving, “as-is” basis.
+        evolving, "as-is" basis.
       </p>
 
       <h3 style={h3}>5. Waitlist and beta</h3>
@@ -431,7 +431,7 @@ function Terms() {
 
       <h3 style={h3}>10. Disclaimer of warranties</h3>
       <p style={para}>
-        To the maximum extent permitted by law, the Service is provided “as is” and “as available”, without warranties
+        To the maximum extent permitted by law, the Service is provided "as is" and "as available", without warranties
         of any kind, whether express or implied, including fitness for a particular purpose, accuracy, reliability, or
         uninterrupted or error-free operation. We do not warrant that location data, connectivity, or the SOS feature
         will be available or accurate at any given time.
@@ -505,7 +505,7 @@ function DeleteAccount() {
   return (
     <div>
       <p style={{ ...para, marginBottom: 26 }}>
-        You can delete your Qafilaa account at any time. Deletion is permanent and immediate — there is no
+        You can delete your Qafilaa account at any time. Deletion is permanent and immediate. There is no
         recovery window and no way for us to restore an account once it is gone.
       </p>
 
@@ -525,14 +525,14 @@ function DeleteAccount() {
       <p style={para}>
         If you have lost access to your phone or have already uninstalled Qafilaa, email{' '}
         <Mail>admin@qafilaa.in</Mail> from the email address on your account, with the subject{' '}
-        <span style={strong}>“Delete my account”</span>. We may ask you to confirm the phone number the
+        <span style={strong}>"Delete my account"</span>. We may ask you to confirm the phone number the
         account was registered with, so that nobody else can delete it. We action verified requests within{' '}
         <span style={strong}>30 days</span>, and normally within a few working days.
       </p>
 
       <h3 style={h3}>What is deleted</h3>
       <p style={para}>
-        Everything below is removed from our systems, in a single transaction — it either all goes or none of
+        Everything below is removed from our systems, in a single transaction. It either all goes or none of
         it does, so an account is never left half-erased:
       </p>
       <ul style={list}>
@@ -573,10 +573,10 @@ function DeleteAccount() {
         <li style={li}>
           <span style={strong}>Safety alerts about other riders</span> that you responded to or marked
           resolved are kept as part of their safety record, but the reference back to your account is cleared
-          — the entry no longer identifies you.
+. The entry no longer identifies you.
         </li>
         <li style={li}>
-          <span style={strong}>Content other people wrote</span> — their notes, their expenses, their photos —
+          <span style={strong}>Content other people wrote</span>, their notes, their expenses, their photos,
           is theirs, and stays with them.
         </li>
         <li style={li}>
@@ -594,7 +594,7 @@ function DeleteAccount() {
       <h3 style={h3}>Questions</h3>
       <p style={para}>
         Contact our Grievance Officer at <Mail>admin@qafilaa.in</Mail>. Your rights under the Digital Personal
-        Data Protection Act, 2023 — including erasure, correction and grievance redressal — are described in
+        Data Protection Act, 2023, including erasure, correction and grievance redressal, are described in
         our <a href="/privacy-policy" style={linkStyle}>Privacy Policy</a>.
       </p>
     </div>
@@ -627,30 +627,30 @@ function DeleteData() {
 
       <h3 style={{ ...h3, marginTop: 0 }}>Delete it yourself, in the app</h3>
       <p style={para}>
-        These take effect immediately and need no request. Deletion is permanent — there is no bin to restore
+        These take effect immediately and need no request. Deletion is permanent. There is no bin to restore
         from.
       </p>
       <ul style={list}>
         <li style={li}>
-          <span style={strong}>Emergency contacts, bikes, documents and permits</span> — open the list in{' '}
+          <span style={strong}>Emergency contacts, bikes, documents and permits</span>. Open the list in{' '}
           <span style={strong}>Settings</span> and swipe a row away, or use the delete icon on the item.
         </li>
         <li style={li}>
-          <span style={strong}>Your medical card</span> — <span style={strong}>Settings → Medical card</span>,
+          <span style={strong}>Your medical card</span>, <span style={strong}>Settings → Medical card</span>,
           clear the fields and save. Saving it empty removes it from our systems and from what your crew can
           see at a scene.
         </li>
         <li style={li}>
-          <span style={strong}>Photos, notes, checklists, reminders and expenses</span> — open the item inside
+          <span style={strong}>Photos, notes, checklists, reminders and expenses</span>. Open the item inside
           the trip and delete it.
         </li>
         <li style={li}>
-          <span style={strong}>A whole trip you host</span> — open the trip and delete it. A trip the crew has
+          <span style={strong}>A whole trip you host</span>. Open the trip and delete it. A trip the crew has
           already ridden can be archived rather than deleted, because the routes, photos and money of every
           other rider hang off it.
         </li>
         <li style={li}>
-          <span style={strong}>Your UPI ID</span> —{' '}
+          <span style={strong}>Your UPI ID</span>, {' '}
           <span style={strong}>Settings → Profile</span>, clear the field and save.
         </li>
       </ul>
@@ -658,16 +658,16 @@ function DeleteData() {
       <h3 style={h3}>Ask us to delete the rest</h3>
       <p style={para}>
         Two things have no self-serve button yet. Email <Mail>admin@qafilaa.in</Mail> from the address on your
-        account, with the subject <span style={strong}>“Delete my data”</span>, and say which of these you
+        account, with the subject <span style={strong}>"Delete my data"</span>, and say which of these you
         want removed:
       </p>
       <ul style={list}>
         <li style={li}>
-          <span style={strong}>Your location history</span> — every position ping we hold for you, across all
+          <span style={strong}>Your location history</span>. Every position ping we hold for you, across all
           trips.
         </li>
         <li style={li}>
-          <span style={strong}>Your ride history</span> — recorded rides, route tracks and the statistics
+          <span style={strong}>Your ride history</span>. Recorded rides, route tracks and the statistics
           derived from them.
         </li>
       </ul>
@@ -683,7 +683,7 @@ function DeleteData() {
       </p>
       <ul style={list}>
         <li style={li}>
-          <span style={strong}>Content other people wrote</span> — their notes, their expenses, their photos —
+          <span style={strong}>Content other people wrote</span>, their notes, their expenses, their photos,
           is theirs, and stays with them even if it names you.
         </li>
         <li style={li}>
@@ -709,7 +709,7 @@ function DeleteData() {
       <h3 style={h3}>Questions</h3>
       <p style={para}>
         Contact our Grievance Officer at <Mail>admin@qafilaa.in</Mail>. Your rights under the Digital Personal
-        Data Protection Act, 2023 — including erasure, correction and grievance redressal — are described in
+        Data Protection Act, 2023, including erasure, correction and grievance redressal, are described in
         our <a href="/privacy-policy" style={linkStyle}>Privacy Policy</a>.
       </p>
     </div>
@@ -793,16 +793,16 @@ function Support() {
   return (
     <div>
       <p style={{ ...para, marginTop: 0 }}>
-        Something broken, confusing, or missing? Tell us and a person will read it. Qafilaa is a safety app —
+        Something broken, confusing, or missing? Tell us and a person will read it. Qafilaa is a safety app, 
         if a rider is relying on it right now, say so in the first line and we will treat it that way.
       </p>
 
       <h3 style={{ ...h3, marginTop: 28 }}>Reach us</h3>
       <p style={paraTight}>
-        <strong style={strong}>Email</strong> — <Mail>admin@qafilaa.in</Mail>
+        <strong style={strong}>Email</strong>, <Mail>admin@qafilaa.in</Mail>
       </p>
       <p style={paraTight}>
-        <strong style={strong}>Phone</strong> —{' '}
+        <strong style={strong}>Phone</strong>, {' '}
         <a href="tel:+918830997757" style={linkStyle}>
           +91 88309 97757
         </a>
@@ -815,14 +815,14 @@ function Support() {
       <h3 style={h3}>From inside the app</h3>
       <p style={para}>
         The fastest route is <strong style={strong}>Settings → Help &amp; support</strong>. It has answers to
-        common questions, and “Contact us” opens a thread we reply to in the app, so you can follow the
+        common questions, and "Contact us" opens a thread we reply to in the app, so you can follow the
         conversation without digging through email. Reporting a problem from there also tells us which screen
         and which ride you were on, which usually saves a round trip.
       </p>
 
       <h3 style={h3}>Reporting content or a rider</h3>
       <p style={para}>
-        Trip notes, checklists and photos are visible only to the crew of a trip you joined — never publicly.
+        Trip notes, checklists and photos are visible only to the crew of a trip you joined, never publicly.
         If someone in a trip posts something objectionable, the trip host can delete it and remove that rider.
         You can also report it to us directly from the note, or by emailing <Mail>admin@qafilaa.in</Mail>. We
         act on reports about a real person’s safety first.
@@ -848,11 +848,11 @@ function Support() {
 
       <h3 style={h3}>Before you write in about location</h3>
       <p style={para}>
-        Qafilaa needs “Always” location so it can keep sharing your position with your crew while your phone
+        Qafilaa needs "Always" location so it can keep sharing your position with your crew while your phone
         is pocketed and the screen is off, and so the crash detector can attach a location to an SOS. It runs
         only while you are on a trip and stops when the ride ends. If your position has stopped updating for
-        the crew, the usual cause is that location permission dropped back to “While Using” after an OS
-        update — check <strong style={strong}>Settings → App permissions</strong> in the app.
+        the crew, the usual cause is that location permission dropped back to "While Using" after an OS
+        update. Check <strong style={strong}>Settings → App permissions</strong> in the app.
       </p>
     </div>
   );

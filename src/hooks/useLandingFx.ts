@@ -129,7 +129,7 @@ export function useLandingFx() {
         start = performance.now();
         if (core) core.style.transform = 'scale(0.94)';
         if (status) {
-          status.textContent = 'Hold…';
+          status.textContent = 'Hold...';
           status.style.color = '#FF5247';
         }
         if (coreSub) coreSub.textContent = 'Keep holding';
@@ -240,8 +240,8 @@ export function useLandingFx() {
         }
         if (hint)
           hint.textContent = live
-            ? 'Flip it — drop the signal behind the ridge.'
-            : 'Pins hold their last spot, timestamped — nothing vanishes.';
+            ? 'Flip it. Drop the signal behind the ridge.'
+            : 'Pins hold their last spot, timestamped. Nothing vanishes.';
         if (banner) {
           banner.style.background = live ? 'rgba(54,211,153,0.10)' : 'rgba(255,176,32,0.10)';
           banner.style.borderColor = live ? 'rgba(54,211,153,0.28)' : 'rgba(255,176,32,0.28)';

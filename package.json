@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Qafilaa — convoy-ride safety app landing page. Ride together. No one left behind.",
+  "description": "Qafilaa. Convoy-ride safety app landing page. Ride together. No one left behind.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node prerender.mjs",

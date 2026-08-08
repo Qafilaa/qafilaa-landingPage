@@ -97,7 +97,7 @@ export function OfflineSpotlight() {
                   Signal: all live
                 </div>
                 <div data-sig-hint style={{ fontSize: 12.5, color: '#9FB0AC', marginTop: 3, transition: 'color .4s' }}>
-                  Flip it — drop the signal behind the ridge.
+                  Flip it. Drop the signal behind the ridge.
                 </div>
               </div>
               <button
