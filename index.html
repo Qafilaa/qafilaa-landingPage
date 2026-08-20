@@ -201,15 +201,67 @@
     }
     </script>
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V4RB2XKEGK"></script>
+    <!--
+      Google Analytics 4, behind a consent gate.
+
+      gtag.js is NOT loaded here. Nothing is requested from Google, and no
+      cookie is set, until the visitor accepts — see src/site/ConsentBanner.tsx.
+      Consent Mode v2 defaults are declared denied first so that anything which
+      does reach the tag later starts from the right state.
+
+      Deliberately stricter than consent-mode-only: with analytics_storage
+      denied, GA4 still sends cookieless pings, which is defensible under
+      ePrivacy but still transmits an IP to Google. Not loading the script at
+      all removes the argument.
+    -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag('js', new Date());
-      gtag('config', 'G-V4RB2XKEGK');
+      window.gtag = gtag;
+
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500,
+      });
+      gtag('set', 'ads_data_redaction', true);
+      gtag('set', 'url_passthrough', true);
+
+      window.QF_GA_ID = 'G-V4RB2XKEGK';
+      window.QF_CONSENT_KEY = 'qf-consent-analytics';
+      /* Only the real site reports. A dev server, `vite preview`, a branch
+         deploy or someone's local dist would otherwise land in the production
+         property and quietly ruin every number in it. */
+      window.QF_GA_HOSTS = ['qafilaa.in', 'www.qafilaa.in'];
+
+      /* Idempotent: safe to call from the inline restore below and again from
+         the banner when someone accepts. */
+      window.qfStartAnalytics = function () {
+        if (window.__qfGaLoaded) return;
+        if (window.QF_GA_HOSTS.indexOf(location.hostname) < 0) return;
+        window.__qfGaLoaded = true;
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+        gtag('js', new Date());
+        gtag('config', window.QF_GA_ID);
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + window.QF_GA_ID;
+        document.head.appendChild(s);
+      };
+
+      /* Restore a previous "yes" before React hydrates, so a returning visitor
+         is measured from the first paint rather than from the banner mount. */
+      try {
+        if (localStorage.getItem(window.QF_CONSENT_KEY) === 'granted') window.qfStartAnalytics();
+      } catch (e) {
+        /* storage blocked — stay denied */
+      }
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />

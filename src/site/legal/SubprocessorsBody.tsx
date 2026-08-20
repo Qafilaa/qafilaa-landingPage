@@ -41,8 +41,12 @@ export function SubprocessorsBody() {
             'Crash diagnostics, so a bug that ends a ride can be found and fixed. Reports carry no identifier for you and no request contents.',
           ],
           [
+            'Google Firebase Analytics',
+            'Product analytics — which screens get opened, which actions get used — reporting into GA4. Events and screen names, not the contents of what you write. On by default in released builds; the diagnostics switch in Settings turns it and Crashlytics off together.',
+          ],
+          [
             'Google Maps Platform',
-            'Base maps, place search and road routing. Requests are proxied through our backend, so your device is not talking to them directly and your identity is not passed on.',
+            'Base maps, place search and road routing. Place search and routing are proxied through our backend, so your identity is not passed on. Map tiles are drawn by Google’s own SDK on the device, which means your IP address reaches Google when a map is on screen. Offline and route-preview maps use OpenStreetMap tiles instead.',
           ],
           [
             'Open-Meteo',
@@ -82,7 +86,7 @@ export function SubprocessorsBody() {
       <UL>
         <li>No advertising network, ad exchange, or attribution SDK.</li>
         <li>No data broker, enrichment service, or people-search provider.</li>
-        <li>No behavioural analytics or session-recording tool inside the app.</li>
+        <li>No session recording, no heatmaps, and no behavioural profiling. The product analytics named above count screens and actions; they do not replay what you did.</li>
         <li>No third party receives your medical card, your documents, or your live position. Those stay between you, your crew, and our own infrastructure.</li>
       </UL>
 

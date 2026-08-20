@@ -247,6 +247,14 @@ const PAGES = [
       "How accessible Qafilaa's website and app are today, where they fall short, and how to tell us when something is not usable.",
   },
   {
+    route: 'licenses',
+    out: 'dist/licenses/index.html',
+    url: 'https://qafilaa.in/licenses',
+    title: 'Open source | Qafilaa',
+    description:
+      'The open-source packages Qafilaa is built on, by name and version — 283 resolved into the app, plus the handful this website uses.',
+  },
+  {
     // Served by CloudFront for every unknown path (Error Pages -> 404 ->
     // /404.html, response code 404). Not in the sitemap, and noindex.
     route: 'notFound',

@@ -11,6 +11,13 @@ declare global {
   }
 
   interface Window {
+    /** Consent-gated GA4 loader, defined inline in index.html. */
+    qfStartAnalytics?: () => void;
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
+    QF_GA_ID?: string;
+    QF_CONSENT_KEY?: string;
+    __qfGaLoaded?: boolean;
     /** Screen id -> pre-rendered app-screen HTML, from `public/qafilaa-screens.js`. */
     QAF_SCREENS?: Record<string, string>;
     /** Screen id -> the design's own label, e.g. `R4 · Muster board`. */

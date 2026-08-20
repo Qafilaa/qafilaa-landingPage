@@ -1,0 +1,63 @@
+# Quality gate. Runs on every PR and on every push to main BEFORE deploy.yml
+# can ship anything — deploy.yml previously only built and synced, so a type
+# error that `vite build` tolerates could reach production.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      # tools/ is Python: the design pipeline and the fidelity checks.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      # The site is a 1:1 port of a design handoff. This diffs every tag,
+      # attribute, CSS declaration and text node of the prerendered output
+      # against it, and fails on any drift that is not a declared divergence.
+      - name: Verify design fidelity
+        run: npm run design:verify
+
+      # Every route has its own title and canonical, no internal link 404s,
+      # every route reachable from the footer.
+      - name: Audit dist
+        run: npm run dist:audit
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # The engine drives ~130 data-* hooks with no compile-time link to the
+      # markup, so a rename breaks a demo silently. This is what catches it.
+      - name: Smoke test
+        run: npm run test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

@@ -55,7 +55,7 @@ handoff lands, re-derive them rather than nudging them. Handoff 12 was a mobile 
 (`reflow`, `refitInline`, `wide`, `applyWide`), a ResizeObserver, and the `data-btn` / `data-cta` /
 `data-seg` / `data-navword` / `data-burgertxt` / `data-ctaarrow` / `data-corner` hooks.
 
-**Seven deliberate departures from the handoff**, each required by a rule below:
+**Nine deliberate departures from the handoff**, each required by a rule below:
 1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§6), and the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
@@ -63,8 +63,10 @@ handoff lands, re-derive them rather than nudging them. Handoff 12 was a mobile 
 5. **Privacy policy §5 gained one paragraph** naming the subprocessors page and confirming third parties give the same or greater protection. App Store Review Guideline 5.1.1 requires that confirmation in the policy itself.
 6. **A 404 page** (`src/site/NotFound.tsx` → `dist/404.html`). The handoff has no such screen; a statically prerendered site has no server to render one on demand.
 7. **The top nav stays pinned.** The handoff floats it away on a fast scroll down and returns it on scroll up; that block is dropped in `paint()`. The pill is already `position:fixed` in the markup, so removing the transform is the whole change. It carries the only route to the policy pages and the Get-the-app CTA, and on a phone the waypoint drawer behind the burger is the only navigation there is.
+8. **The legal shell is a sticky index, not a pill row**, and the four handoff documents that shipped undated (`delete-account`, `delete-data`, `support`, `security`) gained a `Last updated` line. Fifteen documents as four rows of pills pushed the article 478px down the page and left half the width empty; an undated policy page is a defect in its own right. Both are applied by the generators, not by hand — see §9.
+9. **The privacy policy names Firebase Analytics.** The shipped app carries it (`lib/core/analytics/`, wired in `main.dart`), on by default in release and gated by the diagnostics switch in Settings. The handoff's section 2 lists Crashlytics but not Analytics, which left the binding document understating what is collected — Apple 5.1.1 and Play's Data safety both require it named.
 
-Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these seven in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
+Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these nine in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
 ## 4. Styling — a runtime tone system, not static tokens
 
@@ -94,6 +96,28 @@ The waitlist form (in `src/site/sections/TheEnd.tsx`) **POSTs to the live backen
 - `joinWaitlist()` → `POST /api/v1/waitlist`; `getWaitlistCount()` → `GET /api/v1/waitlist/count`.
 - API base is `VITE_API_BASE_URL` (defaults to `https://api.qafilaa.in`, trailing slash normalized).
 - Keep the honeypot (`[data-wlcompany]`, `name="company"`), client-side email validation (mirror the backend's FluentValidation), and the silent-fallback count behavior on `[data-waitline]`. **Do not reintroduce a "wire this up" TODO** — it's done.
+
+### Analytics consent
+
+**gtag.js is not loaded until the visitor accepts.** Consent Mode v2 defaults are declared denied in
+`index.html`, and `window.qfStartAnalytics()` injects the tag only on acceptance — so a first visit makes
+**no request to Google and sets no cookie**. Stricter than consent-mode-only on purpose: with
+`analytics_storage` denied GA4 still sends cookieless pings, which still transmits an IP.
+
+- `src/consent.ts` is the client half — read, write, and undo. `src/site/ConsentBanner.tsx` asks once;
+  `src/site/legal/CookieChoice.tsx` on `/cookies` lets the answer change later, because withdrawal has to be
+  as easy as consent.
+- **Withdrawing expires the `_ga*` cookies**, and cookies left by a visit from before the gate are cleared on
+  arrival. Stopping new cookies is not the same as removing the ones already there.
+- The banner is a **sibling of the page in `App.tsx`, never a child of `Landing`** — the engine owns that
+  subtree and a re-render would discard everything it has drawn. `App` holds no state; the banner holds its
+  own.
+- It renders `null` on the server and on first client render, then appears from `useEffect`. Rendering it
+  during SSR would be a hydration mismatch for anyone who has already answered.
+- It pins Daylight colours rather than using the tone variables, which are rewritten every frame as the
+  landing scrolls — a fixed element that restyles itself mid-scroll is unreadable.
+- **If you change what is loaded, change `/cookies` in the same commit.** That page makes specific factual
+  claims about what is stored and when.
 
 ## 7. SEO / content sync rules
 
@@ -168,16 +192,36 @@ declaration together.
 
 ## 9. Verifying fidelity
 
-Two scripts, kept in the session scratchpad rather than the repo (rebuild them if they are gone — the
-approach matters more than the file):
+**The whole pipeline lives in `tools/`** — see `tools/README.md`. It used to sit in a session scratchpad,
+which meant the ability to absorb the next handoff would have died with the session.
+
+```bash
+npm run design:generate   # gen -> genengine -> anyfix -> gencss
+npm run design:verify     # must print 8/8 identical
+npm run dist:audit        # routes, heads, links, footer coverage
+npm run test              # Playwright smoke suite
+```
+
+**Never hand-edit a generated file** — `src/index.css`, `src/site/engine.ts`, `src/site/sections/*`,
+`src/site/legal/*Body.tsx` are all output. A change made there survives until the next handoff and then
+vanishes; that has already happened twice. Fold it into the generator and add it to the list in §3.
 
 - **`verify.py`** parses the handoff's markup and the prerendered output into trees and compares every tag,
   attribute, CSS declaration and text node, normalising attribute order, declaration order, entity spelling
   and whitespace. It folds in the five departures from §3 and then demands zero differences. It is the only
   thing standing between "looks right" and "is right".
-- **`audit.py`** walks `dist/` and checks every route has its own title and canonical, that no internal link
-  404s, and that every built route is reachable from the footer. `/join` and `404.html` are excluded — neither
-  is a routable URL.
+- **`gencss.py`** writes `src/index.css` = the handoff's `<style>` block **plus an appendix** holding the legal-shell
+  layout (media queries cannot be inline styles). `index.css` is generated — **never hand-edit it**, or the next
+  handoff discards the change. Add to the appendix in `gencss.py`.
+- **`tools/audit.py`** walks `dist/` and checks every route has its own title and canonical, that no internal
+  link 404s, and that every built route is reachable from the footer. `/join` and `404.html` are excluded —
+  neither is a routable URL.
+- **`tests/smoke.spec.ts`** (Playwright, desktop + mobile) is the only thing that catches a renamed `data-*`
+  hook: it asserts `window.__QAF_STEPS` contains no failed step, that no request reaches Google before
+  consent, that all 16 policy routes resolve **without a trailing slash** and carry a canonical and a date,
+  and that an unknown path returns a real 404. It runs against `tools/serve-dist.mjs`, which mirrors S3 +
+  CloudFront rather than `vite preview` — preview answers every unknown path with index.html and would hide
+  exactly those failures.
 - Both were also run at **375 / 320 / 768 px** against the handoff served side by side: all 22 section offsets
   match and no page scrolls horizontally at any width down to 320.
 
@@ -186,7 +230,8 @@ Run both after any change to a section, a policy page, the footer, or `prerender
 ## 10. Quality gates & known gaps
 
 - Run `npm run lint` (`--max-warnings 0`) + `npm run typecheck` before committing; tsconfig is strict (`noUnusedLocals`/`noUnusedParameters`). Use `npm ci` for installs.
-- **CI does not yet gate lint/typecheck** (`.github/workflows/deploy.yml` only builds + syncs to S3 on push to `main`). See `docs/PRODUCTION-READINESS.md` — adding a lint/typecheck gate and a GA4 consent gate are the P0 items.
+- **CI does not yet gate lint/typecheck** (`.github/workflows/deploy.yml` only builds + syncs to S3 on push to `main`). That is now the remaining P0 in `docs/PRODUCTION-READINESS.md`; the GA4 consent gate is done.
+- **CloudFront error pages are configured out-of-band.** `npm run cloudfront:errors` (or the *CloudFront error pages* workflow, `workflow_dispatch`) points 403 and 404 at `/404.html`. It is idempotent and deliberately not in the deploy path — it needs `cloudfront:UpdateDistribution`, which is far broader than the deploy user's `CreateInvalidation`.
 - Secrets/env files are gitignored except `.env.example`.
 - `public/join/index.html` and `public/.well-known/*` are **standalone deep-link infrastructure**, independent of the React app. Leave them alone.
 

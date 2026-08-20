@@ -67,6 +67,7 @@ export function TheEnd() {
                   <a href="/privacy-policy">Privacy</a>
                   <a href="/terms-and-conditions">Terms</a>
                   <a href="/cookies">Cookies</a>
+                  <a href="/licenses">Open source</a>
                 </div>
               </div>
           <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>qafilaa.in</div>

@@ -29,3 +29,14 @@ pnpm-debug.log*
 .env
 .env.*
 !.env.example
+
+# design pipeline scratch (tools/verify.py writes these)
+tools/__pycache__/
+tools/_ref.html
+tools/_cand.html
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright/

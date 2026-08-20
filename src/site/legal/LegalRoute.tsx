@@ -8,6 +8,7 @@ import { DataSafetyBody } from './DataSafetyBody';
 import { DeleteAccountBody } from './DeleteAccountBody';
 import { DeleteDataBody } from './DeleteDataBody';
 import { LegalShell } from './LegalShell';
+import { LicensesBody } from './LicensesBody';
 import { PermissionsBody } from './PermissionsBody';
 import { PrivacyPolicyBody } from './PrivacyPolicyBody';
 import { ReportBody } from './ReportBody';
@@ -33,6 +34,7 @@ const BODIES: Record<LegalRouteName, () => JSX.Element> = {
   support: SupportBody,
   contact: ContactBody,
   accessibility: AccessibilityBody,
+  licenses: LicensesBody,
 };
 
 /** One legal / support page, rendered at its own prerendered URL. */

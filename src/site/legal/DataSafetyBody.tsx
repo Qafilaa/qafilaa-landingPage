@@ -75,13 +75,19 @@ export function DataSafetyBody() {
           Crashlytics. Crash reports carry no identifier for you and no request contents.
         </li>
         <li>
+          <b>App activity — product analytics.</b> Which screens get opened and which actions get used, through
+          Firebase Analytics, so we can tell what is working. Events and screen names, not the contents of your
+          notes, trips or messages. On by default in released builds and{' '}
+          <b>switchable off in Settings</b>, where the same control also stops crash reporting.
+        </li>
+        <li>
           <b>Device or other IDs.</b> A push token, so a crash or SOS alert can reach your device.
         </li>
       </UL>
 
       <H2>What Qafilaa does not collect</H2>
       <UL>
-        <li>No advertising ID, and no advertising or analytics SDK in the app.</li>
+        <li>No advertising ID, no ad network, and no advertising SDK in the app.</li>
         <li>No microphone, no call log, no SMS, no browsing history.</li>
         <li>No financial or payment information. Trip expenses are amounts between riders, not card details.</li>
         <li>No biometrics. No race, religion, caste, politics or sexual orientation.</li>

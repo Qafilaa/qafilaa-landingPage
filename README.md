@@ -93,6 +93,10 @@ In dev, `#root` is empty so the app mounts a fresh React tree. In production it 
 | `npm run preview`   | Serve the production `dist/` locally to verify the build.                                                      |
 | `npm run lint`      | ESLint over `ts`/`tsx` with `--max-warnings 0`.                                                                |
 | `npm run typecheck` | `tsc --noEmit` (type-check only, no output).                                                                   |
+| `npm run test`      | Playwright smoke suite, desktop + mobile, against the real `dist/`.                                            |
+| `npm run design:generate` | Regenerate `src/` from the design handoff in `tools/design/`.                                            |
+| `npm run design:verify`   | Diff the build against the handoff. Must print 8/8 identical.                                            |
+| `npm run dist:audit`      | Routes, heads, internal links, footer coverage.                                                          |
 
 The full `build` pipeline is:
 
@@ -271,6 +275,7 @@ deleting or renaming it.**
 | `/support` | **Apple Support URL** | A marketing homepage does not satisfy this |
 | `/contact` | Apple 1.2 · **EU DSA trader** · DPDP Act | Trader identity and the Grievance Officer |
 | `/accessibility` | **European Accessibility Act** | In force since 28 June 2025 |
+| `/licenses` | most OSS licences | Attribution for the 283 packages the app resolves |
 | `404.html` | — | The CDN error document. Not a route, `noindex`, not in the sitemap |
 
 They are **real URLs, not a modal** — the design ships them as a hash overlay, and that was deliberately not
@@ -335,7 +340,7 @@ The site is checked against the design handoff structurally, not by eye. The che
 authored markup and the prerendered output into trees and compares **every tag, attribute, CSS declaration
 and text node**, normalising away attribute order, declaration order, entity spelling and whitespace.
 
-Everything the handoff drew is expected to come out **identical**. Seven deviations are folded into the
+Everything the handoff drew is expected to come out **identical**. Nine deviations are folded into the
 reference, each required by a rule in [CLAUDE.md](CLAUDE.md):
 
 1. legal cross-links point at real routes rather than hash targets;
@@ -346,10 +351,17 @@ reference, each required by a rule in [CLAUDE.md](CLAUDE.md):
 5. privacy policy §5 gained one paragraph naming the subprocessors page and confirming third parties give
    equal protection, which App Store Review Guideline 5.1.1 requires the policy itself to say;
 6. a 404 page, which the handoff has no screen for;
-7. the top nav stays pinned; the handoff floats it away on a fast scroll down.
+7. the top nav stays pinned; the handoff floats it away on a fast scroll down;
+8. the legal pages use a sticky index rather than the handoff's pill row, and the four documents that
+   shipped undated gained a `Last updated` line;
+9. the privacy policy names Firebase Analytics, which the app ships and the handoff's section 2 omitted.
 
-A second script walks `dist/` and checks every route has its own title and canonical, that JSON-LD appears on
-the home page only, that no internal link 404s, and that every built route is reachable from the footer.
+A second script walks `dist/` and checks every route has its own title and canonical, that no internal link
+404s, and that every built route is reachable from the footer. Both live in [tools/](tools/README.md) — as does
+the handoff itself — and both run in CI.
+
+On top of that, [tests/smoke.spec.ts](tests/smoke.spec.ts) drives the built site in a real browser. It is the
+only thing that catches a renamed `data-*` hook, since the engine has no compile-time link to the markup.
 
 If you change a section, change it **to match the handoff**. Divergence should be a decision, recorded here.
 
@@ -384,10 +396,18 @@ manifest declared two non-square icons, which fails PWA installability.
 **Sitemap.** [public/sitemap.xml](public/sitemap.xml) lists all 16 indexable routes and is **hand-maintained**
 — update it when routes change. `/404` and `/join` are deliberately absent.
 
-**Analytics.** GA4 (`G-V4RB2XKEGK`) is inlined in [index.html](index.html) and therefore present on every
-prerendered page. It has **no consent gate yet** — a P0 in
-[docs/PRODUCTION-READINESS.md](docs/PRODUCTION-READINESS.md), and the reason
-[/cookies](src/site/legal/CookiesBody.tsx) documents how to block it rather than claiming prior consent.
+**Analytics, behind a consent gate.** GA4 (`G-V4RB2XKEGK`) is declared in [index.html](index.html), but
+**gtag.js is never loaded until the visitor accepts** — until then the site makes no request to Google and
+sets no cookie. Consent Mode v2 defaults are declared denied first, so anything reaching the tag later starts
+from the right state. [ConsentBanner](src/site/ConsentBanner.tsx) asks once;
+[CookieChoice](src/site/legal/CookieChoice.tsx) on `/cookies` lets the answer be changed at any time, and
+withdrawing **expires the `_ga*` cookies** rather than just stopping new ones. Cookies left by a visit from
+before the gate existed are cleared on arrival.
+
+This is deliberately stricter than consent-mode-only: with `analytics_storage` denied GA4 still sends
+cookieless pings, which is arguable under ePrivacy but does transmit an IP. Not loading the script removes
+the argument. The site still does not act on Do-Not-Track / GPC — `/cookies` says so rather than claiming
+compliance it does not have.
 
 > FAQ copy is duplicated in the [index.html](index.html) JSON-LD **and** in
 > [SettingsAndSupport.tsx](src/site/sections/SettingsAndSupport.tsx). Edit both together.

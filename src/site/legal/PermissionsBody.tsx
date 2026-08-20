@@ -161,8 +161,9 @@ export function PermissionsBody() {
       <H2>What we do not ask for</H2>
       <P>
         No microphone, no call log, no SMS, no advertising identifier, no accessibility service, no "all files"
-        access, and no cross-app tracking. There is no advertising or tracking software in Qafilaa at all. If
-        you find a permission in the app that is not on this page, tell us at{' '}
+        access, no cross-app tracking, and no advertising software of any kind. The app does carry product
+        analytics — see <a href="/data-safety">Data safety</a> — which you can switch off in Settings. If you
+        find a permission in the app that is not on this page, tell us at{' '}
         <Mail subject="Permissions" /> and we will either explain it or remove it.
       </P>
     </Doc>

@@ -1,6 +1,7 @@
 // Cookie / analytics disclosure for qafilaa.in. Referenced by section 9 of the
 // Privacy Policy. This describes the site only — the Qafilaa app contains no
 // analytics or advertising SDK at all.
+import { CookieChoice } from './CookieChoice';
 import { Callout, Doc, H2, Mail, P, Rows, UL } from './prose';
 
 export function CookiesBody() {
@@ -9,15 +10,19 @@ export function CookiesBody() {
       slug="qafilaa.in/cookies"
       deck="What this website stores in your browser"
       title="Cookies"
-      lede="This page is about qafilaa.in, the website you are reading. The Qafilaa app is a different thing entirely: it carries no analytics or advertising software, and nothing on this page applies to it."
+      lede="This page is about qafilaa.in, the website you are reading. The Qafilaa app is a separate thing and nothing on this page applies to it: it uses no cookies, and its own product analytics are described in Data safety and switched off from Settings."
       updated="20/08/2026"
     >
       <Callout label="In plain English">
         <UL>
           <li>We use one analytics tool, Google Analytics 4, to count page views.</li>
+          <li>
+            <b>Nothing loads until you say yes.</b> Until then this site makes no request to Google at all and sets
+            no cookie.
+          </li>
           <li>We do not use advertising cookies, and we do not track you across other websites.</li>
           <li>Nothing here is connected to your Qafilaa account or anything in the app.</li>
-          <li>You can refuse all of it in your browser and the site works exactly the same.</li>
+          <li>Say no and the site works exactly the same. You can change your mind on this page, any time.</li>
         </UL>
       </Callout>
 
@@ -33,8 +38,12 @@ export function CookiesBody() {
             'Sets no cookie, but loading the two typefaces sends your IP address to Google so the files can be served.',
           ],
           [
+            'Your cookie choice',
+            'Not a cookie: one localStorage entry, qf-consent-analytics, holding "granted" or "denied". It is how we avoid asking you again, it is exempt from consent because it exists to record consent, and it never leaves your browser.',
+          ],
+          [
             'Strictly necessary',
-            'None. This is a static site — there is no login, no basket, and no session to keep.',
+            'Nothing else. This is a static site — there is no login, no basket, and no session to keep.',
           ],
         ]}
       />
@@ -69,16 +78,22 @@ export function CookiesBody() {
         </li>
       </UL>
       <P>
-        We do not currently show a cookie banner. If you are reading this from somewhere that requires prior
-        consent for analytics cookies, block them using one of the routes above, and write to us if you would
-        like your prior visits removed from the analytics record — <Mail subject="Cookies" />.
+        Or use the control below, which is the same choice the notice offers the first time you arrive. If you
+        would also like your earlier visits removed from the analytics record, ask us —{' '}
+        <Mail subject="Cookies" />.
       </P>
+      <CookieChoice />
 
-      <H2>Do Not Track</H2>
+      <H2>Do Not Track and Global Privacy Control</H2>
       <P>
-        Browsers send a Do Not Track or Global Privacy Control signal inconsistently and there is no agreed
-        standard for honouring it, so we would rather tell you the truth than claim compliance: this site does
-        not currently respond to those signals. The blocking routes above do work, immediately and completely.
+        Both are honoured. If your browser sends <b>Global Privacy Control</b>, or the older{' '}
+        <b>Do Not Track</b> set to 1, we treat that as a no: analytics never loads, no cookie is set, and we do
+        not show you the notice at all. You have already answered, and asking again would be asking you to
+        repeat yourself.
+      </P>
+      <P>
+        Only GPC carries legal weight, and only in some places. We honour Do Not Track anyway — it costs nothing
+        and ignoring a request that explicit would be rude.
       </P>
 
       <H2>Changes</H2>

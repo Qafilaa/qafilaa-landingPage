@@ -41,6 +41,7 @@ export const LEGAL_GROUPS: { label: string; items: { route: LegalRouteName; labe
       { route: 'support', label: 'Support' },
       { route: 'contact', label: 'Contact' },
       { route: 'accessibility', label: 'Accessibility' },
+      { route: 'licenses', label: 'Open source' },
     ],
   },
 ];

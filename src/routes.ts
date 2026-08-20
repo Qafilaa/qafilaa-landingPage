@@ -28,7 +28,8 @@ export type LegalRouteName =
   | 'deleteData'
   | 'support'
   | 'contact'
-  | 'accessibility';
+  | 'accessibility'
+  | 'licenses';
 
 /** Public URL path for each non-home route. */
 export const routePaths: Record<LegalRouteName, string> = {
@@ -77,6 +78,9 @@ export const routePaths: Record<LegalRouteName, string> = {
   // Accessibility statement, required of services in the EU under the European
   // Accessibility Act since 28 June 2025.
   accessibility: '/accessibility',
+  // Attribution for the open source Qafilaa is built on. Not demanded by a
+  // store, but most of those licences require it and we ship 283 packages.
+  licenses: '/licenses',
 };
 
 const BY_PATH = new Map<string, Route>(

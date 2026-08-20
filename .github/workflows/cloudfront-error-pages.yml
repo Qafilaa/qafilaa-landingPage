@@ -1,0 +1,44 @@
+# One-off (and re-runnable) CloudFront configuration.
+#
+# Deliberately NOT part of deploy.yml: pointing the distribution at /404.html is
+# a configuration change, not a release step, and it needs
+# cloudfront:UpdateDistribution — a much broader permission than the deploy user's
+# CreateInvalidation. Keeping it here means CI does not hold that key on every push.
+#
+# Run it from the Actions tab: "CloudFront error pages" -> Run workflow.
+name: CloudFront error pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Show what would change without applying it'
+        type: boolean
+        default: true
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Point 403 and 404 at /404.html
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            node scripts/cloudfront-error-pages.mjs --dry-run
+          else
+            node scripts/cloudfront-error-pages.mjs
+          fi

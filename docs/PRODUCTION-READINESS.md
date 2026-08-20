@@ -1,25 +1,57 @@
 # Qafilaa Landing — Production-Readiness Roadmap
 
-> Living checklist of gaps. Source: deep audit (2026-06-26). The site is already solid (SSR/prerender, strong SEO,
-> real waitlist API, S3+CF deploy); these are polish/hardening items. Severity = risk; Effort = S/M/L.
+> Living checklist of gaps. Originally from a deep audit (2026-06-26); re-checked against the code on
+> **2026-08-20** after the Site v2 rebuild, when five items turned out to be done or obsolete.
+> Severity = risk; Effort = S/M/L.
 
 ---
 
+## Blocked on a human
+
+- [ ] **CloudFront error pages are not applied** — the build emits `dist/404.html`, but the distribution still
+  returns `403 AccessDenied` in `application/xml` for every unknown path (verified live 2026-08-20). The origin
+  is REST/OAC, so S3 answers a missing key with **403, not 404** — both codes need mapping. `npm run
+  cloudfront:errors` (idempotent, `--dry-run` supported) or the *CloudFront error pages* workflow does it. Not
+  run here: it needs `cloudfront:UpdateDistribution` and changes production. *(infra, S)*
+- [ ] **Nothing from the Site v2 work is committed or deployed** — the working tree carries the whole rebuild.
+  *(release, S)*
+
 ## P0 — high
 
-- [ ] **No CI quality gate before deploy** — `.github/workflows/deploy.yml` runs `npm install` → `npm run build` → S3 sync on every push to `main`; `npm run lint` (`--max-warnings 0`) and `npm run typecheck` are never enforced as separate gates, and there is no PR check workflow. Add a CI job running `npm ci`, `npm run lint`, `npm run typecheck` on `pull_request` and before deploy; gate deploy on them. Switch `npm install` → `npm ci`. *(ci-cd, S)*
-- [ ] **GA4 loads with no consent gate** — `index.html` calls `gtag('config', ...)` on every load: no Consent Mode, no banner, no Do-Not-Track, while the site ships a DPDP-2023 Privacy Policy. Implement GA4 Consent Mode v2 (default `analytics_storage='denied'`) + a lightweight consent banner (or at minimum region-gate / `anonymize_ip` / respect `navigator.doNotTrack`), and make the privacy policy match what actually runs. *(security/privacy, M)*
+- [x] **CI quality gate** — *done 2026-08-20.* `.github/workflows/ci.yml` runs lint, typecheck, build,
+  design-fidelity verification, a dist audit and the Playwright smoke suite on every PR and push;
+  `deploy.yml` repeats the same gates before it syncs, and now uses `npm ci`.
+- [x] **GA4 consent gate** — *done 2026-08-20.* Consent Mode v2 defaults are declared denied in `index.html` and
+  **gtag.js is not loaded at all** until the visitor accepts, so no request reaches Google and no cookie is set
+  beforehand. `src/site/ConsentBanner.tsx` asks once; `src/site/legal/CookieChoice.tsx` on `/cookies` lets the
+  choice be changed or withdrawn, and withdrawal expires the `_ga*` cookies rather than merely stopping new
+  ones. Cookies left by a visit from before the gate are cleared on arrival.
 
 ## P1 — medium
 
-- [ ] **No `.env.example`** — `src/api.ts` reads `VITE_API_BASE_URL`; `.gitignore` whitelists `.env.example` but none exists. Add it (document `VITE_API_BASE_URL`, note the prod default) and reference it in the README. *(docs, S)*
-- [ ] **702 KB favicon/touch-icon** — `public/qafilaa-icon.png` (702 KB) is used as both `rel=icon` and `rel=apple-touch-icon`. Generate a small set (32×32 + 180×180, <30 KB total, plus .ico/SVG); keep the large PNG only where genuinely needed. *(performance, S)*
-- [ ] **GA4 ID not environment-separated** — `G-V4RB2XKEGK` hardcoded; dev/preview builds pollute prod analytics. Gate init to the prod hostname or inject the ID via build-time env. *(observability, S)*
+- [x] **`.env.example`** — *done 2026-08-20.*
+- [x] **GA4 environment separation** — *done 2026-08-20.* `window.QF_GA_HOSTS` gates analytics to
+  `qafilaa.in` / `www.qafilaa.in`, so dev, `vite preview` and branch deploys can never report into the
+  production property.
+- [x] **Do-Not-Track / Global Privacy Control** — *done 2026-08-20.* Either signal is treated as a no:
+  analytics never loads and the notice is not shown. `/cookies` says so.
+- [x] **702 KB favicon/touch-icon** — *done 2026-08-20.* `public/qafilaa-icon.png` is gone. A square set is
+  generated from `brand/logo-mark.png` (16/32/48/96/192/512, apple-touch-icon, two maskable variants, plus
+  `favicon.ico`). Every shipped brand asset is landscape, so the set has to be built — see `mkicons.py`.
 
 ## P2 — low
 
-- [ ] **No web app manifest** — add a minimal `site.webmanifest` (name/short_name/icons/theme/background/display) for installability + richer mobile metadata. *(ux, S)*
-- [ ] **No skip-link / visible focus ring** — add a visually-hidden skip-to-content link and a `:focus-visible` outline on nav links / CTA / form controls; verify anchor targets receive focus. *(accessibility, S)*
-- [ ] **No automated tests** — add a Playwright smoke test (page loads, form submits to a mocked API, no console errors, prerender doesn't throw, key `data-*` hooks exist) + an optional Lighthouse CI budget. The imperative `useLandingFx.ts` DOM engine + SSR/hydration contract can break silently. *(testing, M)*
-- [ ] **Shared waitlist success flag** — `Landing.tsx` lifts one `submitted` boolean to both the Hero form and the closing CTA form; submitting one flips the other. Consider per-form state (or document the intentional shared behavior). *(ux, S)*
-- [ ] **Stale README claims** — remove `src/hooks/useCyclingBanner.ts` (doesn't exist), fix "hero runs ConvoyMap" (it's `RideScreen`), replace "LegalModal" with the legal *routes*, correct breakpoints to 1000/880/640/430/360, and drop the obsolete waitlist "wire it up" TODO. *(docs, S)*
+- [x] **Automated tests** — *done 2026-08-20.* `tests/smoke.spec.ts` (Playwright, desktop + mobile, 29
+  tests each) plus `tools/verify.py` and `tools/audit.py`, all wired into CI. The design toolchain moved
+  from a session scratchpad into `tools/`, so a future handoff can still be absorbed.
+- [x] **Open-source licences page** — *done 2026-08-20.* `/licenses`, generated by `tools/genlicenses.py`
+  from the Flutter app's `pubspec.yaml`/`.lock` and this site's `package.json`. Licence texts are not
+  reproduced; pub.dev is authoritative and one click away.
+- [x] **Web app manifest** — *done 2026-08-20.* `public/site.webmanifest` with square + maskable icons, app
+  shortcuts and `related_applications` for both stores.
+- [x] **Skip link / visible focus ring** — *done.* The handoff ships `[data-skip]` as the first focusable element
+  and a `*:focus-visible` outline; both are in `src/index.css`.
+- [x] **Shared waitlist success flag** — *obsolete.* The two-form arrangement went with the old landing page;
+  there is one form now.
+- [x] **Stale README claims** — *done 2026-08-20.* The README was rewritten for Site v2; the files it referred
+  to no longer exist.

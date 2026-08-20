@@ -104,7 +104,7 @@ export function ChildSafetyBody() {
       <P>
         Qafilaa is intended for adults. Under the Digital Personal Data Protection Act, 2023 a child is anyone
         under 18, and we do not knowingly process a child's personal data without verifiable consent from a
-        parent or lawful guardian. We do not run behavioural advertising or tracking at all, on anyone.
+        parent or lawful guardian. We run no behavioural advertising and no ad profiling, on anyone.
       </P>
       <P>
         If you believe a child has given us data, email <Mail subject="Child data" /> and we will delete it. See{' '}

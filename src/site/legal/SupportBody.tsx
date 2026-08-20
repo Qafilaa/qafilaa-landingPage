@@ -7,7 +7,7 @@ export function SupportBody() {
     <article>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/support</div>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', color: '#0A6068', marginTop: '22px' }}>Answers, then a human</div>
-            <h1 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(38px,5vw,58px)', lineHeight: '1.04', letterSpacing: '-.025em', margin: '10px 0 0' }}>Help centre</h1>
+            <h1 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(38px,5vw,58px)', lineHeight: '1.04', letterSpacing: '-.025em', margin: '10px 0 0' }}>Help centre</h1><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63', marginTop: '18px' }}>Last updated: 20/08/2026</div>
             <p style={{ margin: '20px 0 0', maxWidth: '64ch', fontSize: '19px', lineHeight: '1.6', color: '#4A4842', textWrap: 'pretty' }}>Every query gets a ticket and a timeline you can follow inside the app. Twelve answers are stored on your phone so they work in a dead zone, which is usually where you need them.</p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px', marginTop: '40px', maxWidth: '1000px' }}>

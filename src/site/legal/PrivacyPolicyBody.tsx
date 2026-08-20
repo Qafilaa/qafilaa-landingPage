@@ -49,7 +49,7 @@ export function PrivacyPolicyBody() {
                 <li><b style={{ color: '#23241F' }}>Ride history:</b> your route, distance, duration, altitude and speed statistics for each riding day, kept as your own record.</li>
                 <li><b style={{ color: '#23241F' }}>Content you create:</b> trips, itineraries, rally points, notes, checklists, expenses and settlements.</li>
                 <li><b style={{ color: '#23241F' }}>Notifications:</b> a push token identifying your device, so crash and SOS alerts can reach it.</li>
-                <li><b style={{ color: '#23241F' }}>Diagnostics:</b> app version, platform and crash reports, through Google Firebase Crashlytics. Crash reports carry no identifier for you and no request contents.</li>
+                <li><b style={{ color: '#23241F' }}>Diagnostics:</b> app version, platform and crash reports, through Google Firebase Crashlytics. Crash reports carry no identifier for you and no request contents.</li><li><b style={{ color: '#23241F' }}>Product analytics:</b> which screens you open and which actions you use, through Google Firebase Analytics. Event and screen names, not the contents of your notes, trips or messages. It is on by default in released builds, and the diagnostics switch in Settings turns it and crash reporting off together.</li>
               </ul>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>We do not knowingly collect more than we need to run the service. There is no advertising or cross-app-tracking software in the Qafilaa app.</p>
               <div style={{ marginTop: '24px', padding: '20px 24px', background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '14px' }}>
