@@ -238,25 +238,40 @@ flight arcs and the auto-demo).
 
 ## Routes
 
-Seven prerendered routes, one static HTML file each. [src/routes.ts](src/routes.ts) maps a pathname to a
-route so the server and client agree on what to render (no hydration mismatch).
+Sixteen prerendered routes, one static HTML file each. [src/routes.ts](src/routes.ts) maps a pathname to a
+route so the server and client agree on what to render (no hydration mismatch). The landing page is
+[src/Landing.tsx](src/Landing.tsx); every other route is a policy or support document rendered by
+[site/legal/LegalRoute.tsx](src/site/legal/LegalRoute.tsx).
 
-| Path | Route | Rendered by |
+Almost all of them exist because a store or a regulator requires them. **Check what a route holds up before
+deleting or renaming it.**
+
+| Path | Required by | What it is |
 | --- | --- | --- |
-| `/` | `home` | [src/Landing.tsx](src/Landing.tsx) |
-| `/privacy-policy` | `privacy` | [site/legal/LegalRoute.tsx](src/site/legal/LegalRoute.tsx) |
-| `/terms-and-conditions` | `terms` | ″ |
-| `/delete-account` | `deleteAccount` | ″ |
-| `/delete-data` | `deleteData` | ″ |
-| `/support` | `support` | ″ |
-| `/security` | `security` | ″ |
+| `/` | — | The landing page |
+| `/privacy-policy` | Apple 5.1.1 · Play App content | Mandatory in both consoles |
+| `/terms-and-conditions` | Apple 3.1.2 | Also serves as the EULA |
+| `/cookies` | GDPR / ePrivacy | This site's analytics; the app has none |
+| `/community-guidelines` | **Apple 1.2** · Play UGC | Published standards for user-generated content |
+| `/child-safety` | **Play Child Safety Standards** | The published CSAE standards URL the declaration asks for |
+| `/report` | **Apple 1.2** · EU DSA | Reporting mechanism reachable from outside the app |
+| `/security` | — | Supports the privacy policy's security claim |
+| `/data-safety` | Play Data safety · Apple App Privacy | Readable mirror of both store forms |
+| `/permissions` | Play prominent disclosure | Backs the background-location declaration |
+| `/subprocessors` | **Apple 5.1.1** | Named third parties + the equal-protection confirmation |
+| `/delete-account` | **Play account deletion** | Must work without installing the app |
+| `/delete-data` | **Play Data safety** | Delete some data without closing the account |
+| `/support` | **Apple Support URL** | A marketing homepage does not satisfy this |
+| `/contact` | Apple 1.2 · **EU DSA trader** · DPDP Act | Trader identity and the Grievance Officer |
+| `/accessibility` | **European Accessibility Act** | In force since 28 June 2025 |
 
-Every non-home route is a store-listing or policy requirement. They are **real URLs, not a modal** — the
-design ships them as a hash overlay, and that was deliberately not adopted.
+They are **real URLs, not a modal** — the design ships them as a hash overlay, and that was deliberately not
+adopted, because a hash target is not a URL a store reviewer can open.
 
-> **Adding a route touches four files, not one:** [src/routes.ts](src/routes.ts), [src/App.tsx](src/App.tsx),
-> the `PAGES` list in [prerender.mjs](prerender.mjs), and [public/sitemap.xml](public/sitemap.xml). Miss one
-> and the route either 404s on the CDN or never gets indexed.
+> **Adding a route touches six places:** [src/routes.ts](src/routes.ts), [src/App.tsx](src/App.tsx), the
+> `PAGES` list in [prerender.mjs](prerender.mjs), [public/sitemap.xml](public/sitemap.xml), the footer in
+> [TheEnd.tsx](src/site/sections/TheEnd.tsx), and [site/legal/groups.ts](src/site/legal/groups.ts). Miss one
+> and the route either 404s on the CDN, never gets indexed, or cannot be found by the reviewer looking for it.
 
 `/join` is deliberately **not** a React route — see below.
 
@@ -312,12 +327,19 @@ The site is checked against the design handoff structurally, not by eye. The che
 authored markup and the prerendered output into trees and compares **every tag, attribute, CSS declaration
 and text node**, normalising away attribute order, declaration order, entity spelling and whitespace.
 
-All seven routes are expected to come out **identical**. Only three deviations are folded into the reference,
-each required by a rule in [CLAUDE.md](CLAUDE.md):
+Everything the handoff drew is expected to come out **identical**. Five deviations are folded into the
+reference, each required by a rule in [CLAUDE.md](CLAUDE.md):
 
 1. legal cross-links point at real routes rather than hash targets;
 2. the waitlist form carries the honeypot input the backend expects;
-3. `fetchpriority` is emitted via a spread, because React 18 renders the camelCase spelling verbatim.
+3. `fetchpriority` is emitted via a spread, because React 18 renders the camelCase spelling verbatim;
+4. the footer carries five link columns instead of three, and the legal tab row is grouped, because the six
+   documents the handoff shipped became fifteen — the store-required set in [Routes](#routes);
+5. privacy policy §5 gained one paragraph naming the subprocessors page and confirming third parties give
+   equal protection, which App Store Review Guideline 5.1.1 requires the policy itself to say.
+
+A second script walks `dist/` and checks every route has its own title and canonical, that JSON-LD appears on
+the home page only, that no internal link 404s, and that every built route is reachable from the footer.
 
 If you change a section, change it **to match the handoff**. Divergence should be a decision, recorded here.
 

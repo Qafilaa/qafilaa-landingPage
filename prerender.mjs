@@ -7,6 +7,7 @@
 //   /privacy-policy         -> dist/privacy-policy/index.html
 //   /terms-and-conditions   -> dist/terms-and-conditions/index.html
 //   /security               -> dist/security/index.html
+//   ...and one file per policy route listed in PAGES below.
 //
 // Each non-home route reuses the built index.html as a template but swaps in
 // its own <title>, canonical, description and Open Graph / Twitter tags, and
@@ -125,6 +126,78 @@ const PAGES = [
     title: 'Security | Qafilaa',
     description:
       'How Qafilaa protects your data — encryption in transit and at rest, what never leaves your phone, who can see your position, retention and deletion, and how to report a vulnerability.',
+  },
+  {
+    route: 'cookies',
+    out: 'dist/cookies/index.html',
+    url: 'https://qafilaa.in/cookies',
+    title: 'Cookies | Qafilaa',
+    description:
+      'What qafilaa.in stores in your browser, why, and how to refuse it. The Qafilaa app itself carries no analytics or advertising software.',
+  },
+  {
+    route: 'communityGuidelines',
+    out: 'dist/community-guidelines/index.html',
+    url: 'https://qafilaa.in/community-guidelines',
+    title: 'Community guidelines | Qafilaa',
+    description:
+      'What belongs on Qafilaa and what does not, how to report content that crosses a line, and what we do within 24 hours of a report.',
+  },
+  {
+    route: 'childSafety',
+    out: 'dist/child-safety/index.html',
+    url: 'https://qafilaa.in/child-safety',
+    title: 'Child safety | Qafilaa',
+    description:
+      "Qafilaa's published standards against child sexual abuse and exploitation, how to report it, what we do when we know, and who to contact.",
+  },
+  {
+    route: 'report',
+    out: 'dist/report/index.html',
+    url: 'https://qafilaa.in/report',
+    title: 'Report content | Qafilaa',
+    description:
+      'How to report abusive or objectionable content and riders on Qafilaa, from inside the app or from anywhere else, and how quickly we act.',
+  },
+  {
+    route: 'dataSafety',
+    out: 'dist/data-safety/index.html',
+    url: 'https://qafilaa.in/data-safety',
+    title: 'Data safety | Qafilaa',
+    description:
+      "A readable version of Qafilaa's Google Play Data safety and Apple App Privacy answers: what we collect, what we share, and what we never touch.",
+  },
+  {
+    route: 'permissions',
+    out: 'dist/permissions/index.html',
+    url: 'https://qafilaa.in/permissions',
+    title: 'Permissions | Qafilaa',
+    description:
+      'Every permission Qafilaa asks for, the real reason for each, what breaks if you refuse it, and how to take it back.',
+  },
+  {
+    route: 'subprocessors',
+    out: 'dist/subprocessors/index.html',
+    url: 'https://qafilaa.in/subprocessors',
+    title: 'Subprocessors | Qafilaa',
+    description:
+      'The named third parties that can touch Qafilaa data, what each one does, and the protection standard every one of them is held to.',
+  },
+  {
+    route: 'contact',
+    out: 'dist/contact/index.html',
+    url: 'https://qafilaa.in/contact',
+    title: 'Contact | Qafilaa',
+    description:
+      'How to reach Qafilaa: business and trader details, our Grievance Officer, child safety and security contacts, and how long each takes to answer.',
+  },
+  {
+    route: 'accessibility',
+    out: 'dist/accessibility/index.html',
+    url: 'https://qafilaa.in/accessibility',
+    title: 'Accessibility | Qafilaa',
+    description:
+      "How accessible Qafilaa's website and app are today, where they fall short, and how to tell us when something is not usable.",
   },
 ];
 

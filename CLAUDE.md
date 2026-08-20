@@ -49,12 +49,14 @@ The whole site is transcribed from **`Qafilaa Site v2.dc.html`** (handoff 11). I
 | `src/site/data.ts` | 1340–1371 |
 | `src/site/engine.ts` | 1373–3262 |
 
-**Only three deliberate departures from the handoff**, all required by rules below:
-1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§5), and the hero's social-proof line takes the live backend count.
+**Five deliberate departures from the handoff**, each required by a rule below:
+1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§6), and the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
+4. **The site footer carries five link columns instead of three**, and the legal tab row is grouped instead of flat, because the six documents the handoff shipped became fifteen — see §8.
+5. **Privacy policy §5 gained one paragraph** naming the subprocessors page and confirming third parties give the same or greater protection. App Store Review Guideline 5.1.1 requires that confirmation in the policy itself.
 
-When changing a section, **change it to match the handoff**. If you need to diverge, say so here.
+Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these five in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
 ## 4. Styling — a runtime tone system, not static tokens
 
@@ -87,13 +89,56 @@ The waitlist form (in `src/site/sections/TheEnd.tsx`) **POSTs to the live backen
 
 ## 7. SEO / content sync rules
 
-- Adding a route requires updating **all of:** `src/routes.ts`, `src/App.tsx`, `prerender.mjs` `PAGES`, and `public/sitemap.xml`.
-- Legal content is **prerendered routes** — `/privacy-policy`, `/terms-and-conditions`, `/delete-account`, `/delete-data`, `/support`, `/security` — rendered by `src/site/legal/LegalRoute.tsx`, **not a modal**. Each is a store-listing or policy requirement; a route missing from `prerender.mjs` is a hard 404 on a static site.
+- Adding a route requires updating **all of:** `src/routes.ts`, `src/App.tsx`, `prerender.mjs` `PAGES`, and `public/sitemap.xml`. It must also appear in the site footer (`src/site/sections/TheEnd.tsx`) and in `src/site/legal/groups.ts` — `scratchpad/audit.py` fails if a built route is not linked from the footer.
+- Legal content is **prerendered routes** rendered by `src/site/legal/LegalRoute.tsx`, **not a modal**. A route missing from `prerender.mjs` is a hard 404 on a static site, and for most of these that is a store rejection. See §8 for what each one satisfies.
 - Legal pages pin the Daylight palette locally in `LegalShell.tsx`. Note `--mut` is **`#4A4842`** there, darker than the light tone's `#6E6B63` — a deliberate long-prose readability choice from the handoff.
+- Pages written by hand use the typographic primitives in `src/site/legal/prose.tsx`, whose values are lifted from the transcribed pages. Do not hand-roll a new heading style.
 - FAQ copy is duplicated as JSON-LD in `index.html` **and** in `src/site/sections/SettingsAndSupport.tsx` — **edit both together**.
 - `src/content.ts` holds the real localized launch values and intentionally differs from prototype placeholders — **do not overwrite on a design sync.**
 
-## 8. Quality gates & known gaps
+## 8. Store requirements — what each route is for
+
+Fifteen policy/support routes. Most exist because Apple or Google will reject the app without them, so
+**do not delete or rename one without checking what it holds up.** Every one is linked from the site
+footer and from the grouped tab row on the legal pages.
+
+| Route | Required by | Why |
+| --- | --- | --- |
+| `/privacy-policy` | Apple 5.1.1 · Play App content | Mandatory field in both consoles. Must state what is collected, all uses, third parties **and that they give equal protection**, retention, and how to revoke consent or delete. |
+| `/terms-and-conditions` | Apple 3.1.2 | Serves as the EULA. Apple wants a functional link if you do not use its standard licence. |
+| `/cookies` | GDPR / ePrivacy | Referenced by privacy policy §9. Covers this site's analytics only — the app has no analytics SDK. |
+| `/community-guidelines` | **Apple 1.2** · Play UGC | An app with user-generated content must publish standards, filter, and act on reports. Commits us to a **24-hour** response. |
+| `/child-safety` | **Play Child Safety Standards** | The "published standards against CSAE" URL the Play Console declaration asks for. Must stay globally reachable, name the app as listed, and name a point of contact. |
+| `/report` | **Apple 1.2** · Play UGC · EU DSA | The reporting mechanism reachable from outside the app, and the notice-and-action contact point. |
+| `/security` | — | Not required; supports the privacy policy's §7 claim. |
+| `/data-safety` | Play Data safety · Apple App Privacy | Human-readable mirror of both store forms. **If either form changes, change this too** — a mismatch is worse than not publishing it. |
+| `/permissions` | Play prominent disclosure | Backs the background-location declaration and Apple's purpose strings. Rows must match what the app actually requests. |
+| `/subprocessors` | **Apple 5.1.1** | Names every third party with access and carries the equal-protection confirmation. |
+| `/delete-account` | **Play account deletion** | Must let a user request deletion **without installing the app**. Enforced since April 2024. |
+| `/delete-data` | **Play Data safety** | The second deletion URL: delete *some* data without closing the account. |
+| `/support` | **Apple Support URL** | Apple will not accept a marketing homepage here. |
+| `/contact` | Apple 1.2 · **EU DSA trader** · DPDP Act | Published contact info, trader identity, and the named Grievance Officer. **Must match what is filed in App Store Connect and Play Console.** |
+| `/accessibility` | **European Accessibility Act** | In force since 28 June 2025 for services offered in the EU. Claims here must be checkable against the code. |
+
+Two of these carry named-person commitments — the Grievance Officer and the child-safety point of contact.
+If the person changes, change `/contact`, `/child-safety`, the privacy policy, and the Play Console
+declaration together.
+
+## 9. Verifying fidelity
+
+Two scripts, kept in the session scratchpad rather than the repo (rebuild them if they are gone — the
+approach matters more than the file):
+
+- **`verify.py`** parses the handoff's markup and the prerendered output into trees and compares every tag,
+  attribute, CSS declaration and text node, normalising attribute order, declaration order, entity spelling
+  and whitespace. It folds in the five departures from §3 and then demands zero differences. It is the only
+  thing standing between "looks right" and "is right".
+- **`audit.py`** walks `dist/` and checks every route has its own title and canonical, that JSON-LD appears
+  on the home page only, that no internal link 404s, and that every built route is reachable from the footer.
+
+Run both after any change to a section, a policy page, the footer, or `prerender.mjs`.
+
+## 10. Quality gates & known gaps
 
 - Run `npm run lint` (`--max-warnings 0`) + `npm run typecheck` before committing; tsconfig is strict (`noUnusedLocals`/`noUnusedParameters`). Use `npm ci` for installs.
 - **CI does not yet gate lint/typecheck** (`.github/workflows/deploy.yml` only builds + syncs to S3 on push to `main`). See `docs/PRODUCTION-READINESS.md` — adding a lint/typecheck gate and a GA4 consent gate are the P0 items.

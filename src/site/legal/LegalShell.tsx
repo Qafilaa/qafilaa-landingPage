@@ -2,19 +2,15 @@
 // overlay (`Qafilaa Site v2.dc.html`, lines 813-835), with two changes: it is a
 // real page rather than a fixed overlay, and the pills are links to the real
 // prerendered URLs instead of hash targets.
+//
+// The handoff shipped six documents in one flat pill row. There are fifteen
+// now, all of them required or store-facing, so the row is grouped — same
+// pills, same palette, with the section labels the rest of the site uses.
 import type { ReactNode } from 'react';
 
+import { routePaths } from '../../routes';
+import { LEGAL_GROUPS } from './groups';
 import { LegalFoot } from './LegalFoot';
-
-/** The six legal / support routes, in the order the design lists them. */
-export const LEGAL_TABS = [
-  { path: '/privacy-policy', label: 'Privacy' },
-  { path: '/terms-and-conditions', label: 'Terms' },
-  { path: '/delete-account', label: 'Delete account' },
-  { path: '/delete-data', label: 'Delete data' },
-  { path: '/support', label: 'Support' },
-  { path: '/security', label: 'Security' },
-] as const;
 
 /**
  * The tone system never runs on these pages, so Daylight is pinned locally —
@@ -55,10 +51,16 @@ const PILL = {
   textDecoration: 'none',
 } as const;
 
-const PILL_ON = {
-  background: '#0E7C86',
-  color: '#F7F5F0',
-  borderColor: '#0E7C86',
+const PILL_ON = { background: '#0E7C86', color: '#F7F5F0', borderColor: '#0E7C86' } as const;
+
+const GROUP_LABEL = {
+  fontFamily: "'Space Grotesk',sans-serif",
+  fontSize: '10.5px',
+  letterSpacing: '.16em',
+  textTransform: 'uppercase',
+  color: '#6E6B63',
+  flex: '0 0 74px',
+  paddingTop: '13px',
 } as const;
 
 export function LegalShell({ path, children }: { path: string; children: ReactNode }) {
@@ -130,19 +132,26 @@ export function LegalShell({ path, children }: { path: string; children: ReactNo
             Back to the ride
           </a>
         </div>
-        <div
+        <nav
           data-legaltabs="1"
-          style={{ maxWidth: '1120px', margin: '0 auto', padding: '0 40px 14px', display: 'flex', flexWrap: 'wrap', gap: '7px' }}
+          aria-label="Policies and support"
+          style={{ maxWidth: '1120px', margin: '0 auto', padding: '0 40px 14px', display: 'flex', flexDirection: 'column', gap: '6px' }}
         >
-          {LEGAL_TABS.map((t) => {
-            const on = t.path === path;
-            return (
-              <a key={t.path} href={t.path} aria-current={on ? 'page' : undefined} style={on ? { ...PILL, ...PILL_ON } : PILL}>
-                {t.label}
-              </a>
-            );
-          })}
-        </div>
+          {LEGAL_GROUPS.map((g) => (
+            <div key={g.label} style={{ display: 'flex', gap: '7px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+              <span style={GROUP_LABEL}>{g.label}</span>
+              {g.items.map((t) => {
+                const href = routePaths[t.route];
+                const on = href === path;
+                return (
+                  <a key={href} href={href} aria-current={on ? 'page' : undefined} style={on ? { ...PILL, ...PILL_ON } : PILL}>
+                    {t.label}
+                  </a>
+                );
+              })}
+            </div>
+          ))}
+        </nav>
       </div>
 
       <div data-legalpages="1" style={{ maxWidth: '1120px', margin: '0 auto', padding: '56px 40px 130px' }}>

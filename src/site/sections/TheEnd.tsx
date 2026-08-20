@@ -32,10 +32,42 @@ export function TheEnd() {
             <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>India · Nepal · Bhutan</div>
             <div data-social="1" style={{ display: 'flex', gap: '10px' }}></div>
           </div>
-          <div style={{ display: 'flex', gap: '34px', flexWrap: 'wrap', fontSize: '14px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}><span data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Product</span><a href="#ride">Live convoy</a><a href="#safety">Safety</a><a href="#offline">No signal</a></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}><span data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Support</span><a href="/support">Help centre</a><a href="mailto:admin@qafilaa.in">admin@qafilaa.in</a><a href="/delete-data">Delete my data</a><a href="/security">Security</a></div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}><span data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Legal</span><a href="/privacy-policy">Privacy</a><a href="/terms-and-conditions">Terms</a><a href="/delete-account">Delete my account</a></div>
+          <div style={{ display: 'flex', gap: '30px', flexWrap: 'wrap', fontSize: '14px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span data-plot="1" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Product</span>
+              <a href="#ride">Live convoy</a>
+              <a href="#safety">Safety</a>
+              <a href="#offline">No signal</a>
+              <a href="#join">Get the app</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span data-plot="1" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Support</span>
+              <a href="/support">Help centre</a>
+              <a href="/contact">Contact</a>
+              <a href="mailto:admin@qafilaa.in">admin@qafilaa.in</a>
+              <a href="/accessibility">Accessibility</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span data-plot="1" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Safety</span>
+              <a href="/community-guidelines">Community guidelines</a>
+              <a href="/child-safety">Child safety</a>
+              <a href="/report">Report content</a>
+              <a href="/security">Security</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span data-plot="1" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Your data</span>
+              <a href="/data-safety">Data safety</a>
+              <a href="/permissions">Permissions</a>
+              <a href="/subprocessors">Subprocessors</a>
+              <a href="/delete-data">Delete my data</a>
+              <a href="/delete-account">Delete my account</a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span data-plot="1" style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Legal</span>
+              <a href="/privacy-policy">Privacy</a>
+              <a href="/terms-and-conditions">Terms</a>
+              <a href="/cookies">Cookies</a>
+            </div>
           </div>
           <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>qafilaa.in</div>
         </footer>

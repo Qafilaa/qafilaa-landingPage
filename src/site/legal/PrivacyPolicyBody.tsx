@@ -97,6 +97,7 @@ export function PrivacyPolicyBody() {
                 <li>Authorities or third parties where required by law, or to protect the rights, safety, or property of users or the public.</li>
               </ul>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>In the event of a merger, acquisition, or restructuring, data may be transferred as part of that transaction, subject to this policy.</p>
+              <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>Every service provider we use is named on the <a href="/subprocessors">Subprocessors</a> page, with what it does and what it can see. Each is bound by contract to confidentiality and data-protection terms, is permitted to use your data only to provide the service to us, and is required to provide the same or greater protection of your personal data than this policy promises you. None of them is permitted to use it for their own purposes, and none of them is an advertising network or a data broker.</p>
 
               <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '23px', lineHeight: '1.25', letterSpacing: '-.01em', margin: '56px 0 0' }}>6 · Data retention</h2>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>We keep personal data only as long as needed for the purposes above:</p>
