@@ -6,7 +6,14 @@
  * browser loaded. `pathToRoute` maps a URL pathname to a route so the server
  * and client agree on what to render (no hydration mismatch).
  */
-export type Route = 'home' | 'privacy' | 'terms' | 'deleteAccount' | 'deleteData' | 'support';
+export type Route =
+  | 'home'
+  | 'privacy'
+  | 'terms'
+  | 'deleteAccount'
+  | 'deleteData'
+  | 'support'
+  | 'security';
 
 /** Public URL path for each non-home route. */
 export const routePaths: Record<Exclude<Route, 'home'>, string> = {
@@ -26,6 +33,9 @@ export const routePaths: Record<Exclude<Route, 'home'>, string> = {
   // homepage — it has to lead somewhere a user can actually get help. It is listed on the
   // App Store version metadata, so a 404 here is a metadata rejection.
   support: '/support',
+  // Linked from the privacy policy and the footer; spells out how location data
+  // and medical cards are actually held. Added with the Site v2 design.
+  security: '/security',
 };
 
 export function pathToRoute(pathname: string): Route {
@@ -36,5 +46,6 @@ export function pathToRoute(pathname: string): Route {
   if (p === routePaths.deleteAccount) return 'deleteAccount';
   if (p === routePaths.deleteData) return 'deleteData';
   if (p === routePaths.support) return 'support';
+  if (p === routePaths.security) return 'security';
   return 'home';
 }

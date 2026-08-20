@@ -2,11 +2,17 @@
 
 > **Ride together. No one left behind.**
 
-A pixel-faithful React implementation of the **Qafilaa** convoy-ride safety app landing page — a dark "Summit" themed coming-soon page with a single teal accent (`#20D6A8`), Space Grotesk + Inter typography, and rich ambient motion.
+A pixel-faithful React implementation of the **Qafilaa Site v2** design — a light "Daylight" themed site
+(`#F7F5F0` paper, `#0E7C86` teal, Hanken Grotesk + Space Grotesk) built as a **22-waypoint scroll journey**
+down the Manali–Leh–Manali circuit, with a flying phone that docks section to section showing 75 real
+screens from the app.
 
-Qafilaa keeps a whole riding group on one live map — gaps, rally points, last-known positions and one-tap SOS. Built for rides where the road runs out of signal before it runs out of mountain.
+Qafilaa keeps a whole riding group on one live map — gaps, rally points, last-known positions and one-tap
+SOS. Built for rides where the road runs out of signal before it runs out of mountain.
 
-The page is a from-scratch React port of an HTML/CSS/JS prototype produced in Claude Design. Every colour, dimension, and animation curve is transcribed 1:1 from the source so the visual output matches the original.
+The page is a 1:1 transcription of `Qafilaa Site v2.dc.html`, a complete working prototype produced in
+Claude Design. Every colour, dimension, animation curve and interaction is carried across from the source,
+and the build is verified against it by an automated structural diff (see [Fidelity](#fidelity)).
 
 🌐 Live site: **[qafilaa.in](https://qafilaa.in/)**
 
@@ -29,15 +35,14 @@ This repo is one of three:
 - [Tech stack](#tech-stack)
 - [Getting started](#getting-started)
 - [Scripts](#scripts)
-- [How the build works (SSR prerender + hydration)](#how-the-build-works-ssr-prerender--hydration)
+- [How the build works](#how-the-build-works-ssr-prerender--hydration)
 - [What's on the page](#whats-on-the-page)
 - [Architecture](#architecture)
+- [The engine](#the-engine)
+- [Theming — the tone system](#theming--the-tone-system)
 - [Routes](#routes)
 - [Deep links & the /join page](#deep-links--the-join-page)
-- [Responsive layout](#responsive-layout)
-- [Editing content](#editing-content)
-- [Theming](#theming)
-- [Motion / FX engine](#motion--fx-engine)
+- [Fidelity](#fidelity)
 - [SEO & analytics](#seo--analytics)
 - [Deployment](#deployment)
 - [Conventions](#conventions)
@@ -47,17 +52,17 @@ This repo is one of three:
 
 ## Tech stack
 
-| Concern         | Choice                                              |
-| --------------- | --------------------------------------------------- |
-| Framework       | React 18 (`react`, `react-dom`)                     |
-| Language        | TypeScript 5                                        |
-| Bundler / dev   | Vite 5 (`@vitejs/plugin-react`)                     |
-| SSR / prerender | `react-dom/server` + a Node post-build step         |
-| Styling         | Inline-style objects + design tokens (no CSS framework) |
-| Linting         | ESLint 8 (`@typescript-eslint`, react-hooks rules)  |
-| Fonts           | Inter + Space Grotesk (Google Fonts)                |
+| | |
+| --- | --- |
+| **Framework** | React 18 + TypeScript 5 (strict) |
+| **Bundler** | Vite 5 |
+| **Rendering** | Static prerender at build time (`renderToString`), hydrated on load |
+| **Styling** | Inline style objects transcribed from the design + CSS custom properties written at runtime. No CSS framework. |
+| **Fonts** | Hanken Grotesk (body) + Space Grotesk (display), Google Fonts |
+| **Motion** | One imperative runtime (`src/site/engine.ts`), ported from the design handoff |
+| **Hosting** | S3 + CloudFront, deployed by GitHub Actions on push to `main` |
 
-Zero runtime UI dependencies beyond `react` / `react-dom` — styling is done with transcribed inline-style objects plus a small global stylesheet ([src/index.css](src/index.css)) for keyframes, `::selection`, fonts and responsive breakpoints.
+Runtime dependencies are **React and React DOM only** — no router, no animation library, no UI kit.
 
 ---
 
@@ -75,7 +80,7 @@ npm ci           # reproducible install — prefer this over `npm install`
 npm run dev      # start the dev server (http://localhost:5173)
 ```
 
-In dev, `#root` is empty so the app mounts a fresh React tree. In production it hydrates prerendered markup (see below).
+In dev, `#root` is empty so the app mounts a fresh React tree. In production it hydrates prerendered markup.
 
 ---
 
@@ -84,7 +89,7 @@ In dev, `#root` is empty so the app mounts a fresh React tree. In production it 
 | Script              | What it does                                                                                                  |
 | ------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `npm run dev`       | Start the Vite dev server with HMR.                                                                            |
-| `npm run build`     | Type-check, build the client bundle, build the SSR bundle, then prerender static HTML into `dist/index.html`. |
+| `npm run build`     | Type-check, build the client bundle, build the SSR bundle, then prerender static HTML for every route.         |
 | `npm run preview`   | Serve the production `dist/` locally to verify the build.                                                      |
 | `npm run lint`      | ESLint over `ts`/`tsx` with `--max-warnings 0`.                                                                |
 | `npm run typecheck` | `tsc --noEmit` (type-check only, no output).                                                                   |
@@ -96,7 +101,7 @@ tsc --noEmit \
   && vite build \                              # client bundle  -> dist/
   && vite build --ssr src/entry-server.tsx \   # server bundle  -> dist-ssr/
        --outDir dist-ssr \
-  && node prerender.mjs                        # inject static HTML into dist/index.html
+  && node prerender.mjs                        # bake static HTML for all 7 routes
 ```
 
 ---
@@ -106,83 +111,148 @@ tsc --noEmit \
 This project is a **statically prerendered SPA** — there is no Node server at runtime, just static files.
 
 1. **Client build** (`vite build`) emits the hydrating bundle to `dist/`.
-2. **Server build** (`vite build --ssr src/entry-server.tsx`) emits a Node-loadable bundle to `dist-ssr/`. Its [entry-server.tsx](src/entry-server.tsx) exposes `render()`, returning the app as an HTML string via `renderToString`.
-3. **Prerender step** ([prerender.mjs](prerender.mjs)) imports that `render()`, then replaces `<div id="root"></div>` in `dist/index.html` with the rendered markup. Crawlers and first byte now receive the full page.
+2. **Server build** (`vite build --ssr src/entry-server.tsx`) emits a Node-loadable bundle to `dist-ssr/`. Its [entry-server.tsx](src/entry-server.tsx) exposes `render(route)`, returning the app as an HTML string via `renderToString`.
+3. **Prerender step** ([prerender.mjs](prerender.mjs)) imports that `render()`, then replaces `<div id="root"></div>` with the rendered markup — once per route, rewriting the per-route `<head>` tags and stripping the home-only JSON-LD. Crawlers and first byte now receive the full page.
 4. **Hydration** ([src/main.tsx](src/main.tsx)) checks whether `#root` already has children — if so it `hydrateRoot`s the prerendered markup; otherwise (dev) it `createRoot`s a fresh tree.
 
-> ⚠️ **SSR safety:** every browser API (`window` / `document`) must live inside `useEffect` or event handlers so nothing touches the DOM during `render()`. The motion engine already follows this rule.
+> ⚠️ **SSR safety:** every browser API (`window` / `document`) must live inside `useEffect` or event handlers so nothing touches the DOM during `render()`. The engine already follows this rule.
+
+> ⚠️ **`npm run preview` serves nested routes from the SPA fallback**, so `/security` shows the home page's
+> `<title>`. That is a preview-server artifact, not a build defect — the files in `dist/<route>/index.html`
+> are correct. To check them the way S3 does, serve `dist/` with any static server and request the route
+> **with a trailing slash**.
 
 ---
 
 ## What's on the page
 
-The page is composed top-to-bottom in [src/App.tsx](src/App.tsx) (plus a global cursor scout-light). Legal content (`/privacy-policy`, `/terms-and-conditions`) is rendered as prerendered **routes** via `components/LegalPage.tsx`, not a modal:
+The landing page is **22 waypoints**, each a `<section>` with its own `data-tone`:
 
-| Section | Highlights |
-| --- | --- |
-| **Nav** | Sticky, blurred bar with the convoy logo and a waitlist CTA |
-| **Hero** | Floating phone running `RideScreen` (the live convoy view; `ConvoyMap.tsx` is a legacy/demo map component), drifting topographic terrain, traveling GPS dots, a cursor-following glow, floating telemetry chips, and the e-mail capture |
-| **Route marquee** | Infinitely scrolling band of legendary high-altitude passes |
-| **Stats band** | Count-up numbers that animate on scroll |
-| **Problem** | The "lead can't see the sweep" narrative |
-| **Features** | Six tools — live map, gap tracking, rally points, offline-first, sweep & roles, one-tap SOS — with hover lift and a live mini-demo |
-| **Offline spotlight** | A user-toggled live vs last-known signal switch (wired imperatively by `useLandingFx`) and live/last-known rider rows |
-| **How it works** | Three steps from gate to summit |
-| **Safety** | The red one-tap SOS section with a pulsing button |
-| **Device showcase** | In-signal vs. past-the-last-bar phones |
-| **Waitlist** | Coming-soon CTA with a live countdown to launch and a working form success state |
-| **FAQ + Footer** | Answers, footer, and links to the legal pages (`/privacy-policy`, `/terms-and-conditions`) |
+| # | Section | Tone | What it shows |
+| --- | --- | --- | --- |
+| 00 | Trailhead | light | Hero, route line, waitlist CTA, live convoy screen |
+| 01 | The split | night | Why a group ride comes apart — animated road with a gap label |
+| 02 | Set up once | light | Profile, bikes, medical card, documents |
+| 03 | Permissions | paper | The three permissions and the real reason for each |
+| 04 | The send-off | deep | The E20 fuel warning interstitial |
+| 05 | Plan the trip | light | Trip creation, dates cascade, overlap guard |
+| 06 | Bring the crew | paper | Join code (tap to copy), invites, crew fan |
+| 07 | Day-wise plan | light | Leg map + elevation profile + day rail, rally points |
+| 08 | Where you sleep | paper | Night-scoped stays |
+| 09 | The money | light | Drag-to-split expense demo with a live settle graph |
+| 10 | Papers & lists | paper | Checklists, geofenced reminders, permits |
+| 11 | Notes | light | Day-tagged notes with a seen-by list |
+| 12 | Along the way | paper | Discovery, POIs, smart nudges |
+| 13 | The lobby | clay | Readiness board, roles, offline pack download |
+| 14 | Roll out | deep | One person calls it; every phone knows |
+| 15 | Live convoy | night | Convoy map with a 20-minute replay scrubber + muster board |
+| 16 | Navigation | light | The four-rung offline navigation ladder |
+| 17 | Safety | night | Runnable crash sequence with countdown and cancel |
+| 18 | No signal | paper | Drag the signal down: live → last-known → offline |
+| 19 | Settings & support | light | Safety toggles, help centre, FAQ |
+| 20 | End of the ride | paper | Share card with a dark toggle, lifetime stats |
+| 21 | The end | clay | Waitlist form, stores, footer |
+
+Around them sits fixed chrome: a nav pill with a scroll rail, a left "spine" that tracks progress with a
+convoy of dots, a right waypoint rail, a bottom-left altitude/km/stretch readout, a contour-field
+background whose density follows the tone, and the flying phone itself.
 
 ---
 
 ## Architecture
 
 ```
-.
-├── index.html                  HTML shell: meta/OG/Twitter tags, JSON-LD, GA4, fonts
-├── prerender.mjs               Post-build: inject static markup into dist/index.html
-├── vite.config.ts              Vite + React plugin
-├── tsconfig.json
-├── public/
-│   ├── robots.txt
-│   ├── sitemap.xml
-│   ├── qafilaa-icon.png        favicon / apple-touch-icon
-│   ├── og-image.png / .svg     social share image
-│   ├── join/index.html         invite fallback page (standalone HTML, NOT React)
-│   └── .well-known/            App Links + Universal Links verification files
-└── src/
-    ├── main.tsx                Hydrate (prod) or mount (dev)
-    ├── entry-server.tsx        Build-time SSR render() entry
-    ├── App.tsx                 Page composition (section order)
-    ├── routes.ts               Path → route mapping (home / privacy / terms)
-    ├── api.ts                  Waitlist client for the live backend
-    ├── theme.ts                Design tokens (colours, fonts, layout, easing)
-    ├── content.ts              Editable copy (launch label, hero subhead, passes…)
-    ├── index.css               Reset, fonts, every @keyframes, reduced-motion, breakpoints
-    ├── hooks/
-    │   ├── useLandingFx.ts     Imperative pointer-driven motion engine
-    │   ├── useReveal.ts        Scroll-triggered entrance animation (IntersectionObserver)
-    │   ├── useCountUp.ts       Eased count-up for the stat band
-    │   ├── useCountdown.ts     Live countdown to the launch instant
-    │   ├── usePointerGlow.ts   Cursor-following hero glow
-    │   ├── useTerrain.ts       Drifting topographic terrain layer
-    │   └── useHover.ts         Inline-style :hover / :focus helper
-    └── components/             One file per section + shared primitives
-        └── ConvoyMap.tsx       Reusable SVG phone map (live / stale / offline / solo)
+src/
+  main.tsx                  client entry — hydrate or mount
+  entry-server.tsx          build-time renderToString entry
+  App.tsx                   route switch (home vs one legal document)
+  routes.ts                 pathname <-> route mapping
+  api.ts                    waitlist POST + count GET
+  content.ts                editable copy and links
+  index.css                 :root seed, reset, @keyframes, [data-*] rules, media queries
+  Landing.tsx               chrome + the 22 sections, stateless by contract
+  site/
+    tokens.ts               TONES table, PW/PH, colour helpers
+    data.ts                 TRIP, DAYS, CREW — the itinerary every demo is built from
+    engine.ts               the imperative runtime (~1,950 lines, ported 1:1)
+    useSiteEngine.ts        mounts/destroys the engine from a useEffect
+    chrome/                 Chrome.tsx, Shortcuts.tsx
+    sections/               22 files, one per waypoint
+    legal/                  LegalRoute, LegalShell, LegalFoot + 6 document bodies
+public/
+  qafilaa-screens.js        75 pre-rendered app screens (815 KB / 79 KB gz)
+  brand/                    logo mark, lockup, touch icon, OG cover
+  join/index.html           standalone deep-link bounce page
+  .well-known/              App Links + Universal Links association files
 ```
+
+`Landing.tsx` holds **no state**. The engine rewrites `innerHTML` on ~40 containers once it boots, so a React
+re-render would discard everything it has drawn.
+
+---
+
+## The engine
+
+[`src/site/engine.ts`](src/site/engine.ts) is a 1:1 port of the design handoff's own runtime class. It owns
+everything the markup cannot express, and drives the DOM **imperatively through `data-*` hooks** — there is
+**no compile-time link** between the markup and the engine, so renaming or dropping a hook silently kills a
+demo. The markup carries ~130 distinct hooks.
+
+`boot()` runs **38 build steps**, each in its own try/catch, pushing its name to `window.__QAF_STEPS`.
+
+```js
+// in the browser console on / — this is the first thing to check
+window.__QAF_STEPS.filter(s => s[0] === '!')   // must be []  — a `!name` entry is a failed step
+window.__QAF_FERR                              // must be undefined — frame-loop error
+```
+
+The phone is a single fixed element that flies between 19 `[data-dock]` slots along a bézier arc, drawing a
+trail behind it, and swaps screens with push / sheet / tab / replace transitions. Tap it to take over from
+the auto-demo; it returns to `Auto` after 9 s idle. Screens come from
+[`public/qafilaa-screens.js`](public/qafilaa-screens.js), which **must stay in `public/`** so Vite does not
+bundle it, and is loaded by a `<script defer>`.
+
+Keyboard: `J` / `K` move between waypoints, `?` lists shortcuts, `Esc` closes.
+
+---
+
+## Theming — the tone system
+
+There is no static palette. Each section declares a `data-tone` (`light` / `paper` / `clay` / `night` /
+`deep`), and the engine's `paint()` **interpolates between the tones of adjacent sections**, writing
+`--bg --ink --mut --sur --line --card --acc --acc2 --ctr --ctaInk --navbg --navline` onto the document
+element every frame the tone changes. Scrolling from one section to the next fades the whole page — text,
+cards, borders, nav glass — from one palette into the other.
+
+So **components reference `var(--ink)`, never an imported colour constant.** The tone table lives in
+[`src/site/tokens.ts`](src/site/tokens.ts) and is the single source of truth for the palette.
+
+Breakpoints live in [src/index.css](src/index.css): **1500 / 1240 / 1080 / 760**, plus `max-height: 760 / 620`
+for the readout instrument. Below 900 px the engine takes its `narrow` path — the flying phone is retired and
+each dock renders its screen inline.
+
+`prefers-reduced-motion` is honoured twice: in `index.css`, and again in the engine (`calm` mode drops the
+flight arcs and the auto-demo).
 
 ---
 
 ## Routes
 
-Three prerendered routes, one static HTML file each. [src/routes.ts](src/routes.ts) maps a pathname to a route
-so the server and client agree on what to render (no hydration mismatch).
+Seven prerendered routes, one static HTML file each. [src/routes.ts](src/routes.ts) maps a pathname to a
+route so the server and client agree on what to render (no hydration mismatch).
 
 | Path | Route | Rendered by |
 | --- | --- | --- |
 | `/` | `home` | [src/Landing.tsx](src/Landing.tsx) |
-| `/privacy-policy` | `privacy` | [components/LegalPage.tsx](src/components/LegalPage.tsx) |
-| `/terms-and-conditions` | `terms` | [components/LegalPage.tsx](src/components/LegalPage.tsx) |
+| `/privacy-policy` | `privacy` | [site/legal/LegalRoute.tsx](src/site/legal/LegalRoute.tsx) |
+| `/terms-and-conditions` | `terms` | ″ |
+| `/delete-account` | `deleteAccount` | ″ |
+| `/delete-data` | `deleteData` | ″ |
+| `/support` | `support` | ″ |
+| `/security` | `security` | ″ |
+
+Every non-home route is a store-listing or policy requirement. They are **real URLs, not a modal** — the
+design ships them as a hash overlay, and that was deliberately not adopted.
 
 > **Adding a route touches four files, not one:** [src/routes.ts](src/routes.ts), [src/App.tsx](src/App.tsx),
 > the `PAGES` list in [prerender.mjs](prerender.mjs), and [public/sitemap.xml](public/sitemap.xml). Miss one
@@ -236,80 +306,34 @@ open  https://qafilaa.in/join?c=ABC123      # should show the invite card with c
 
 ---
 
-## Responsive layout
+## Fidelity
 
-The page is fully responsive across desktop, tablet and mobile. Breakpoints live in [src/index.css](src/index.css) and target `data-*` hooks on the relevant elements (they use `!important` to override the desktop inline styles):
+The site is checked against the design handoff structurally, not by eye. The check parses both the handoff's
+authored markup and the prerendered output into trees and compares **every tag, attribute, CSS declaration
+and text node**, normalising away attribute order, declaration order, entity spelling and whitespace.
 
-- **≤1000px** — feature grid drops to 2 columns.
-- **≤880px** — hero collapses to a single column, nav text links hide (the waitlist CTA stays), hero padding tightens.
-- **≤640px** — section gutters shrink, feature grid goes single-column, the wide feature card restacks vertically, floating hero chips hide, and the SOS visual recenters below its copy.
-- **≤430px** — the hero phone scales down and the countdown tiles compress.
-- **≤360px** — tightest mobile pass; plus a landscape `max-height: 560` rule.
+All seven routes are expected to come out **identical**. Only three deviations are folded into the reference,
+each required by a rule in [CLAUDE.md](CLAUDE.md):
 
-The stat band, offline spotlight and how-it-works grids use intrinsic `auto-fit` / `minmax` tracks, so they reflow without explicit breakpoints.
+1. legal cross-links point at real routes rather than hash targets;
+2. the waitlist form carries the honeypot input the backend expects;
+3. `fetchpriority` is emitted via a spread, because React 18 renders the camelCase spelling verbatim.
 
----
-
-## Editing content
-
-Most user-facing copy and configuration lives in [src/content.ts](src/content.ts):
-
-- `site.brand`, `site.launchLabel`, `site.heroSub`
-- `site.waitlistCount` — raw number, rendered as a localized string with a trailing `+`
-- `site.launchDate` — the instant the countdown ticks toward
-- `navLinks` — top-nav anchors
-- `passes` — legendary passes scrolled in the route marquee
-
-> **Note:** the values in `content.ts` are the real/localized launch values — they intentionally differ from prototype/design placeholders and should not be overwritten on a design sync.
-
-Section-specific copy (FAQ answers, feature blurbs, etc.) lives inside each component under [src/components/](src/components/). The FAQ text is duplicated as JSON-LD in [index.html](index.html) — keep both in sync if you edit questions/answers.
-
-### Waitlist form
-
-[src/components/WaitlistForm.tsx](src/components/WaitlistForm.tsx) is shared by the hero and the closing CTA. Submitting either instance flips the whole page into its "you're on the list" success state (a shared `submitted` flag lifted to `App`). It includes a hidden honeypot field (`name="company"`) for bot filtering.
-
-> The form already persists signups to the live backend via [src/api.ts](src/api.ts) (`joinWaitlist` → `POST /api/v1/waitlist`, `getWaitlistCount` → `GET /api/v1/waitlist/count`). API base is `VITE_API_BASE_URL` (defaults to `https://api.qafilaa.in`). It handles duplicates, client-side email validation (mirroring the backend), and a silent-fallback live count.
-
----
-
-## Theming
-
-Design tokens are centralized in [src/theme.ts](src/theme.ts) — the "Summit" palette:
-
-- Colours: `bg` (near-black forest green), `accent` (teal `#20D6A8`), text tiers, surfaces, plus semantic `success` / `warning` / `danger` / `stale`.
-- Fonts: `display` (Space Grotesk), `body` (Inter).
-- `layout` (max width / gutter) and a shared `EASE` cubic-bezier used by reveals and button lifts.
-
-Components import these tokens rather than hardcoding values, so palette changes propagate site-wide.
-
-### A note on reveals
-
-The original prototype animated its sections in on a timer because its preview ran inside a content-sized iframe where `IntersectionObserver` never fired. On a real site the intended behaviour is scroll-tied reveals, so this port uses an `IntersectionObserver`-based `useReveal` hook while keeping the exact same opacity/transform/easing values.
-
----
-
-## Motion / FX engine
-
-[src/hooks/useLandingFx.ts](src/hooks/useLandingFx.ts) is an imperative engine that runs once on mount and drives behaviour directly on the live DOM via `data-*` attributes under `#qf-landing`:
-
-- `data-tilt` — 3D tilt + glare on cards/phones
-- `data-magnetic` — magnetic buttons
-- `data-cursor` — lagging cursor scout-light
-- parallax diorama, GPS particles, and the hold-to-send SOS
-
-Reveal cascades, counters, the connectivity banner and the countdown live in their own dedicated hooks; the FX engine only owns pointer-driven motion. All listeners register cleanups for unmount.
+If you change a section, change it **to match the handoff**. Divergence should be a decision, recorded here.
 
 ---
 
 ## SEO & analytics
 
-Configured in [index.html](index.html):
+- Per-route `<title>`, canonical, description, Open Graph and Twitter tags, rewritten at prerender time.
+- JSON-LD `@graph` on the home page only: Organization, WebSite, MobileApplication and a FAQPage.
+- `hreflang` for `en-IN` / `en` / `x-default`, plus geo tags for Leh, Ladakh.
+- [public/sitemap.xml](public/sitemap.xml) is **hand-maintained** — update it when routes change.
+- GA4 (`G-V4RB2XKEGK`) is inlined in [index.html](index.html). It has **no consent gate yet** — a P0 in
+  [docs/PRODUCTION-READINESS.md](docs/PRODUCTION-READINESS.md).
 
-- `<title>`, `<meta name="description">`, `theme-color`, `robots`, canonical URL
-- Open Graph + Twitter card tags (share title / description / image)
-- **JSON-LD** structured data: `Organization`, `WebSite`, `SoftwareApplication`, and a `FAQPage`
-- **Google Analytics 4** (gtag) — verify the Measurement ID is the production property before relying on data
-- [public/robots.txt](public/robots.txt) and [public/sitemap.xml](public/sitemap.xml)
+> FAQ copy is duplicated in the [index.html](index.html) JSON-LD **and** in
+> [SettingsAndSupport.tsx](src/site/sections/SettingsAndSupport.tsx). Edit both together.
 
 ---
 
@@ -359,12 +383,19 @@ ever moves. Only two things must be preserved: `/join` reachable as a path, and 
 
 ## Conventions
 
-- **Inline styles + tokens**, not a CSS framework — match the surrounding component's style-object pattern when adding UI. No new CSS files, no hardcoded hex.
-- **SSR-safe code** — never touch `window` / `document` during render; confine browser APIs to `useEffect` / handlers. Hydration breaks otherwise.
-- **Lint is strict** — `npm run lint` runs with `--max-warnings 0`, and tsconfig is strict (`noUnusedLocals` / `noUnusedParameters`). Keep both clean.
-- **The FX engine has no compile-time link to components.** `useLandingFx.ts` drives motion through `data-*` attributes; if you add or rename a `data-*` hook in a component, update the engine in the same change. Always register cleanups.
-- Keep FAQ copy in [index.html](index.html) JSON-LD in sync with the [Faq](src/components/Faq.tsx) component.
-- `prerender.mjs` **throws** if `index.html`'s `<head>` meta shape drifts. That is intentional — it is the only guard that per-route SEO tags still get rewritten. Keep the tag shapes it edits intact.
+- **Match the handoff.** Section markup is transcribed inline styles, hex values included — those *are* the
+  design's values. Do not "tokenise" or tidy them; drift from the handoff is the only thing that breaks fidelity.
+- **Colours come from CSS variables**, never imported constants, because the tone system rewrites them at runtime.
+- **SSR-safe code** — never touch `window` / `document` during render; confine browser APIs to `useEffect` / handlers.
+- **`Landing.tsx` stays stateless** — the engine owns that subtree once it boots.
+- **The engine has no compile-time link to the markup.** If you add or rename a `data-*` hook, update
+  [engine.ts](src/site/engine.ts) in the same change. Always register cleanups.
+- **Lint is strict** — `npm run lint` runs with `--max-warnings 0`, and tsconfig is strict
+  (`noUnusedLocals` / `noUnusedParameters`). Keep both clean. `engine.ts` carries a scoped `eslint-disable`
+  for `no-explicit-any`; that is deliberate and should not spread to other files.
+- `prerender.mjs` **throws** if `index.html`'s `<head>` meta shape drifts. That is intentional — it is the only
+  guard that per-route SEO tags still get rewritten. Keep the tag shapes it edits intact, and **never write a
+  tag name in angle brackets inside an `index.html` comment** (the title regex would match the comment).
 - Honour `prefers-reduced-motion` (already wired in [src/index.css](src/index.css)).
 
 ---

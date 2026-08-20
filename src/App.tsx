@@ -1,6 +1,16 @@
 import { Landing } from './Landing';
-import { LegalPage } from './components/LegalPage';
+import { LegalRoute, type LegalDoc } from './site/legal/LegalRoute';
 import { pathToRoute, type Route } from './routes';
+
+/** Every non-home route is one of the legal / support documents. */
+const LEGAL: Record<Exclude<Route, 'home'>, LegalDoc> = {
+  privacy: 'privacy',
+  terms: 'terms',
+  deleteAccount: 'deleteAccount',
+  deleteData: 'deleteData',
+  support: 'support',
+  security: 'security',
+};
 
 /**
  * Top-level router. The site is prerendered to one HTML file per route
@@ -11,10 +21,6 @@ import { pathToRoute, type Route } from './routes';
 export default function App({ route }: { route?: Route }) {
   const active = route ?? (typeof window !== 'undefined' ? pathToRoute(window.location.pathname) : 'home');
 
-  if (active === 'privacy') return <LegalPage doc="privacy" />;
-  if (active === 'terms') return <LegalPage doc="terms" />;
-  if (active === 'deleteAccount') return <LegalPage doc="deleteAccount" />;
-  if (active === 'deleteData') return <LegalPage doc="deleteData" />;
-  if (active === 'support') return <LegalPage doc="support" />;
-  return <Landing />;
+  if (active === 'home') return <Landing />;
+  return <LegalRoute doc={LEGAL[active]} />;
 }

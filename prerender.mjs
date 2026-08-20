@@ -6,6 +6,7 @@
 //   /                       -> dist/index.html
 //   /privacy-policy         -> dist/privacy-policy/index.html
 //   /terms-and-conditions   -> dist/terms-and-conditions/index.html
+//   /security               -> dist/security/index.html
 //
 // Each non-home route reuses the built index.html as a template but swaps in
 // its own <title>, canonical, description and Open Graph / Twitter tags, and
@@ -113,6 +114,17 @@ const PAGES = [
     title: 'Support | Qafilaa',
     description:
       'Get help with Qafilaa — contact the team by email or phone, report content, manage your account and data, and fix a rider position that has stopped updating.',
+  },
+  {
+    // Linked from the privacy policy and the site footer. Added with the Site v2
+    // design; same prerender rule as the routes above — a route missing from this
+    // list is a 404 on a static S3 site.
+    route: 'security',
+    out: 'dist/security/index.html',
+    url: 'https://qafilaa.in/security',
+    title: 'Security | Qafilaa',
+    description:
+      'How Qafilaa protects your data — encryption in transit and at rest, what never leaves your phone, who can see your position, retention and deletion, and how to report a vulnerability.',
   },
 ];
 
