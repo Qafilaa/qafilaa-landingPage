@@ -1,18 +1,21 @@
 /*
- * Qafilaa Site v2 — global stylesheet.
+ * Qafilaa Site v2 - global stylesheet.
  * Transcribed 1:1 from the design handoff's <style> block
- * (`Qafilaa Site v2.dc.html`, lines 143-221).
+ * (`Qafilaa Site v2.dc.html`, handoff 12, lines 143-285).
  *
  * The `:root` values here are only the seed. Once `src/site/engine.ts` boots,
  * `paint()` overwrites --bg/--ink/--mut/--sur/--line/--card/--acc/--acc2/--ctr/
  * --ctaInk/--navbg/--navline on the document element every time the scroll
  * position crosses into a new tone, interpolating between adjacent sections.
  *
- * Breakpoints: 1500 / 1240 / 1080 / 760, plus max-height 760 / 620 for the
- * readout instrument. All @keyframes for the site live here.
+ * Breakpoints: 1500 / 1240 / 1080 / 900 / 760 / 480 / 370, plus max-height
+ * 760 / 620 for the readout instrument. All @keyframes for the site live here.
+ * Below 900px the engine also switches to its `narrow` path in JS (NARROW in
+ * src/site/tokens.ts) - keep the two numbers in step.
  */
-:root{ --bg:#F7F5F0; --ink:#23241F; --mut:#6E6B63; --sur:#6E6B63; --line:#EAE5DB; --card:#FFFFFF; --acc:#0A6068; --acc2:#0E7C86; --ctr:#E5E2DA; --warn:#B26B00; --ctaInk:#F7F5F0; --navbg:rgba(255,255,255,.80); --navline:rgba(35,36,31,.11); }
+:root{ --bg:#F7F5F0; --ink:#23241F; --mut:#6E6B63; --sur:#6E6B63; --line:#DCD6C9; --card:#FFFFFF; --acc:#0A6068; --acc2:#0E7C86; --ctr:#E5E2DA; --warn:#B26B00; --ctaInk:#F7F5F0; --navbg:rgba(255,255,255,.80); --navline:rgba(35,36,31,.11); }
 html,body{ margin:0; padding:0; background:#F7F5F0; }
+html{ overflow-x:clip; }
 body{ font-family:'Hanken Grotesk', system-ui, sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
 a{ color:var(--acc); text-decoration:none; }
 a:hover{ color:var(--acc2); text-decoration:underline; }
@@ -60,12 +63,26 @@ nav a{ position:relative; text-decoration:none !important; z-index:1; }
 [data-rv]{ opacity:0; transform:translateY(20px); transition:opacity .5s cubic-bezier(.22,.61,.36,1), transform .5s cubic-bezier(.22,.61,.36,1); }
 [data-rv].in{ opacity:1; transform:none; }
 [data-strip]{ display:flex; gap:18px; }
+[data-social]{ flex-wrap:wrap; }
+/* one edge language: filled buttons carry an accent edge, outlined buttons a
+   firmer ink edge than the hairlines used on cards and chips */
+[data-btn]{ border:1px solid color-mix(in srgb, var(--ink) 22%, transparent) !important; }
+/* buttons are buttons, not links — never underline their label */
+a[data-btn],a[data-cta],a[data-tap],a[data-magnet],button,[data-btn],[role="button"]{ text-decoration:none !important; }
+a[data-btn]:hover,a[data-cta]:hover,a[data-tap]:hover,a[data-magnet]:hover,button:hover,[data-btn]:hover{ text-decoration:none !important; }
+[data-btn]:hover{ border-color:color-mix(in srgb, var(--ink) 38%, transparent) !important; }
+[data-seg]{ border:1px solid var(--line); }
+
+/* section rhythm — one number per breakpoint, not per section */
+section[data-pad]{ padding-top:72px !important; padding-bottom:72px !important; }
+#top{ padding-top:124px !important; padding-bottom:76px !important; }
+#join{ padding-bottom:40px !important; }
 [data-strip] > *{ flex:none; scroll-snap-align:start; }
 details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-details-marker{ display:none; }
 ::-webkit-scrollbar{ height:9px; width:9px; }
 ::-webkit-scrollbar-thumb{ background:rgba(120,116,108,.32); border-radius:8px; }
 @media (max-width:1240px){
-  [data-strip]{ overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:10px; }
+  [data-strip]{ overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:10px; justify-content:flex-start !important; }
   [data-rail]{ display:none !important; }
   [data-burger]{ display:flex !important; }
 }
@@ -77,14 +94,63 @@ details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-det
   [data-nights],[data-ladder],[data-notedemo],[data-nudgedemo],[data-tripcard],[data-sharecard]{ max-width:660px !important; }
 }
 @media (max-width:1080px){
-  [data-cols]{ grid-template-columns:1fr !important; max-width:none !important; }
+  [data-cols]{ grid-template-columns:minmax(0,1fr) !important; max-width:none !important; }
   [data-pad]{ padding-left:74px !important; padding-right:26px !important; }
   [data-navlinks]{ display:none !important; }
 }
+
+/* ── tablet: the composition stacks, so the vertical rhythm tightens with it ── */
+@media (max-width:900px){
+  section[data-pad]{ padding-top:60px !important; padding-bottom:60px !important; }
+  #top{ padding-top:110px !important; padding-bottom:64px !important; min-height:100svh !important; }
+  [data-cols]{ gap:40px !important; }
+  [data-legalpages]{ padding:46px 30px 112px !important; }
+  [data-legalbar]{ padding:15px 26px !important; }
+  [data-legaltabs]{ padding:0 26px 13px !important; }
+}
+
+/* ── phone ── */
 @media (max-width:760px){
-  [data-pad]{ padding-left:52px !important; padding-right:20px !important; }
-  [data-h1]{ font-size:38px !important; }
-  [data-readout]{ font-size:9px !important; padding:6px 8px !important; left:10px !important; }
+  [data-pad]{ padding-left:46px !important; padding-right:18px !important; }
+  section[data-pad]{ padding-top:52px !important; padding-bottom:52px !important; }
+  #top{ padding-top:100px !important; padding-bottom:48px !important; }
+  [data-cols]{ gap:30px !important; }
+  [data-h1]{ font-size:clamp(31px,8.6vw,40px) !important; }
+  section h2[data-lines]{ font-size:clamp(25px,6.7vw,34px) !important; }
+  section h3[data-lines]{ font-size:22px !important; }
+  [data-readout]{ display:none !important; }
+  [data-corner]{ right:18px !important; font-size:10px !important; }
+  [data-roadwrap]{ height:172px !important; margin-top:40px !important; }
+  [data-permcards],[data-autogrid],[data-musterboard]{ grid-template-columns:minmax(0,1fr) !important; }
+  [data-splitamt]{ font-size:34px !important; }
+  /* the pill has to carry a mark, a menu and a call to action inside 375px */
+  [data-navpill]{ gap:8px !important; padding:7px 8px 7px 11px !important; }
+  [data-navmark],[data-navmark] img{ width:46px !important; height:28px !important; }
+  [data-navword]{ font-size:17px !important; }
+  [data-wpbadge]{ display:none !important; }
+  [data-burgertxt]{ display:none !important; }
+  [data-burger]{ width:44px; padding:0 !important; justify-content:center; }
+  [data-cta]{ height:42px !important; padding:0 15px !important; font-size:13.5px !important; }
+  [data-ctaarrow]{ display:none !important; }
+  [data-drawerpanel]{ width:min(358px,92vw) !important; box-sizing:border-box !important; }
+  [data-legalpages]{ padding:34px 20px 96px !important; }
+  [data-legalbar]{ padding:13px 18px !important; }
+  [data-legaltabs]{ padding:0 18px 12px !important; }
+  [data-legalbody] h2{ margin-top:44px !important; }
+  /* thumb-sized targets where the desktop layout leaned on a mouse */
+  [data-cltoggle] button,[data-cardtabs] button{ min-height:44px !important; }
+  #join footer a{ padding-block:8px !important; }
+  [data-social] a{ padding-block:0 !important; }
+}
+@media (max-width:480px){
+  [data-pad]{ padding-left:34px !important; padding-right:16px !important; }
+  section[data-pad]{ padding-top:44px !important; padding-bottom:44px !important; }
+  [data-nav]{ padding:10px 12px !important; }
+  [data-strip]{ gap:12px !important; }
+  [data-legalfoot]{ gap:16px !important; }
+}
+@media (max-width:370px){
+  [data-navword]{ display:none !important; }
 }
 @media (prefers-reduced-motion: reduce){
   [data-line] > span{ transform:none !important; }

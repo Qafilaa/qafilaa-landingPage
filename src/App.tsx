@@ -1,5 +1,6 @@
 import { Landing } from './Landing';
 import { LegalRoute } from './site/legal/LegalRoute';
+import { NotFound } from './site/NotFound';
 import { pathToRoute, type Route } from './routes';
 
 /**
@@ -12,5 +13,6 @@ export default function App({ route }: { route?: Route }) {
   const active = route ?? (typeof window !== 'undefined' ? pathToRoute(window.location.pathname) : 'home');
 
   if (active === 'home') return <Landing />;
+  if (active === 'notFound') return <NotFound />;
   return <LegalRoute doc={active} />;
 }

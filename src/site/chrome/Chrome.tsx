@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 11), lines 228-292.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 292-356.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -40,7 +40,7 @@ export function Chrome() {
             </div>
             <a href="#top" data-tap="1" style={{ display: 'flex', alignItems: 'center', gap: '11px', textDecoration: 'none', color: 'var(--ink)', zIndex: '2', flex: 'none' }}>
               <span data-navmark="1" style={{ display: 'block', width: '60px', height: '36px', willChange: 'transform' }}><img src="brand/logo-mark-sm.png" alt="" width="132" height="80" {...{ fetchpriority: 'high' }} decoding="async" style={{ display: 'block', width: '60px', height: '36px', objectFit: 'contain' }} /></span>
-              <span style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '600', letterSpacing: '-.01em' }}>Qafilaa</span>
+              <span data-navword="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '600', letterSpacing: '-.01em' }}>Qafilaa</span>
             </a>
             <nav data-navlinks="1" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '2px', fontSize: '14px', zIndex: '2' }}>
               <span data-navind="1" style={{ position: 'absolute', left: '0', top: '50%', height: '34px', marginTop: '-17px', width: '0', borderRadius: '999px', background: 'color-mix(in srgb, var(--acc2) 16%, transparent)', border: '1px solid color-mix(in srgb, var(--acc2) 34%, transparent)', opacity: '0', transform: 'translateX(0)', transition: 'transform .46s cubic-bezier(.34,1.3,.5,1), width .46s cubic-bezier(.34,1.3,.5,1), opacity .26s', pointerEvents: 'none' }}></span>
@@ -54,12 +54,12 @@ export function Chrome() {
                 <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--acc2)', animation: 'qf-navdot 2.4s ease-in-out infinite' }}></span>
                 <span data-wpnum="1">00 / 22</span>
               </div>
-              <button data-burger="1" type="button" aria-label="Open waypoint menu" aria-expanded="false" style={{ display: 'none', alignItems: 'center', gap: '8px', height: '44px', padding: '0 14px', border: '1px solid var(--line)', borderRadius: '999px', background: 'transparent', color: 'var(--ink)', font: '600 13px \'Hanken Grotesk\'', cursor: 'pointer' }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>Waypoints
+              <button data-burger="1" data-btn="1" type="button" aria-label="Open waypoint menu" aria-expanded="false" style={{ display: 'none', alignItems: 'center', gap: '8px', height: '44px', padding: '0 14px', border: '1px solid var(--line)', borderRadius: '999px', background: 'transparent', color: 'var(--ink)', font: '600 13px \'Hanken Grotesk\'', cursor: 'pointer' }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg><span data-burgertxt="1">Waypoints</span>
               </button>
-              <a href="#join" data-magnet="1" data-tap="1" style={{ position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', gap: '8px', height: '44px', padding: '0 18px', borderRadius: '999px', background: 'var(--acc2)', color: 'var(--ctaInk)', fontSize: '14px', fontWeight: '600', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              <a href="#join" data-cta="1" data-magnet="1" data-tap="1" style={{ position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', gap: '8px', height: '44px', padding: '0 18px', borderRadius: '999px', background: 'var(--acc2)', color: 'var(--ctaInk)', fontSize: '14px', fontWeight: '600', textDecoration: 'none', whiteSpace: 'nowrap', border: '1px solid var(--acc2)' }}>
                 <span style={{ position: 'relative', zIndex: '2' }}>Get the app</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ position: 'relative', zIndex: '2' }}><path d="M5 12h13"></path><path d="m12 5 7 7-7 7"></path></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" data-ctaarrow="1" style={{ position: 'relative', zIndex: '2' }}><path d="M5 12h13"></path><path d="m12 5 7 7-7 7"></path></svg>
                 <span style={{ position: 'absolute', inset: '0', background: 'linear-gradient(105deg, transparent 34%, rgba(255,255,255,.45) 50%, transparent 66%)', transform: 'translateX(-130%)', animation: 'qf-sweep 4.2s cubic-bezier(.5,0,.3,1) infinite' }}></span>
               </a>
             </div>

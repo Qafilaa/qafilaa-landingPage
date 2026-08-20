@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * The Qafilaa Site v2 scroll runtime — a 1:1 port of the design handoff's own
- * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1373-3262).
+ * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1442-3444).
  *
  * It owns everything the markup cannot express: the tone interpolation written
  * onto `:root`, the contour field, the spine, the flying phone and its 75-screen
@@ -18,7 +18,7 @@
 import { getWaitlistCount, isValidEmail, joinWaitlist } from '../api';
 import { site } from '../content';
 import { CREW, DAYS, MAXD, PASSES, RESTD, TOTAL_KM, TRIP, roleOf } from './data';
-import { KEYS, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
+import { KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
 
 /** Display base for the social-proof line; live backend signups add to it. */
 const BASE_WAITLIST = site.waitlistCount;
@@ -54,17 +54,22 @@ export class SiteEngine {
     if (this.booted) { this.measure(); this.measureDocks(); this.loop(); return; }
     this.wait(0);
   }
+  /** Record a global listener so destroy() can take it off again. */
+  bind(target: EventTarget, type: string, fn: any, opts?: AddEventListenerOptions) {
+    (this.bound = this.bound || []).push([target, type, fn, opts]);
+    target.addEventListener(type, fn, opts);
+  }
+
   destroy() {
     this.dead = true; this.gen = -1;
     if (this.raf) cancelAnimationFrame(this.raf);
     if (this.fallback) clearInterval(this.fallback);
-    clearInterval(this.watch); clearInterval(this.slowT);
+    clearInterval(this.watch); clearInterval(this.slowT); clearInterval(this.vwT);
     clearTimeout(this.sosT); clearTimeout(this.sosT2);
-    clearTimeout(this.rzT);
-    if (this.onKey) document.removeEventListener('keydown', this.onKey);
-    if (this.onPointer) window.removeEventListener('pointermove', this.onPointer);
-    if (this.onScroll) window.removeEventListener('scroll', this.onScroll);
-    if (this.onResize) window.removeEventListener('resize', this.onResize);
+    clearTimeout(this.roT); clearTimeout(this.rzT);
+    if (this.ro) { try { this.ro.disconnect(); } catch { /* already gone */ } }
+    (this.bound || []).forEach(([t, ty, fn, o]: any) => t.removeEventListener(ty, fn, o));
+    this.bound = [];
     /* the tone system writes onto :root — hand it back on the way out */
     const rs = document.documentElement.style;
     [...KEYS, 'navbg', 'navline'].forEach((k) => rs.removeProperty('--' + k));
@@ -84,7 +89,7 @@ export class SiteEngine {
       const st = document.createElement('style'); st.id = 'qaf-screen-css';
       st.textContent = window.QAF_SCREEN_CSS; document.head.appendChild(st);
     }
-    this.narrow = window.innerWidth < 900;
+    this.narrow = window.innerWidth < NARROW;
     try {
       const de = document.documentElement;
       if (de.lang !== 'en-IN') de.lang = 'en-IN';
@@ -174,8 +179,9 @@ export class SiteEngine {
       secs.forEach((s: any) => { s.style.paddingLeft = ''; s.style.paddingRight = ''; });
       this.qa('[data-cols]').forEach((g: any) => {
         if (g.dataset.gtc) g.style.gridTemplateColumns = g.dataset.gtc;
-        g.style.justifyContent = ''; g.style.maxWidth = '';
+        g.style.justifyContent = ''; g.style.maxWidth = ''; g.style.width = '';
       });
+      this.qa('[data-musterboard],[data-permcards],[data-strip]').forEach((el: any) => { el.style.maxWidth = ''; });
       return;
     }
     /* Measure what the copy ACTUALLY occupies (it is capped in ch, not by the
@@ -277,7 +283,7 @@ export class SiteEngine {
     const sp = this.q('[data-spine]');
     const NS = 'http://www.w3.org/2000/svg';
     const H = this.root.scrollHeight, VH = window.innerHeight, SEG = 620;
-    const W = window.innerWidth < 760 ? 40 : 132, CX = W/2;
+    const W = window.innerWidth < 480 ? 30 : (window.innerWidth < 760 ? 40 : 132), CX = W/2;
     this.SEG = SEG; this.spineH = H; this.spineVH = VH;
     sp.style.width = W + 'px';
     sp.setAttribute('viewBox', '0 0 ' + W + ' ' + VH);
@@ -371,6 +377,7 @@ export class SiteEngine {
   buildDocks() {
     this.docks = this.qa('[data-dock]').map((el: any) => {
       const sc = parseFloat(el.getAttribute('data-scale')||'0.56');
+      if (el.__css0 == null) el.__css0 = el.getAttribute('style') || '';
       el.style.width = Math.round(PW*sc)+'px';
       el.style.height = Math.round(PH*sc)+'px';
       el.style.flex = 'none';
@@ -383,7 +390,19 @@ export class SiteEngine {
     this.tiltEl = this.q('[data-phonetilt]');
     this.host = this.q('[data-phonehost]');
     this.pv = { x:0, y:0, s:0.56, rx:0, ry:0, rz:0 };
-    if (this.narrow) { this.layer.style.display = 'none'; this.docks.forEach((d: any) => this.inlineDock(d)); return; }
+    this.layer.style.display = this.narrow ? 'none' : '';
+    if (this.narrow) {
+      this.docks.forEach((d: any) => this.inlineDock(d));
+      /* the column can change width without a resize event (panels, split views) */
+      if (window.ResizeObserver && !this.ro) {
+        this.ro = new ResizeObserver(() => { clearTimeout(this.roT); this.roT = setTimeout(() => this.refitInline(), 200); });
+      }
+      if (this.ro) { try { this.ro.disconnect(); this.docks.forEach((d: any) => this.ro.observe(d.el)); } catch { /* observer already gone */ } }
+      return;
+    }
+    if (this.ro) { try { this.ro.disconnect(); } catch { /* observer already gone */ } }
+    /* already rigged once — a breakpoint crossing only needs the docks re-measured */
+    if (this.trailPath) { this.measureDocks(); this.beginFlight(this.docks[0]); return; }
     const NS = 'http://www.w3.org/2000/svg';
     const tr = document.createElementNS(NS,'svg');
     tr.setAttribute('aria-hidden','true');
@@ -424,21 +443,89 @@ export class SiteEngine {
 
   livePos(d: any) { const r = d.el.getBoundingClientRect(); return { x:r.left, y:r.top, s:d.sc }; }
 
+  /* On a phone the flying rig makes no sense. Each dock becomes a plain screen,
+     sized from the column it actually sits in rather than from the viewport, so it
+     can never be wider than the box that clips it. */
   inlineDock(d: any) {
-    const w = Math.min(393, window.innerWidth - 40), sc = w/393;
     const el = d.el;
-    el.style.width = '100%'; el.style.maxWidth = w+'px';
-    el.style.height = Math.round(852*sc)+'px';
+    el.style.width = '100%';
+    el.style.maxWidth = '393px';
+    el.style.height = 'auto';
     el.style.margin = '0 auto';
-    el.style.borderRadius = Math.round(28*sc)+'px';
+    el.style.border = '0';
     el.style.overflow = 'hidden';
-    el.style.border = '1px solid var(--line)';
-    el.appendChild(this.skel(w, Math.round(852*sc), Math.round(28*sc)));
-    this.addTrig(el, -700, () => { el.innerHTML = ''; el.appendChild(this.screenEl(d.key, sc, false)); });
+    const box = Math.round(el.getBoundingClientRect().width) || Math.min(393, window.innerWidth - 36);
+    const w = Math.max(220, Math.min(393, box)), sc = w/393;
+    const h = Math.round(852*sc), r = Math.round(30*sc);
+    el.style.height = '';
+    el.style.aspectRatio = '393 / 852';
+    el.style.borderRadius = r+'px';
+    el.style.boxShadow = '0 0 0 1px var(--line), 0 18px 42px -28px rgba(35,36,31,.5)';
+    d.iw = w;
+    el.appendChild(this.skel(w, h, r));
+    this.addTrig(el, -700, () => {
+      const w2 = Math.max(220, Math.min(393, Math.round(el.getBoundingClientRect().width))), s2 = w2/393;
+      d.iw = w2;
+      el.style.borderRadius = Math.round(30*s2)+'px';
+      el.innerHTML = '';
+      el.appendChild(this.screenEl(d.key, s2, false));
+    });
+  }
+
+  /* A breakpoint crossing rebuilds the pixel-measured pieces: the phone rig, the
+     flanking screens and the graphics that scroll instead of shrinking. */
+  reflow() {
+    if (!this.docks) return;
+    this.trig = (this.trig||[]).filter((t: any) => !(t.el.hasAttribute('data-dock') || t.el.hasAttribute('data-static')));
+    this.qa('[data-dock],[data-static]').forEach((el: any) => { el.innerHTML = ''; el.setAttribute('style', el.__css0 || ''); });
+    this.cur = null; this.fl = null; this.fitF = null;
+    (this.wides||[]).forEach((g: any) => this.applyWide(g));
+    this.buildDocks();
+    this.buildStatics();
+    this.dirty = true;
+  }
+
+  refitInline() {
+    if (!this.docks || !this.narrow) return;
+    this.docks.forEach((d: any) => {
+      const el = d.el;
+      const w2 = Math.max(220, Math.min(393, Math.round(el.getBoundingClientRect().width)));
+      if (!w2 || Math.abs((d.iw || 0) - w2) < 5) return;
+      d.iw = w2;
+      const s2 = w2/393;
+      el.style.borderRadius = Math.round(30*s2)+'px';
+      if (el.firstElementChild) { el.innerHTML = ''; el.appendChild(this.screenEl(d.key, s2, false)); }
+    });
+    this.dirty = true;
+  }
+
+  /* A pixel-drawn map does not survive being squeezed into 320px: it either crops
+     its route away or shrinks its labels past reading. On phones the frame scrolls. */
+  wide(els: any, w: any, h?: any) {
+    els = (els||[]).filter(Boolean);
+    if (!els.length || !els[0].parentElement) return;
+    const box = document.createElement('div');
+    box.style.cssText = 'position:relative; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;';
+    els[0].parentElement.insertBefore(box, els[0]);
+    const g = { box, els, w, h, h0: els.map((e: any) => e.style.height || '') };
+    els.forEach((e: any) => box.appendChild(e));
+    (this.wides = this.wides || []).push(g);
+    this.applyWide(g);
+  }
+
+  applyWide(g: any) {
+    const on = !!this.narrow;
+    g.box.style.overflowX = on ? 'auto' : 'visible';
+    g.els.forEach((e: any,i: any) => {
+      e.style.width = on ? g.w+'px' : '';
+      e.style.minWidth = on ? g.w+'px' : '';
+      if (g.h) e.style.height = on ? g.h : (g.h0[i] || '');
+    });
   }
 
   buildStatics() {
     this.qa('[data-static]').forEach((el: any) => {
+      if (el.__css0 == null) el.__css0 = el.getAttribute('style') || '';
       let sc = Math.max(0.52, parseFloat(el.getAttribute('data-scale')||'0.54'));
       if (this.narrow) sc = Math.max(0.42, Math.min(0.52, (window.innerWidth-70)/PW));
       const w = Math.round(PW*sc), h = Math.round(PH*sc);
@@ -605,11 +692,11 @@ export class SiteEngine {
       const t = this.q(a.getAttribute('href'));
       if (!t) return;
       e.preventDefault();
-      window.scrollTo({ top: t.offsetTop - 70, behavior: this.rm ? 'auto' : 'smooth' });
+      window.scrollTo({ top: t.offsetTop - 26, behavior: this.rm ? 'auto' : 'smooth' });
     }));
 
     if (!this.touch) {
-      this.onPointer = (e: PointerEvent) => {
+      this.bind(window, 'pointermove', (e: any) => {
         this.px = e.clientX; this.py = e.clientY;
         this.dirty = true; this.ptrMoved = true;
         this.qa('[data-magnet]').forEach((b: any) => {
@@ -619,11 +706,10 @@ export class SiteEngine {
           if (d < 90) b.style.transform = 'translate(' + (dx*0.09).toFixed(1) + 'px,' + (dy*0.09).toFixed(1) + 'px)';
           else if (b.style.transform) b.style.transform = '';
         });
-      };
-      window.addEventListener('pointermove', this.onPointer, { passive: true });
+      }, { passive:true });
     }
 
-    this.onKey = (e: KeyboardEvent) => {
+    this.bind(document, 'keydown', (e: KeyboardEvent) => {
       const tag = ((e.target as HTMLElement | null)?.tagName || '').toLowerCase();
       if (tag === 'input' || tag === 'textarea') return;
       const k = e.key.toLowerCase();
@@ -631,16 +717,37 @@ export class SiteEngine {
       if (k === 'k') this.step(-1);
       if (e.key === '?') this.shortcuts();
       if (e.key === 'Escape') { this.q('[data-shortcuts]').style.display = 'none'; this.drawer(false); }
-    };
-    document.addEventListener('keydown', this.onKey);
+    });
 
-    this.onScroll = () => { this.dirty = true; };
-    window.addEventListener('scroll', this.onScroll, { passive: true });
-    this.onResize = () => {
+    clearInterval(this.vwT);
+    this.vwT = setInterval(() => {
+      if (this.dead) return;
+      const n = window.innerWidth < NARROW;
+      if (n !== this.narrow) {
+        this.narrow = n; this.reflow();
+        this.capGrids(); this.measure(); this.measureDocks(); this.buildSpine(); this.dirty = true;
+      } else if (n) this.refitInline();
+    }, 1200);
+
+    this.bind(window, 'scroll', () => { this.dirty = true; }, { passive:true });
+    this.bind(window, 'resize', () => {
       clearTimeout(this.rzT);
-      this.rzT = setTimeout(() => { this.capGrids(); this.measure(); this.measureDocks(); this.buildSpine(); this.dirty = true; }, 150);
-    };
-    window.addEventListener('resize', this.onResize, { passive: true });
+      this.rzT = setTimeout(() => {
+        const n = window.innerWidth < NARROW;
+        if (n !== this.narrow) { this.narrow = n; this.reflow(); }
+        else if (n) this.refitInline();
+        this.capGrids(); this.measure(); this.measureDocks(); this.buildSpine(); this.dirty = true;
+      }, 150);
+    }, { passive:true });
+    this.bind(window, 'orientationchange', () => {
+      clearTimeout(this.rzT);
+      this.rzT = setTimeout(() => {
+        const n = window.innerWidth < NARROW;
+        if (n !== this.narrow) { this.narrow = n; this.reflow(); }
+        else if (n) this.refitInline();
+        this.capGrids(); this.measure(); this.measureDocks(); this.buildSpine(); this.dirty = true;
+      }, 260);
+    }, { passive:true });
 
     const wl = this.q('[data-waitlist]');
     if (wl) wl.addEventListener('submit', (e: Event) => {
@@ -683,7 +790,7 @@ export class SiteEngine {
     let i = 0;
     this.secTops.forEach((t: any,k: any) => { if (t <= y) i = k; });
     const t = this.sections[clamp(i+dir, 0, this.sections.length-1)];
-    window.scrollTo({ top: t.offsetTop-70, behavior:'smooth' });
+    window.scrollTo({ top: t.offsetTop-26, behavior:'smooth' });
   }
 
   shortcuts() {
@@ -979,12 +1086,12 @@ export class SiteEngine {
       const lean = clamp(-(this.scrollV || 0) * 0.5, -7, 7);
       this.navMark.style.transform = 'rotate(' + lean.toFixed(2) + 'deg)';
     }
-    /* float away when diving down the page, return the moment you look back up */
-    const nav = this.q('[data-nav]');
-    const hide = y > 260 && (this.scrollV || 0) > 2.2;
-    const show = (this.scrollV || 0) < -0.6 || y < 200;
-    if (hide && !this.navHidden) { this.navHidden = true; nav.style.transition = 'transform .42s cubic-bezier(.5,0,.2,1), opacity .3s'; nav.style.transform = 'translateY(-130%)'; nav.style.opacity = '0'; }
-    else if (show && this.navHidden) { this.navHidden = false; nav.style.transform = 'translateY(0)'; nav.style.opacity = '1'; }
+    /* The handoff floats the nav away on a fast scroll down and returns it when
+       you look back up. Kept pinned instead: it carries the only route to the
+       policy pages and the Get-the-app CTA, and on a phone the waypoint drawer
+       behind the burger is the only navigation there is. The pill is already
+       position:fixed in the markup, so dropping the transform is all it takes.
+       Declared divergence - CLAUDE.md section 3. */
 
     let act = 0;
     this.secTops.forEach((t: any,k: any) => { if (t - 180 <= y) act = k; });
@@ -1127,6 +1234,7 @@ export class SiteEngine {
       this.addTrig(el, -60, () => { ln.style.animation = 'qf-draw 1.3s cubic-bezier(.22,.9,.3,1) forwards'; });
     }
 
+    this.wide([map, el], 760);
     const rail = this.q('[data-dayrail]'); rail.innerHTML = '';
     this.dayBtns = DAYS.map((d,i) => {
       const b = document.createElement('button');
@@ -1199,6 +1307,7 @@ export class SiteEngine {
     });
     this.q('[data-splitslider]').addEventListener('input', () => this.renderSplit());
     this.renderSplit();
+    this.wide([this.q('[data-splitviz]')], 560);
   }
 
   renderSplit() {
@@ -1255,6 +1364,7 @@ export class SiteEngine {
     const tog = this.q('[data-cltoggle]');
     Array.from(tog.children).forEach((b: any, i: any) => {
       b.style.background = i===this.clMode ? 'var(--card)' : 'transparent';
+      b.style.boxShadow = i===this.clMode ? '0 0 0 1px var(--line)' : 'none';
       b.style.color = i===this.clMode ? 'var(--ink)' : 'var(--mut)';
     });
     const list = this.clMode ? this.clPriv : this.clItems;
@@ -1458,8 +1568,8 @@ export class SiteEngine {
   buildConvoyMap() {
     const el = this.q('[data-convoymap]');
     el.innerHTML = '<svg viewBox="0 0 900 430" preserveAspectRatio="xMidYMid slice" style="position:absolute; inset:0; width:100%; height:100%;" aria-hidden="true">' +
-      '<rect width="900" height="430" fill="#04262A"></rect>' +
-      '<g fill="none" stroke="#0A5057" stroke-width="1.2" opacity=".85">' +
+      '<rect width="900" height="430" fill="var(--card)"></rect>' +
+      '<g fill="none" stroke="var(--line)" stroke-width="1.2" opacity=".9">' +
       '<path d="M-10 66C140 46 300 96 460 68 620 40 760 88 910 62"></path><path d="M-10 146C140 126 300 176 460 148 620 120 760 168 910 142"></path>' +
       '<path d="M-10 226C140 206 300 256 460 228 620 200 760 248 910 222"></path><path d="M-10 306C140 286 300 336 460 308 620 280 760 328 910 302"></path>' +
       '<path d="M-10 386C140 366 300 416 460 388 620 360 760 408 910 382"></path></g>' +
@@ -1472,16 +1582,17 @@ export class SiteEngine {
     const g = this.q('[data-criders]');
     this.cNodes = this.conv.map((r: any) => {
       const n = document.createElementNS('http://www.w3.org/2000/svg','g');
-      const col = r.stale ? '#B26B00' : (r.c.role === 'Lead' ? '#14C3CE' : '#0E9AA7');
-      n.innerHTML = '<circle r="14" fill="'+col+'" opacity=".18"></circle><circle r="7" fill="'+col+'"></circle><text y="-19" text-anchor="middle" fill="#9CC4C4" font-size="12" font-family="Space Grotesk, sans-serif">'+r.c.name+'</text>';
+      const col = r.stale ? '#B26B00' : (r.c.role === 'Lead' ? '#0A6068' : '#0E7C86');
+      n.innerHTML = '<circle r="14" fill="'+col+'" opacity=".18"></circle><circle r="7" fill="'+col+'"></circle><text y="-19" text-anchor="middle" fill="var(--sur)" font-size="12" font-family="Space Grotesk, sans-serif">'+r.c.name+'</text>';
       g.appendChild(n); return n;
     });
     this.q('[data-cinfo]').innerHTML = ['Lead · '+roleOf('Lead').name,'Sweep · '+roleOf('Sweep').name,'Convoy stretch 4.8 km']
-      .map(t => '<span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#9CC4C4; background:rgba(4,38,42,.85); border:1px solid #0A5057; border-radius:999px; padding:6px 11px; width:max-content;">'+t+'</span>').join('');
+      .map(t => '<span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 11px; width:max-content;">'+t+'</span>').join('');
     const sc = this.q('[data-scrub]');
     sc.addEventListener('input', () => { this.scrubUser = true; this.renderConvoy(parseInt(sc.value,10)/100); });
     this.convT = 1; this.convPhase = 0;
     this.renderConvoy(1);
+    this.wide([el], 900, '360px');
   }
 
   renderConvoy(t: any) {
@@ -1510,7 +1621,7 @@ export class SiteEngine {
       cards.forEach((c: any, i: any) => setTimeout(() => {
         if (this.rm) return;
         c.style.transition = 'box-shadow .3s, transform .3s';
-        c.style.boxShadow = '0 0 0 2px #14C3CE'; c.style.transform = 'translateY(-4px)';
+        c.style.boxShadow = '0 0 0 2px var(--acc2)'; c.style.transform = 'translateY(-4px)';
         setTimeout(() => { c.style.boxShadow = 'none'; c.style.transform = ''; }, 340);
       }, i*70));
       this.muster.forEach((m: any) => { m.age = 2; });
@@ -1536,7 +1647,7 @@ export class SiteEngine {
     const order = this.muster.slice().sort((a: any,b: any) => (a.state === 'Rolling' ? 0 : 1) - (b.state === 'Rolling' ? 0 : 1));
     board.innerHTML = '';
     order.forEach((m: any) => {
-      const col = m.state === 'Rolling' ? '#14C3CE' : '#D08A2A';
+      const col = m.state === 'Rolling' ? '#0E7C86' : '#B26B00';
       const stale = m.age > 60;
       const c = document.createElement('div');
       c.dataset.k = m.c.id;
@@ -1544,7 +1655,7 @@ export class SiteEngine {
       const ago = m.age < 60 ? Math.round(m.age)+' s ago' : Math.round(m.age/60)+' min ago';
       c.innerHTML = '<span style="display:flex; align-items:center; gap:9px;"><span style="width:8px; height:8px; border-radius:'+(m.state==='Rolling'?'50%':'2px')+'; background:'+col+';"></span><span style="'+SG+' font-size:18px; font-weight:500;">'+m.c.name+'</span></span>' +
         '<span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:'+col+';">'+m.state+'</span>' +
-        '<span style="font-size:13px; color:'+(stale?'#D08A2A':'var(--mut)')+';">Last position '+ago+'</span>';
+        '<span style="font-size:13px; color:'+(stale?'#B26B00':'var(--mut)')+';">Last position '+ago+'</span>';
       board.appendChild(c);
     });
     if (this.rm) return;
@@ -1649,7 +1760,7 @@ export class SiteEngine {
     if (!w) return;
     w.innerHTML = '<div style="'+SUR+'">U1 · Help centre</div><div style="'+SG+' font-size:20px; font-weight:500; margin-top:10px;">Answers, then a human.</div>' +
       '<div data-faq="1" style="margin-top:14px; display:flex; flex-direction:column; gap:2px;"></div>' +
-      '<div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;"><a href="https://qafilaa.in/support" style="display:flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:12px; font-size:14px; color:var(--ink);">Help centre</a><a href="mailto:admin@qafilaa.in" style="display:flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:12px; font-size:14px; color:var(--ink);">Contact us</a></div>' +
+      '<div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;"><a href="https://qafilaa.in/support" data-btn="1" style="display:flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:12px; font-size:14px; color:var(--ink);">Help centre</a><a href="mailto:admin@qafilaa.in" data-btn="1" style="display:flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:12px; font-size:14px; color:var(--ink);">Contact us</a></div>' +
       '<p style="margin:12px 0 0; font-size:14px; color:var(--mut);">Every query gets a ticket and a timeline you can follow inside the app.</p>';
     const f = this.q('[data-faq]');
     [['Does it work with no signal?','Yes. Every screen reads from disk, and writes queue until a bar comes back.'],
@@ -1682,6 +1793,7 @@ export class SiteEngine {
   renderCard() {
     Array.from(this.q('[data-cardtabs]').children).forEach((b: any, i: any) => {
       b.style.background = i===this.cardMode ? 'var(--card)' : 'transparent';
+      b.style.boxShadow = i===this.cardMode ? '0 0 0 1px var(--line)' : 'none';
       b.style.color = i===this.cardMode ? 'var(--ink)' : 'var(--mut)';
     });
     const dk = this.q('[data-carddark]');
@@ -1855,7 +1967,7 @@ export class SiteEngine {
     this.roadDots = [];
     for (let i = 0; i < 6; i++) {
       const d = document.createElement('span');
-      d.style.cssText = 'position:absolute; left:0; top:0; width:12px; height:12px; border-radius:50%; background:'+(i===4?'#D08A2A':'#0E9AA7')+'; will-change:transform;';
+      d.style.cssText = 'position:absolute; left:0; top:0; width:12px; height:12px; border-radius:50%; background:'+(i===4?'#B26B00':'#0E7C86')+'; will-change:transform;';
       wrap.appendChild(d); this.roadDots.push(d);
     }
     this.onPaint = (_y: any, vh: any) => {

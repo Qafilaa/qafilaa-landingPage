@@ -34,36 +34,44 @@ npm run preview
 
 ## 3. The design handoff — this is the source of truth
 
-The whole site is transcribed from **`Qafilaa Site v2.dc.html`** (handoff 11). It is a complete, working, standalone implementation, and the repo is a faithful port of it, not an interpretation.
+The whole site is transcribed from **`Qafilaa Site v2.dc.html`** (**handoff 12**). It is a complete, working, standalone implementation, and the repo is a faithful port of it, not an interpretation.
 
 | Repo | Handoff lines |
 |---|---|
-| `index.html` `<head>` | 9–141 (`<helmet>`) |
-| `src/index.css` | 143–221 (`<style>`) |
-| `src/site/chrome/Chrome.tsx` | 228–292 |
-| `src/site/sections/*.tsx` (22 files) | 295–810 |
-| `src/site/chrome/Shortcuts.tsx` | 1314 |
-| `src/site/legal/*Body.tsx` (6 files) | 837–1305 |
-| `src/site/legal/LegalFoot.tsx` | 1307–1310 |
-| `src/site/tokens.ts` | 1319–1338 |
-| `src/site/data.ts` | 1340–1371 |
-| `src/site/engine.ts` | 1373–3262 |
+| `index.html` `<head>` | 9–140 (`<helmet>`) |
+| `src/index.css` | 143–285 (`<style>`) |
+| `src/site/chrome/Chrome.tsx` | 292–356 |
+| `src/site/sections/*.tsx` (22 files) | 359–874 |
+| `src/site/chrome/Shortcuts.tsx` | 1378 |
+| `src/site/legal/*Body.tsx` (6 files) | 901–1369 |
+| `src/site/legal/LegalFoot.tsx` | 1371–1374 |
+| `src/site/tokens.ts` | 1383–1407 |
+| `src/site/data.ts` | 1409–1440 |
+| `src/site/engine.ts` | 1442–3444 |
 
-**Five deliberate departures from the handoff**, each required by a rule below:
+**Line numbers shift with every handoff.** They are constants in the generator scripts (§9); when a new
+handoff lands, re-derive them rather than nudging them. Handoff 12 was a mobile pass: it added the
+900/480/370 breakpoints, a `NARROW` threshold shared with the engine, four responsive runtime helpers
+(`reflow`, `refitInline`, `wide`, `applyWide`), a ResizeObserver, and the `data-btn` / `data-cta` /
+`data-seg` / `data-navword` / `data-burgertxt` / `data-ctaarrow` / `data-corner` hooks.
+
+**Seven deliberate departures from the handoff**, each required by a rule below:
 1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§6), and the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
 4. **The site footer carries five link columns instead of three**, and the legal tab row is grouped instead of flat, because the six documents the handoff shipped became fifteen — see §8.
 5. **Privacy policy §5 gained one paragraph** naming the subprocessors page and confirming third parties give the same or greater protection. App Store Review Guideline 5.1.1 requires that confirmation in the policy itself.
+6. **A 404 page** (`src/site/NotFound.tsx` → `dist/404.html`). The handoff has no such screen; a statically prerendered site has no server to render one on demand.
+7. **The top nav stays pinned.** The handoff floats it away on a fast scroll down and returns it on scroll up; that block is dropped in `paint()`. The pill is already `position:fixed` in the markup, so removing the transform is the whole change. It carries the only route to the policy pages and the Get-the-app CTA, and on a phone the waypoint drawer behind the burger is the only navigation there is.
 
-Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these five in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
+Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these seven in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
 ## 4. Styling — a runtime tone system, not static tokens
 
 - The page is a **22-waypoint scroll journey**, and each section declares a `data-tone` (`light` / `paper` / `clay` / `night` / `deep`). `engine.ts`'s `paint()` interpolates between the tones of adjacent sections and writes **`--bg --ink --mut --sur --line --card --acc --acc2 --ctr --ctaInk --navbg --navline` onto `document.documentElement`** every frame the tone signature changes.
 - So **components reference CSS variables (`var(--ink)`), never imported colour constants.** The tone table lives in `src/site/tokens.ts` (`TONES`), which is the single source of truth for the palette. There is no `src/theme.ts`.
 - Section markup is **inline-style objects transcribed literally from the handoff**, hex values included. Do not "tokenise" them — they are already the design's own values, and drift from the handoff is the only thing that can break fidelity.
-- `src/index.css` holds the `:root` seed values, the reset, all `@keyframes`, the `[data-*]` behaviour rules and the media queries. Breakpoints: **1500 / 1240 / 1080 / 760**, plus `max-height: 760 / 620` for the readout instrument.
+- `src/index.css` holds the `:root` seed values, the reset, all `@keyframes`, the `[data-*]` behaviour rules and the media queries. Breakpoints: **1500 / 1240 / 1080 / 900 / 760 / 480 / 370**, plus `max-height: 760 / 620` for the readout instrument. Below **900** the engine also switches to its `narrow` path in JS — the phone rig goes inline and wide graphics scroll. That number is `NARROW` in `src/site/tokens.ts`; the CSS and the JS must agree.
 - Fonts are **Hanken Grotesk** (body) + **Space Grotesk** (display), from Google Fonts.
 - `prefers-reduced-motion` is honoured in `index.css` and again in the engine (`this.calm` disables flight arcs and the auto-demo).
 
@@ -96,6 +104,36 @@ The waitlist form (in `src/site/sections/TheEnd.tsx`) **POSTs to the live backen
 - FAQ copy is duplicated as JSON-LD in `index.html` **and** in `src/site/sections/SettingsAndSupport.tsx` — **edit both together**.
 - `src/content.ts` holds the real localized launch values and intentionally differs from prototype placeholders — **do not overwrite on a design sync.**
 
+### The crawler and install surface
+
+Hand-maintained files in `public/`. None is generated, so each drifts silently if you forget it:
+
+| File | Purpose | Watch out for |
+|---|---|---|
+| `robots.txt` | Allows everything, and names the answer-engine crawlers explicitly (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended…) | Nothing is disallowed on purpose — the policy pages are the ones people most need to find |
+| `llms.txt` | The curated map answer engines read: what Qafilaa is, the hard facts, and every policy URL with a one-line summary | Update when a route or a headline fact changes |
+| `sitemap.xml` | All 16 indexable routes | Hand-maintained. `/404` is **not** in it |
+| `site.webmanifest` | PWA install metadata, store `related_applications`, shortcuts | Icons must be **square**; Android rejects non-square |
+| `.well-known/security.txt` | RFC 9116 disclosure contact | `Expires` is a hard date — renew it before it lapses or the file is invalid |
+| `.well-known/{assetlinks.json,apple-app-site-association}` | App Links / Universal Links | Must serve as `application/json`; the deploy re-tags them |
+| `favicon.ico`, `brand/icon-*.png` | Favicon + PWA icon set | **Generated**, not hand-cut — see below |
+
+**Icons are generated.** Every shipped brand asset is landscape (132×80, 180×109, 994×603), so there was no
+square icon at all: the favicon was a squashed rectangle and the manifest declared two non-square icons,
+which fails installability. The set is built from `brand/logo-mark.png` by a script that trims the
+transparent margin and centres the mark on a white square — no recolour, no crop of the artwork. Maskable
+variants pad to 60% so the mark survives Android's circular mask. Regenerate rather than editing a PNG.
+
+**Structured data.** The home page carries the full `@graph` (Organization with address/contactPoint/sameAs,
+WebSite, MobileApplication with `installUrl`, FAQPage). Every other route gets a per-page
+`WebPage`/`ContactPage` + `BreadcrumbList` generated by `ldFor()` in `prerender.mjs`, pointing back at the
+home page's `#organization` and `#website` nodes. Policy routes used to have their JSON-LD stripped entirely.
+
+**Caching.** Only `/assets/*` is content-hashed, so only `/assets/*` may be `immutable`. Everything else in
+`public/` keeps a stable URL — an immutable `robots.txt` or `qafilaa-screens.js` would pin a stale copy at
+every edge for a year. The deploy splits the sync accordingly and re-tags the config files with real
+content types.
+
 ## 8. Store requirements — what each route is for
 
 Fifteen policy/support routes. Most exist because Apple or Google will reject the app without them, so
@@ -120,6 +158,10 @@ footer and from the grouped tab row on the legal pages.
 | `/contact` | Apple 1.2 · **EU DSA trader** · DPDP Act | Published contact info, trader identity, and the named Grievance Officer. **Must match what is filed in App Store Connect and Play Console.** |
 | `/accessibility` | **European Accessibility Act** | In force since 28 June 2025 for services offered in the EU. Claims here must be checkable against the code. |
 
+Plus `dist/404.html`, which is not a route: it is the CDN error document, `noindex`, has no canonical, and
+is not in the sitemap. **CloudFront must be pointed at it** — Error Pages → 404 → `/404.html`, response
+code 404. Without that the CDN returns its own bare XML error for every typo'd URL.
+
 Two of these carry named-person commitments — the Grievance Officer and the child-safety point of contact.
 If the person changes, change `/contact`, `/child-safety`, the privacy policy, and the Play Console
 declaration together.
@@ -133,8 +175,11 @@ approach matters more than the file):
   attribute, CSS declaration and text node, normalising attribute order, declaration order, entity spelling
   and whitespace. It folds in the five departures from §3 and then demands zero differences. It is the only
   thing standing between "looks right" and "is right".
-- **`audit.py`** walks `dist/` and checks every route has its own title and canonical, that JSON-LD appears
-  on the home page only, that no internal link 404s, and that every built route is reachable from the footer.
+- **`audit.py`** walks `dist/` and checks every route has its own title and canonical, that no internal link
+  404s, and that every built route is reachable from the footer. `/join` and `404.html` are excluded — neither
+  is a routable URL.
+- Both were also run at **375 / 320 / 768 px** against the handoff served side by side: all 22 section offsets
+  match and no page scrolls horizontally at any width down to 320.
 
 Run both after any change to a section, a policy page, the footer, or `prerender.mjs`.
 

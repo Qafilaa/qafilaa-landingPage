@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 11), lines 485-522.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 549-586.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -8,12 +8,12 @@ export function PapersAndLists() {
         <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 10 · Papers, permits and lists</div>
         <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0 0 34px', maxWidth: '20ch' }}>The dull things that end rides when they are missing.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '48px', alignItems: 'start' }} data-cols="1">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '20px', alignItems: 'start' }}>
+          <div data-autogrid="1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '20px', alignItems: 'start' }}>
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
               <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Checklists</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', marginTop: '12px', flexWrap: 'wrap' }}>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500' }}>Pre-departure</div>
-                <div data-cltoggle="1" style={{ display: 'flex', gap: '4px', padding: '4px', background: 'color-mix(in srgb, var(--ink) 7%, transparent)', borderRadius: '999px' }}></div>
+                <div data-cltoggle="1" data-seg="1" style={{ display: 'flex', gap: '4px', padding: '4px', background: 'color-mix(in srgb, var(--ink) 7%, transparent)', borderRadius: '999px' }}></div>
               </div>
               <div data-checklist="1" style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '2px' }}></div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '14px', flexWrap: 'wrap' }}>

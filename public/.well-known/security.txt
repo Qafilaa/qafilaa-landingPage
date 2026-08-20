@@ -1,0 +1,13 @@
+# Qafilaa vulnerability disclosure — RFC 9116
+#
+# Qafilaa holds a live map of where people are and, if they filled it in, their
+# blood group. If you find a way to reach either without permission, we want to
+# hear from you, and we will not come after you for reporting it in good faith.
+# The full policy is at https://qafilaa.in/security
+
+Contact: mailto:admin@qafilaa.in
+Contact: https://qafilaa.in/security
+Expires: 2027-08-20T00:00:00.000Z
+Preferred-Languages: en, hi, mr
+Canonical: https://qafilaa.in/.well-known/security.txt
+Policy: https://qafilaa.in/security

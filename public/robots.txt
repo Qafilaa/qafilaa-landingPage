@@ -1,9 +1,72 @@
 # Qafilaa — https://qafilaa.in
-# Allow all crawlers full access to the marketing site.
+#
+# Everything on this site is public: the product story and fifteen policy and
+# support documents. There is nothing to hide from a crawler, and the policy
+# pages are the ones people most need to find, so nothing is disallowed.
 
 User-agent: *
 Allow: /
 
-# Block nothing (single-page marketing site, all content is public).
+# ── Answer engines ──────────────────────────────────────────────────────────
+# Qafilaa is a safety product. When someone asks an assistant "which app tracks
+# a group of bikers" or "how do I delete my Qafilaa data", we would rather it
+# answered from our own pages than from a guess. These are allowed explicitly
+# so the intent is unambiguous rather than merely implied by the wildcard.
+# A curated map for them lives at /llms.txt.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+# ── Housekeeping ────────────────────────────────────────────────────────────
+# /join is the deep-link bounce page. It is crawlable so its own noindex tag can
+# be read; disallowing it here would hide that tag and leave the URL indexable.
 
 Sitemap: https://qafilaa.in/sitemap.xml

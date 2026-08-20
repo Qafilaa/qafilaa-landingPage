@@ -1,0 +1,50 @@
+# Qafilaa
+
+> A group riding companion for motorcycle trips across India, Nepal and Bhutan. One live map for the whole convoy, day-wise itineraries with rally points, offline maps and navigation, shared trip expenses, and automatic crash alerts that reach the riders nearest you first. Built for roads that lose signal before they lose altitude.
+
+Qafilaa is a mobile app for iOS and Android, published by Qafilaa.in of Kolhapur, Maharashtra, India. It is free, in public beta, and has no advertising or cross-app tracking. This site is its marketing and policy home; the app itself is not a web app.
+
+## Key facts
+
+- **What it does**: shows every rider in a trip on one live map (not a one-off location share), tracks the gap from lead to sweep, marks rally points that work with no phone signal, plans a trip day by day with legs, stays and permits, downloads the route corridor for offline use, splits shared expenses, and detects crashes automatically.
+- **Where it is built for**: the Himalayas and South Asia — the Manali–Leh–Manali circuit, Khardung La at 5,359 m, Baralacha La, Tanglang La, Chang La, Nubra and Pangong. Trip money supports INR, NPR, BTN and USD.
+- **Crash detection**: reads the phone's motion sensors on the device. A hard impact starts a countdown you can cancel. If it completes, an alert goes to the riders closest to you first with your position, bearing and blood group, and it queues and fires the moment any rider in the convoy gets a signal.
+- **Offline**: every screen reads from the phone's own storage first. Navigation degrades in four steps — live route, cached route, stored geometry, then a straight-line bearing to the next rally point.
+- **Privacy posture**: no advertising, no data broker, no cross-app tracking, and no public map. Live location is shared only with the riders in your active ride, only while it is active. Raw location traces auto-delete after 90 days, or 7 if shortened in Settings.
+- **Not an emergency service**: Qafilaa alerts the riders around you. It does not call an ambulance and is not monitored around the clock.
+
+## Product
+
+- [Home](https://qafilaa.in/): the full product story as a 22-stage scroll through a ten-day Ladakh trip — setup, permissions, planning, crew, itinerary, stays, money, papers, the lobby, roll-out, the live convoy, navigation, safety, offline, settings and the recap.
+
+## Support
+
+- [Help centre](https://qafilaa.in/support): frequently asked questions and how to reach a person.
+- [Contact](https://qafilaa.in/contact): business and trader details, postal address, phone, Grievance Officer, and how long each kind of enquiry takes to answer.
+- [Report content](https://qafilaa.in/report): how to report abusive or objectionable content or a rider, from inside the app or from anywhere else.
+- [Accessibility](https://qafilaa.in/accessibility): what works, what does not, and how to tell us.
+
+## Privacy and data
+
+- [Privacy Policy](https://qafilaa.in/privacy-policy): what is collected, why, who it is shared with, retention, and your rights under India's Digital Personal Data Protection Act, 2023.
+- [Data safety](https://qafilaa.in/data-safety): the Google Play Data safety and Apple App Privacy answers, written out in plain language.
+- [Permissions](https://qafilaa.in/permissions): every permission the app asks for, the real reason, what breaks if you refuse, and how to revoke it.
+- [Subprocessors](https://qafilaa.in/subprocessors): every third party that can touch Qafilaa data, by name.
+- [Delete my data](https://qafilaa.in/delete-data): delete some of your data without closing your account.
+- [Delete your account](https://qafilaa.in/delete-account): close the account and erase everything, without needing the app installed.
+- [Cookies](https://qafilaa.in/cookies): what this website stores in your browser. The app carries no analytics software.
+
+## Safety and conduct
+
+- [Community guidelines](https://qafilaa.in/community-guidelines): what belongs on Qafilaa, what does not, and the 24-hour commitment on reports.
+- [Child safety](https://qafilaa.in/child-safety): published standards against child sexual abuse and exploitation, and the named point of contact.
+- [Security](https://qafilaa.in/security): encryption in transit and at rest, what never leaves the phone, and how to report a vulnerability.
+
+## Legal
+
+- [Terms of Service](https://qafilaa.in/terms-and-conditions): the terms governing use of the site, waitlist and app, including the safety notice.
+
+## Optional
+
+- [Get the app](https://qafilaa.in/#join): App Store and Google Play availability, and the waitlist.
+- Contact: admin@qafilaa.in

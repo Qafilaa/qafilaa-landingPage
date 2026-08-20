@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 11), lines 363-378.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 427-442.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 

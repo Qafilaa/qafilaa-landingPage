@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 11), lines 720-752.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 784-816.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -25,8 +25,8 @@ export function SettingsAndSupport() {
                 <details className="qf-rcpt" style={{ padding: '11px 0' }}><summary style={{ cursor: 'pointer', fontSize: '15px', fontWeight: '500', minHeight: '24px' }}>Does live tracking drain the battery?</summary><p style={{ margin: '8px 0 0', fontSize: '14px', lineHeight: '1.55', color: 'var(--mut)' }}>Battery mode reduces how often your position is published on long straight legs and restores full frequency near passes and rally points, where knowing exactly where the group is matters most.</p></details>
               </div>
               <div style={{ display: 'flex', gap: '10px', marginTop: '16px', flexWrap: 'wrap' }}>
-                <a href="/support" style={{ display: 'flex', alignItems: 'center', minHeight: '44px', padding: '0 16px', border: '1px solid var(--line)', borderRadius: '12px', fontSize: '14px', color: 'var(--ink)' }}>Help centre</a>
-                <a href="mailto:admin@qafilaa.in" style={{ display: 'flex', alignItems: 'center', minHeight: '44px', padding: '0 16px', border: '1px solid var(--line)', borderRadius: '12px', fontSize: '14px', color: 'var(--ink)' }}>Contact us</a>
+                <a href="/support" data-btn="1" style={{ display: 'flex', alignItems: 'center', minHeight: '44px', padding: '0 16px', border: '1px solid var(--line)', borderRadius: '12px', fontSize: '14px', color: 'var(--ink)' }}>Help centre</a>
+                <a href="mailto:admin@qafilaa.in" data-btn="1" style={{ display: 'flex', alignItems: 'center', minHeight: '44px', padding: '0 16px', border: '1px solid var(--line)', borderRadius: '12px', fontSize: '14px', color: 'var(--ink)' }}>Contact us</a>
               </div>
               <p style={{ margin: '12px 0 0', fontSize: '14px', color: 'var(--mut)' }}>Every query gets a ticket and a timeline you can follow inside the app.</p>
             </div>

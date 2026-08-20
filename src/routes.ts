@@ -11,7 +11,7 @@
  * touching four files: this one, `src/App.tsx`, `prerender.mjs` PAGES, and
  * `public/sitemap.xml`.
  */
-export type Route = 'home' | LegalRouteName;
+export type Route = 'home' | 'notFound' | LegalRouteName;
 
 export type LegalRouteName =
   | 'privacy'
@@ -86,5 +86,8 @@ const BY_PATH = new Map<string, Route>(
 export function pathToRoute(pathname: string): Route {
   // Ignore a trailing slash so `/privacy-policy` and `/privacy-policy/` match.
   const p = pathname.replace(/\/+$/, '') || '/';
-  return BY_PATH.get(p) ?? 'home';
+  if (p === '/') return 'home';
+  // Anything else is served dist/404.html by the CDN, so the client has to
+  // agree it is a 404 or hydration would mismatch the prerendered markup.
+  return BY_PATH.get(p) ?? 'notFound';
 }

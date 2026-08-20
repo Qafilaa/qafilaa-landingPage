@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 11), lines 1078-1147.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 1142-1211.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -22,7 +22,7 @@ export function DeleteAccountBody() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(320px,1fr))', gap: '20px', marginTop: '44px', maxWidth: '1000px' }}>
-              <div style={{ background: '#FFFFFF', border: '1px solid #EAE5DB', borderRadius: '18px', padding: '26px' }}>
+              <div style={{ background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '18px', padding: '26px' }}>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#0A6068' }}>Fastest · recommended</div>
                 <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '22px', letterSpacing: '-.01em', margin: '12px 0 0' }}>Delete from inside the app</h2>
                 <ol style={{ margin: '16px 0 0', paddingLeft: '22px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '16.5px', lineHeight: '1.6', color: '#4A4842' }}>
@@ -31,7 +31,7 @@ export function DeleteAccountBody() {
                   <li>Tap <b style={{ color: '#23241F' }}>Delete account</b> and press and hold to confirm.</li>
                 </ol>
               </div>
-              <div style={{ background: '#FFFFFF', border: '1px solid #EAE5DB', borderRadius: '18px', padding: '26px' }}>
+              <div style={{ background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '18px', padding: '26px' }}>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#B26B00' }}>No app, no sign-in needed</div>
                 <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '22px', letterSpacing: '-.01em', margin: '12px 0 0' }}>Delete without the app</h2>
                 <p style={{ margin: '16px 0 0', fontSize: '16.5px', lineHeight: '1.65', color: '#4A4842', textWrap: 'pretty' }}>If you have lost access to your phone or have already uninstalled Qafilaa, email <a href="mailto:admin@qafilaa.in?subject=Delete%20my%20account">admin@qafilaa.in</a> from the email address on your account, with the subject "Delete my account". We may ask you to confirm the phone number the account was registered with, so that nobody else can delete it.</p>

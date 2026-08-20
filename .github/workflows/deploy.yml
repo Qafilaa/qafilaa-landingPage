@@ -31,12 +31,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Sync assets to S3 (long cache, hashed files)
+      # Only /assets/* carries a content hash in its filename, so only /assets/*
+      # may be immutable. Everything else in public/ keeps a stable URL — an
+      # immutable robots.txt or qafilaa-screens.js would pin a stale copy in
+      # every CDN edge and browser for a year.
+      - name: Sync hashed assets to S3 (immutable)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }}/ \
+            --delete \
+            --exclude "*" \
+            --include "assets/*" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      - name: Sync everything else (stable URLs, one day)
         run: |
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET }}/ \
             --delete \
             --exclude "*.html" \
-            --cache-control "public, max-age=31536000, immutable"
+            --exclude "assets/*" \
+            --cache-control "public, max-age=86400"
 
       - name: Upload HTML pages (no cache)
         run: |
@@ -48,8 +61,8 @@ jobs:
             --content-type "text/html"
 
       # App deep-link association files must be application/json on a short
-      # cache (the bulk sync above tags them immutable/octet-stream). Universal
-      # Links / App Links silently fail without the right content-type.
+      # cache (the bulk sync above tags them octet-stream). Universal Links /
+      # App Links silently fail without the right content-type.
       - name: Fix headers on /.well-known deep-link files
         run: |
           aws s3 cp dist/.well-known/apple-app-site-association \
@@ -60,6 +73,26 @@ jobs:
             s3://${{ secrets.AWS_S3_BUCKET }}/.well-known/assetlinks.json \
             --content-type "application/json" \
             --cache-control "public, max-age=300"
+
+      # Crawler- and browser-facing config files. S3 guesses octet-stream for
+      # .webmanifest and for extensionless files, which makes browsers ignore
+      # the manifest and makes security.txt download instead of render. These
+      # also change independently of a release, so they stay short-cached.
+      - name: Fix headers on crawler and config files
+        run: |
+          BUCKET=s3://${{ secrets.AWS_S3_BUCKET }}
+          aws s3 cp dist/robots.txt $BUCKET/robots.txt \
+            --content-type "text/plain; charset=utf-8" --cache-control "public, max-age=300"
+          aws s3 cp dist/sitemap.xml $BUCKET/sitemap.xml \
+            --content-type "application/xml; charset=utf-8" --cache-control "public, max-age=3600"
+          aws s3 cp dist/llms.txt $BUCKET/llms.txt \
+            --content-type "text/plain; charset=utf-8" --cache-control "public, max-age=3600"
+          aws s3 cp dist/site.webmanifest $BUCKET/site.webmanifest \
+            --content-type "application/manifest+json; charset=utf-8" --cache-control "public, max-age=3600"
+          aws s3 cp dist/.well-known/security.txt $BUCKET/.well-known/security.txt \
+            --content-type "text/plain; charset=utf-8" --cache-control "public, max-age=3600"
+          aws s3 cp dist/favicon.ico $BUCKET/favicon.ico \
+            --content-type "image/x-icon" --cache-control "public, max-age=604800"
 
       - name: Invalidate CloudFront cache
         run: |

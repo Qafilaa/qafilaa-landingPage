@@ -58,15 +58,61 @@ function headFor(html, page) {
     `<meta name="twitter:description" content="${page.description}" />`,
     'twitter:description',
   );
-  // The JSON-LD graph (Organization, WebSite, SoftwareApplication, FAQ) is
-  // specific to the home page; drop it from the legal pages.
-  out = out.replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/, '');
+  // The home page's graph (Organization, WebSite, MobileApplication, FAQ) is
+  // specific to it. Rather than leave the policy pages with no structured data
+  // at all, swap in a per-page WebPage + BreadcrumbList that points back at the
+  // Organization and WebSite nodes the home page defines.
+  out = out.replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/, ldFor(page));
+  // The 404 is a real HTML file the CDN serves for every unknown path. It must
+  // never be indexed, or every typo'd URL becomes a thin page in the index.
+  if (page.noindex) {
+    out = sub(out, /<meta name="robots"[^>]*>/, '<meta name="robots" content="noindex, follow" />', 'robots');
+    out = sub(out, /<meta name="googlebot"[^>]*>/, '<meta name="googlebot" content="noindex, follow" />', 'googlebot');
+    out = out.replace(/\s*<link rel="canonical"[^>]*>/, '');
+  }
   return out;
+}
+
+/** Per-page structured data for a policy / support route. */
+function ldFor(page) {
+  const crumb = page.title.replace(/ \| Qafilaa$/, '');
+  const graph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': page.schemaType ?? 'WebPage',
+        '@id': `${page.url}#webpage`,
+        url: page.url,
+        name: page.title,
+        description: page.description,
+        inLanguage: 'en-IN',
+        isPartOf: { '@id': 'https://qafilaa.in/#website' },
+        about: { '@id': 'https://qafilaa.in/#app' },
+        publisher: { '@id': 'https://qafilaa.in/#organization' },
+        breadcrumb: { '@id': `${page.url}#breadcrumb` },
+        primaryImageOfPage: { '@type': 'ImageObject', url: 'https://qafilaa.in/brand/og-cover.png' },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${page.url}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Qafilaa', item: 'https://qafilaa.in/' },
+          { '@type': 'ListItem', position: 2, name: crumb, item: page.url },
+        ],
+      },
+    ],
+  };
+  const body = JSON.stringify(graph, null, 2)
+    .split('\n')
+    .map((l) => '    ' + l)
+    .join('\n');
+  return `\n    <script type="application/ld+json">\n${body}\n    </script>`;
 }
 
 const PAGES = [
   { route: 'home', out: 'dist/index.html', template },
   {
+    schemaType: 'WebPage',
     route: 'privacy',
     out: 'dist/privacy-policy/index.html',
     url: 'https://qafilaa.in/privacy-policy',
@@ -184,6 +230,7 @@ const PAGES = [
       'The named third parties that can touch Qafilaa data, what each one does, and the protection standard every one of them is held to.',
   },
   {
+    schemaType: 'ContactPage',
     route: 'contact',
     out: 'dist/contact/index.html',
     url: 'https://qafilaa.in/contact',
@@ -198,6 +245,16 @@ const PAGES = [
     title: 'Accessibility | Qafilaa',
     description:
       "How accessible Qafilaa's website and app are today, where they fall short, and how to tell us when something is not usable.",
+  },
+  {
+    // Served by CloudFront for every unknown path (Error Pages -> 404 ->
+    // /404.html, response code 404). Not in the sitemap, and noindex.
+    route: 'notFound',
+    out: 'dist/404.html',
+    url: 'https://qafilaa.in/404',
+    title: 'Page not found | Qafilaa',
+    description: 'That page is not on the map. Here is the way back to Qafilaa.',
+    noindex: true,
   },
 ];
 

@@ -52,10 +52,13 @@
     <meta property="og:image" content="https://qafilaa.in/brand/og-cover.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:alt" content="Qafilaa — Ride together. No one left behind." />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@Qafilaa" />
+    <meta name="twitter:creator" content="@Qafilaa" />
     <meta name="twitter:title" content="Qafilaa — Ride together. No one left behind." />
     <meta
       name="twitter:description"
@@ -64,9 +67,21 @@
     <meta name="twitter:image" content="https://qafilaa.in/brand/og-cover.png" />
     <meta name="twitter:image:alt" content="Qafilaa — Ride together. No one left behind." />
 
-    <link rel="icon" href="/brand/logo-mark-sm.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/brand/icon-180.png" />
+    <!--
+      Icons are generated from brand/logo-mark.png by a script, not hand-cut:
+      every shipped brand asset is landscape, so a square set has to be built.
+      See public/brand/icon-*.png. Keep favicon.ico at the site root — some
+      crawlers and feed readers still request /favicon.ico blindly.
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/brand/icon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/brand/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="icon" href="/brand/icon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#0E7C86" />
+    <meta name="msapplication-TileImage" content="/brand/icon-192.png" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- Structured data: brand + product + FAQ. Home page only — prerender.mjs strips it elsewhere. -->
     <script type="application/ld+json">
@@ -82,6 +97,37 @@
           "slogan": "Ride together. No one left behind.",
           "description": "Qafilaa builds group riding software for motorcyclists in the Himalayas and across South Asia.",
           "email": "admin@qafilaa.in",
+          "telephone": "+91-88309-97757",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Yashree, Plot no. 41 & 42, Shanti Udyan, Apate Nagar, Radhanagari Road",
+            "addressLocality": "Kolhapur",
+            "addressRegion": "Maharashtra",
+            "postalCode": "416011",
+            "addressCountry": "IN"
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "contactType": "customer support",
+              "email": "admin@qafilaa.in",
+              "telephone": "+91-88309-97757",
+              "url": "https://qafilaa.in/support",
+              "availableLanguage": ["en", "hi", "mr"],
+              "areaServed": ["IN", "NP", "BT"]
+            },
+            {
+              "@type": "ContactPoint",
+              "contactType": "technical support",
+              "email": "admin@qafilaa.in",
+              "url": "https://qafilaa.in/security"
+            }
+          ],
+          "sameAs": [
+            "https://instagram.com/qafilaa.in",
+            "https://www.linkedin.com/company/qafilaa/",
+            "https://x.com/Qafilaa"
+          ],
           "areaServed": [
             { "@type": "Country", "name": "India" },
             { "@type": "Country", "name": "Nepal" },
@@ -122,6 +168,10 @@
             "Shared trip expenses with settle-up in the fewest transfers",
             "Inner Line permit tracking per rider",
             "Shared checklists, notes and reminders"
+          ],
+          "installUrl": [
+            "https://apps.apple.com/app/qafilaa/id6798303654",
+            "https://play.google.com/store/apps/details?id=app.qafilaa"
           ],
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR", "availability": "https://schema.org/PreOrder" }
         },
@@ -164,6 +214,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"

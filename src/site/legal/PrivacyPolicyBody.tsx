@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 11), lines 837-982.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 901-1046.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -52,7 +52,7 @@ export function PrivacyPolicyBody() {
                 <li><b style={{ color: '#23241F' }}>Diagnostics:</b> app version, platform and crash reports, through Google Firebase Crashlytics. Crash reports carry no identifier for you and no request contents.</li>
               </ul>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>We do not knowingly collect more than we need to run the service. There is no advertising or cross-app-tracking software in the Qafilaa app.</p>
-              <div style={{ marginTop: '24px', padding: '20px 24px', background: '#FFFFFF', border: '1px solid #EAE5DB', borderRadius: '14px' }}>
+              <div style={{ marginTop: '24px', padding: '20px 24px', background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '14px' }}>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '16px', fontWeight: '500' }}>Where your medical card is stored</div>
                 <p style={{ margin: '9px 0 0', fontSize: '16.5px', lineHeight: '1.65', color: '#4A4842', textWrap: 'pretty' }}>Your medical card is held securely on Qafilaa's servers, not only on your phone. That is deliberate: a medical card that exists only on your device is unreachable in exactly the situation it is for. Your phone destroyed, out of battery, or under the bike. It is shown to fellow riders only during an active alert.</p>
               </div>
@@ -96,8 +96,7 @@ export function PrivacyPolicyBody() {
                 <li>Service providers who help us run Qafilaa (for example hosting, analytics, email delivery, and crash reporting), under appropriate confidentiality and data-protection obligations, and only as needed.</li>
                 <li>Authorities or third parties where required by law, or to protect the rights, safety, or property of users or the public.</li>
               </ul>
-              <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>In the event of a merger, acquisition, or restructuring, data may be transferred as part of that transaction, subject to this policy.</p>
-              <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>Every service provider we use is named on the <a href="/subprocessors">Subprocessors</a> page, with what it does and what it can see. Each is bound by contract to confidentiality and data-protection terms, is permitted to use your data only to provide the service to us, and is required to provide the same or greater protection of your personal data than this policy promises you. None of them is permitted to use it for their own purposes, and none of them is an advertising network or a data broker.</p>
+              <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>In the event of a merger, acquisition, or restructuring, data may be transferred as part of that transaction, subject to this policy.</p><p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>Every service provider we use is named on the <a href="/subprocessors">Subprocessors</a> page, with what it does and what it can see. Each is bound by contract to confidentiality and data-protection terms, is permitted to use your data only to provide the service to us, and is required to provide the same or greater protection of your personal data than this policy promises you. None of them is permitted to use it for their own purposes, and none of them is an advertising network or a data broker.</p>
 
               <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '23px', lineHeight: '1.25', letterSpacing: '-.01em', margin: '56px 0 0' }}>6 · Data retention</h2>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>We keep personal data only as long as needed for the purposes above:</p>
@@ -137,7 +136,7 @@ export function PrivacyPolicyBody() {
 
               <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '23px', lineHeight: '1.25', letterSpacing: '-.01em', margin: '56px 0 0' }}>12 · Grievance Officer</h2>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>In line with applicable Indian law, you can contact our Grievance Officer for any concern about your personal data:</p>
-              <div style={{ marginTop: '16px', padding: '22px 24px', background: '#FFFFFF', border: '1px solid #EAE5DB', borderRadius: '14px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(210px,1fr))', gap: '18px' }}>
+              <div style={{ marginTop: '16px', padding: '22px 24px', background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '14px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(210px,1fr))', gap: '18px' }}>
                 <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Name</div><div style={{ fontSize: '16.5px', color: '#23241F', marginTop: '5px' }}>Yash Turmbekar</div></div>
                 <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Email</div><div style={{ fontSize: '16.5px', marginTop: '5px' }}><a href="mailto:admin@qafilaa.in">admin@qafilaa.in</a></div></div>
                 <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Address</div><div style={{ fontSize: '16.5px', color: '#4A4842', marginTop: '5px', lineHeight: '1.5' }}>Yashree, Plot no. 41 &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur, Maharashtra 416011</div></div>

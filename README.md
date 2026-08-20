@@ -101,7 +101,7 @@ tsc --noEmit \
   && vite build \                              # client bundle  -> dist/
   && vite build --ssr src/entry-server.tsx \   # server bundle  -> dist-ssr/
        --outDir dist-ssr \
-  && node prerender.mjs                        # bake static HTML for all 7 routes
+  && node prerender.mjs                        # bake static HTML for 16 routes + 404
 ```
 
 ---
@@ -112,7 +112,7 @@ This project is a **statically prerendered SPA** — there is no Node server at 
 
 1. **Client build** (`vite build`) emits the hydrating bundle to `dist/`.
 2. **Server build** (`vite build --ssr src/entry-server.tsx`) emits a Node-loadable bundle to `dist-ssr/`. Its [entry-server.tsx](src/entry-server.tsx) exposes `render(route)`, returning the app as an HTML string via `renderToString`.
-3. **Prerender step** ([prerender.mjs](prerender.mjs)) imports that `render()`, then replaces `<div id="root"></div>` with the rendered markup — once per route, rewriting the per-route `<head>` tags and stripping the home-only JSON-LD. Crawlers and first byte now receive the full page.
+3. **Prerender step** ([prerender.mjs](prerender.mjs)) imports that `render()`, then replaces `<div id="root"></div>` with the rendered markup — once per route, rewriting the per-route `<head>` tags and swapping the home-only JSON-LD for per-page structured data. Crawlers and first byte now receive the full page.
 4. **Hydration** ([src/main.tsx](src/main.tsx)) checks whether `#root` already has children — if so it `hydrateRoot`s the prerendered markup; otherwise (dev) it `createRoot`s a fresh tree.
 
 > ⚠️ **SSR safety:** every browser API (`window` / `document`) must live inside `useEffect` or event handlers so nothing touches the DOM during `render()`. The engine already follows this rule.
@@ -227,9 +227,16 @@ cards, borders, nav glass — from one palette into the other.
 So **components reference `var(--ink)`, never an imported colour constant.** The tone table lives in
 [`src/site/tokens.ts`](src/site/tokens.ts) and is the single source of truth for the palette.
 
-Breakpoints live in [src/index.css](src/index.css): **1500 / 1240 / 1080 / 760**, plus `max-height: 760 / 620`
-for the readout instrument. Below 900 px the engine takes its `narrow` path — the flying phone is retired and
-each dock renders its screen inline.
+Breakpoints live in [src/index.css](src/index.css): **1500 / 1240 / 1080 / 900 / 760 / 480 / 370**, plus
+`max-height: 760 / 620` for the readout instrument. Below **900 px** the engine also takes its `narrow` path —
+the flying phone is retired, each dock renders its screen inline, and wide graphics (the leg map, the settle
+graph) become horizontally scrollable strips rather than overflowing. That threshold is `NARROW` in
+[src/site/tokens.ts](src/site/tokens.ts); the CSS and the JS must agree.
+
+On a phone the nav pill sheds its waypoint counter, its burger label and — under 370 px — the wordmark, so a
+mark, a menu and a call to action still fit inside 320 px. The margin readout hides, section rhythm tightens
+to one number per breakpoint, and controls that leaned on a mouse grow to 44 px. Verified against the handoff
+at 375 / 320 / 768 px: every section offset matches and **nothing scrolls horizontally down to 320 px**.
 
 `prefers-reduced-motion` is honoured twice: in `index.css`, and again in the engine (`calm` mode drops the
 flight arcs and the auto-demo).
@@ -264,6 +271,7 @@ deleting or renaming it.**
 | `/support` | **Apple Support URL** | A marketing homepage does not satisfy this |
 | `/contact` | Apple 1.2 · **EU DSA trader** · DPDP Act | Trader identity and the Grievance Officer |
 | `/accessibility` | **European Accessibility Act** | In force since 28 June 2025 |
+| `404.html` | — | The CDN error document. Not a route, `noindex`, not in the sitemap |
 
 They are **real URLs, not a modal** — the design ships them as a hash overlay, and that was deliberately not
 adopted, because a hash target is not a URL a store reviewer can open.
@@ -327,7 +335,7 @@ The site is checked against the design handoff structurally, not by eye. The che
 authored markup and the prerendered output into trees and compares **every tag, attribute, CSS declaration
 and text node**, normalising away attribute order, declaration order, entity spelling and whitespace.
 
-Everything the handoff drew is expected to come out **identical**. Five deviations are folded into the
+Everything the handoff drew is expected to come out **identical**. Seven deviations are folded into the
 reference, each required by a rule in [CLAUDE.md](CLAUDE.md):
 
 1. legal cross-links point at real routes rather than hash targets;
@@ -336,7 +344,9 @@ reference, each required by a rule in [CLAUDE.md](CLAUDE.md):
 4. the footer carries five link columns instead of three, and the legal tab row is grouped, because the six
    documents the handoff shipped became fifteen — the store-required set in [Routes](#routes);
 5. privacy policy §5 gained one paragraph naming the subprocessors page and confirming third parties give
-   equal protection, which App Store Review Guideline 5.1.1 requires the policy itself to say.
+   equal protection, which App Store Review Guideline 5.1.1 requires the policy itself to say;
+6. a 404 page, which the handoff has no screen for;
+7. the top nav stays pinned; the handoff floats it away on a fast scroll down.
 
 A second script walks `dist/` and checks every route has its own title and canonical, that JSON-LD appears on
 the home page only, that no internal link 404s, and that every built route is reachable from the footer.
@@ -347,12 +357,37 @@ If you change a section, change it **to match the handoff**. Divergence should b
 
 ## SEO & analytics
 
-- Per-route `<title>`, canonical, description, Open Graph and Twitter tags, rewritten at prerender time.
-- JSON-LD `@graph` on the home page only: Organization, WebSite, MobileApplication and a FAQPage.
-- `hreflang` for `en-IN` / `en` / `x-default`, plus geo tags for Leh, Ladakh.
-- [public/sitemap.xml](public/sitemap.xml) is **hand-maintained** — update it when routes change.
-- GA4 (`G-V4RB2XKEGK`) is inlined in [index.html](index.html). It has **no consent gate yet** — a P0 in
-  [docs/PRODUCTION-READINESS.md](docs/PRODUCTION-READINESS.md).
+**Per route.** Title, canonical, description, Open Graph and Twitter tags, all rewritten at prerender time.
+Structured data too: the home page carries the full `@graph` (Organization with postal address, contact
+points and `sameAs`; WebSite; MobileApplication with store `installUrl`s; FAQPage), and every other route
+gets its own `WebPage`/`ContactPage` plus a `BreadcrumbList` pointing back at the home page's entity nodes.
+
+**Geographic.** `html lang="en-IN"`, `hreflang` for `en-IN` / `en` / `x-default`, and geo meta pinned to
+Leh, Ladakh — the circuit the whole product is built around. `areaServed` covers India, Nepal and Bhutan.
+
+**Answer engines.** [public/robots.txt](public/robots.txt) names GPTBot, ClaudeBot, PerplexityBot,
+Google-Extended, Applebot-Extended and the rest explicitly rather than leaving them to a wildcard, and
+[public/llms.txt](public/llms.txt) gives them a curated map: what Qafilaa is, the load-bearing facts, and
+every policy URL with a one-line summary. When someone asks an assistant "how do I delete my Qafilaa data",
+we would rather it answered from our page than guessed.
+
+**Install and identity.** [public/site.webmanifest](public/site.webmanifest) declares square icons at
+96/192/512 plus maskable variants, app shortcuts, and `related_applications` for both stores.
+[public/.well-known/security.txt](public/.well-known/security.txt) is RFC 9116 — note its `Expires` date is
+hard and must be renewed.
+
+**Icons are generated, not hand-cut.** Every shipped brand asset is landscape, so a square set has to be
+built from `brand/logo-mark.png`: trim the transparent margin, centre on white, pad. Maskable variants pad
+to 60% so the mark survives Android's circular mask. Before this the favicon was a squashed 132×80 and the
+manifest declared two non-square icons, which fails PWA installability.
+
+**Sitemap.** [public/sitemap.xml](public/sitemap.xml) lists all 16 indexable routes and is **hand-maintained**
+— update it when routes change. `/404` and `/join` are deliberately absent.
+
+**Analytics.** GA4 (`G-V4RB2XKEGK`) is inlined in [index.html](index.html) and therefore present on every
+prerendered page. It has **no consent gate yet** — a P0 in
+[docs/PRODUCTION-READINESS.md](docs/PRODUCTION-READINESS.md), and the reason
+[/cookies](src/site/legal/CookiesBody.tsx) documents how to block it rather than claiming prior consent.
 
 > FAQ copy is duplicated in the [index.html](index.html) JSON-LD **and** in
 > [SettingsAndSupport.tsx](src/site/sections/SettingsAndSupport.tsx). Edit both together.
@@ -396,6 +431,18 @@ Verify locally before shipping:
 ```bash
 npm run lint && npm run typecheck && npm run build && npm run preview
 ```
+
+> ⚠️ **One thing the workflow cannot set for you: the CloudFront error document.** The build emits
+> `dist/404.html`, but CloudFront has to be told to use it — Distribution → Error Pages → Create custom error
+> response → HTTP 404 → response page `/404.html`, response code **404**. Without that, every typo'd URL
+> returns CloudFront's bare XML error instead of a page with a way back. Do the same for 403, which is what
+> S3 returns for a missing key when the bucket is a REST origin.
+
+> ⚠️ **Cache policy is deliberate.** Only `/assets/*` is content-hashed, so only `/assets/*` is `immutable`.
+> Everything else in `public/` keeps a stable URL — an immutable `robots.txt`, `sitemap.xml` or
+> `qafilaa-screens.js` would pin a stale copy at every CDN edge and in every browser for a year. The deploy
+> splits the sync and re-tags the config files with real content types, because S3 guesses `octet-stream`
+> for `.webmanifest` and for extensionless files like `security.txt`.
 
 `dist/` is portable — it will run on Netlify, Vercel, Cloudflare Pages, or GitHub Pages unchanged if the host
 ever moves. Only two things must be preserved: `/join` reachable as a path, and `application/json` on the
