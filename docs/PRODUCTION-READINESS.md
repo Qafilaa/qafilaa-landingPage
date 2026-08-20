@@ -11,8 +11,9 @@
 - [ ] **CloudFront error pages are not applied** — the build emits `dist/404.html`, but the distribution still
   returns `403 AccessDenied` in `application/xml` for every unknown path (verified live 2026-08-20). The origin
   is REST/OAC, so S3 answers a missing key with **403, not 404** — both codes need mapping. `npm run
-  cloudfront:errors` (idempotent, `--dry-run` supported) or the *CloudFront error pages* workflow does it. Not
-  run here: it needs `cloudfront:UpdateDistribution` and changes production. *(infra, S)*
+  cloudfront:errors` does it — idempotent, `--dry-run` supported, and it finds the distribution
+  (`E1PL91RX18GLP8`) by the `qafilaa.in` alias so no id is needed. Not run here: it changes production.
+  *(infra, S)*
 - [ ] **Nothing from the Site v2 work is committed or deployed** — the working tree carries the whole rebuild.
   *(release, S)*
 

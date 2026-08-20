@@ -23,8 +23,10 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-const DIST_ID = process.env.CLOUDFRONT_DISTRIBUTION_ID;
 const DRY = process.argv.includes('--dry-run');
+
+/** The site this script is for. Used to find the distribution when no id is given. */
+const SITE_ALIAS = 'qafilaa.in';
 
 /** The page CloudFront should serve, and the status the browser should see. */
 const WANTED = [
@@ -44,16 +46,41 @@ const WANTED = [
   },
 ];
 
-if (!DIST_ID) {
-  console.error('CLOUDFRONT_DISTRIBUTION_ID is not set.');
-  console.error('Find it with:  aws cloudfront list-distributions \\');
-  console.error("    --query \"DistributionList.Items[].{id:Id,domain:DomainName,aliases:Aliases.Items}\"");
-  process.exit(1);
-}
-
 function aws(args) {
   return execFileSync('aws', args, { encoding: 'utf-8', maxBuffer: 32 * 1024 * 1024 });
 }
+
+/**
+ * Find the distribution by its alias, so nobody has to look an id up.
+ * The account holds more than one distribution, so matching on the alias also
+ * means this can never reconfigure somebody else's site by accident.
+ */
+function findDistribution() {
+  if (process.env.CLOUDFRONT_DISTRIBUTION_ID) return process.env.CLOUDFRONT_DISTRIBUTION_ID;
+
+  let list;
+  try {
+    list = JSON.parse(aws(['cloudfront', 'list-distributions', '--output', 'json']));
+  } catch (err) {
+    console.error('Could not list distributions. Is the AWS CLI configured?');
+    console.error(String(err.stderr || err.message).trim());
+    process.exit(1);
+  }
+
+  const items = list.DistributionList?.Items ?? [];
+  const hits = items.filter((d) =>
+    (d.Aliases?.Items ?? []).some((a) => a === SITE_ALIAS || a === `www.${SITE_ALIAS}`),
+  );
+  if (hits.length !== 1) {
+    console.error(`Expected exactly one distribution aliased to ${SITE_ALIAS}, found ${hits.length}.`);
+    console.error('Set CLOUDFRONT_DISTRIBUTION_ID explicitly to choose.');
+    process.exit(1);
+  }
+  console.log(`Matched ${hits[0].Id} by alias ${SITE_ALIAS} (${hits[0].DomainName}).`);
+  return hits[0].Id;
+}
+
+const DIST_ID = findDistribution();
 
 let raw;
 try {

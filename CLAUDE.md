@@ -231,7 +231,7 @@ Run both after any change to a section, a policy page, the footer, or `prerender
 
 - Run `npm run lint` (`--max-warnings 0`) + `npm run typecheck` before committing; tsconfig is strict (`noUnusedLocals`/`noUnusedParameters`). Use `npm ci` for installs.
 - **CI does not yet gate lint/typecheck** (`.github/workflows/deploy.yml` only builds + syncs to S3 on push to `main`). That is now the remaining P0 in `docs/PRODUCTION-READINESS.md`; the GA4 consent gate is done.
-- **CloudFront error pages are configured out-of-band.** `npm run cloudfront:errors` (or the *CloudFront error pages* workflow, `workflow_dispatch`) points 403 and 404 at `/404.html`. It is idempotent and deliberately not in the deploy path — it needs `cloudfront:UpdateDistribution`, which is far broader than the deploy user's `CreateInvalidation`.
+- **CloudFront error pages are configured out-of-band.** `npm run cloudfront:errors` (or the *CloudFront error pages* workflow, `workflow_dispatch`) points **403 and 404** at `/404.html` — 403 because the origin is REST/OAC and S3 answers a missing key with AccessDenied, not NotFound. It finds the distribution by the `qafilaa.in` alias, so no id is needed and it cannot touch another site in the account. Idempotent, `--dry-run` supported, and deliberately not in the deploy path: it needs `cloudfront:UpdateDistribution`, far broader than the deploy user's `CreateInvalidation`.
 - Secrets/env files are gitignored except `.env.example`.
 - `public/join/index.html` and `public/.well-known/*` are **standalone deep-link infrastructure**, independent of the React app. Leave them alone.
 
