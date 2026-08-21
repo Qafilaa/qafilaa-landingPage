@@ -8,7 +8,7 @@ Everything here needs **Python 3**. Nothing here runs at build time — you run 
 
 ## The source of truth
 
-`design/Qafilaa Site v2.dc.html` — handoff 12. A complete, working, standalone implementation of the site:
+`design/Qafilaa Site v2.dc.html` — handoff 13. A complete, working, standalone implementation of the site:
 markup, styles, and a ~1,950-line vanilla-JS runtime. **This file is the design.** When a new handoff
 arrives, replace it and re-run the pipeline.
 

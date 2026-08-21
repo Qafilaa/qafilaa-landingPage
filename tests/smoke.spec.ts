@@ -22,7 +22,48 @@ test.describe('landing', () => {
     const failed = await page.evaluate(() => (window.__QAF_STEPS ?? []).filter((s) => s.startsWith('!')));
     expect(failed, 'engine build steps that threw').toEqual([]);
     expect(await page.evaluate(() => window.__QAF_FERR ?? null), 'frame-loop error').toBeNull();
-    expect(await page.evaluate(() => Object.keys(window.QAF_SCREENS ?? {}).length)).toBe(75);
+    // A floor, not an exact count: the library grows with each handoff (75 at
+    // handoff 12, 84 at 13) but must never shrink or arrive truncated.
+    expect(await page.evaluate(() => Object.keys(window.QAF_SCREENS ?? {}).length)).toBeGreaterThanOrEqual(84);
+  });
+
+  test('the phone HUD narrates the screen it is showing', async ({ page }) => {
+    await bootedLanding(page);
+    // New in handoff 13: a caption rail under the flying phone, with its own
+    // step counter and prev/next. Driven by CAPS in src/site/tokens.ts.
+    const cap = await page.locator('[data-hudcap]').first().textContent();
+    expect(cap?.trim(), 'the HUD must name the screen on show').toBeTruthy();
+    await expect(page.locator('[data-hudprev]')).toHaveCount(1);
+    await expect(page.locator('[data-hudnext]')).toHaveCount(1);
+    const step = await page.locator('[data-hudstep]').first().textContent();
+    expect(step?.trim()).toMatch(/\d/);
+  });
+
+  test('the flying phone is on screen above NARROW and stood down below it', async ({ page }) => {
+    await bootedLanding(page);
+    // NARROW is 900 in src/site/tokens.ts, and the CSS and the JS must agree on it.
+    const wide = (page.viewportSize()?.width ?? 0) >= 900;
+
+    const layer = await page.locator('[data-phonelayer]').evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { opacity: Number(cs.opacity), display: cs.display };
+    });
+    const host = await page.locator('[data-phonehost]').boundingBox();
+
+    if (wide) {
+      // The centrepiece of the page. stepPhone() rewrites this opacity every
+      // frame from measured dock offsets, so a regression in measureDocks()
+      // fades the phone out silently -- no error, no failed build step, just an
+      // empty right-hand column. Nothing else here would catch that.
+      expect(layer.opacity, 'the flying phone must not fade out').toBeGreaterThan(0.9);
+      expect(layer.display).toBe('block');
+      expect(host?.width ?? 0, 'phone width').toBeGreaterThan(100);
+      expect(host?.height ?? 0, 'phone height').toBeGreaterThan(200);
+    } else {
+      // Below NARROW the engine parks a phone inline in each dock instead, and
+      // the flying layer is display:none rather than merely transparent.
+      expect(layer.display, 'the flying layer must be out of the flow on mobile').toBe('none');
+    }
   });
 
   test('all 22 waypoints render', async ({ page }) => {

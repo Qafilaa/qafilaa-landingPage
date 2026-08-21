@@ -51,6 +51,10 @@ ATTR = {
 # boolean attributes: emit bare in JSX
 BOOL = {'required', 'disabled', 'checked', 'readonly', 'multiple', 'selected',
         'autofocus', 'novalidate', 'open', 'hidden', 'inert', 'async', 'defer'}
+# React types these as numbers; `tabIndex="0"` is a type error in TSX.
+NUMERIC = {'tabIndex', 'rowSpan', 'colSpan', 'span', 'start', 'maxLength',
+           'minLength', 'size', 'cols', 'rows'}
+
 # value/checked on inputs must become uncontrolled defaults
 DEFAULTS = {'value': 'defaultValue', 'checked': 'defaultChecked'}
 
@@ -149,6 +153,9 @@ def convert_attrs(raw, tag):
             continue
         if lname in BOOL and val.lower() in ('', name.lower(), 'true'):
             out.append(name)
+            continue
+        if name in NUMERIC and re.fullmatch(r'-?\d+', val or ''):
+            out.append('%s={%s}' % (name, val))
             continue
         # JSX string literal: escape braces is unnecessary inside quotes, but
         # a literal double quote must be moved into an expression container.

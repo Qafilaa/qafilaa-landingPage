@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 621-638.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 653-670.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -17,7 +17,7 @@ export function TheLobby() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="lobby" data-scale="0.54" data-kind="tab" data-flow="lobby,readiness,roles,crewReadiness,offlineMap"></div>
+            <div data-dock="1" data-screen="lobby" data-scale="0.54" data-kind="tab" data-flowname="The pre-ride lobby" data-flow="lobby,readiness,roles,roleChange,offlineMap"></div>
             <div data-static="crewReadiness" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
         </div>

@@ -59,18 +59,19 @@ def cut_method(text, name):
 
 
 HDR = ('/**\n'
-       ' * Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines %s.\n'
+       ' * Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines %s.\n'
        ' * %s\n'
        ' */\n')
 
 # ── tokens.ts ───────────────────────────────────────────────────────────────
-tokens = seg(1383, 1407)
+tokens = seg(1415, 1486)
 tokens = tokens.replace('const SUR =', 'export const SUR =')
 tokens = tokens.replace('const SG =', 'export const SG =')
 tokens = tokens.replace('const PW = 413, PH = 872;',
                         'export const PW = 413;\nexport const PH = 872;')
 tokens = tokens.replace('const TONES = {', 'export const TONES: Record<string, Tone> = {')
 tokens = tokens.replace('const NARROW =', 'export const NARROW =')
+tokens = tokens.replace('const CAPS = {', 'export const CAPS: Record<string, string> = {')
 tokens = tokens.replace('const KEYS =', 'export const KEYS =')
 tokens = tokens.replace('const alphaOf =', 'export const alphaOf =')
 tokens = tokens.replace('const rgb =', 'export const rgb =')
@@ -96,11 +97,11 @@ export interface Tone {
 }
 """
 write('tokens.ts',
-      (HDR % ('1383-1407', 'Daylight palette, tone table and colour helpers.'))
+      (HDR % ('1415-1486', 'Daylight palette, tone table and colour helpers.'))
       + TONE_T + '\n' + tokens + '\n')
 
 # ── data.ts ─────────────────────────────────────────────────────────────────
-data = seg(1409, 1440)
+data = seg(1488, 1519)
 for name in ('TRIP', 'DAYS', 'TOTAL_KM', 'MAXD', 'RESTD', 'PASSES', 'CREW', 'roleOf'):
     data = data.replace('const %s ' % name, 'export const %s ' % name)
     data = data.replace('const %s=' % name, 'export const %s=' % name)
@@ -125,11 +126,11 @@ export interface CrewMember { id: string; name: string; role: string; c: string;
 """
 data = data.replace('export const CREW = [', 'export const CREW: CrewMember[] = [')
 write('data.ts',
-      (HDR % ('1409-1440', 'The trip, the ten days, and the crew the demos are built from.'))
+      (HDR % ('1488-1519', 'The trip, the ten days, and the crew the demos are built from.'))
       + DAY_T + '\n' + data + '\n')
 
 # ── engine.ts ───────────────────────────────────────────────────────────────
-eng = seg(1442, 3444)
+eng = seg(1521, 3744)
 
 eng = sub1(eng, 'class Component extends DCLogic {', 'export class SiteEngine {\n'
            '  /* A 1:1 port of a hand-written DOM runtime: it assigns ~120 fields on\n'
@@ -218,6 +219,15 @@ eng = eng.replace(old_wl, new_wl, 1)
 # Strict-mode annotations. Type-level only — nothing here changes runtime
 # behaviour. See CLAUDE.md: annotate the ported engine, never restructure it.
 TYPE_FIXES = [
+    # deliberate best-effort catch; a comment keeps eslint's no-empty quiet
+    ('    } catch (e) {}' + NL + '    this.syncing = false;',
+     '    } catch { /* a demo failing to follow the phone must not stall the rig */ }'
+     + NL + '    this.syncing = false;'),
+
+    # a screen key indexing an inline literal — widen it rather than enumerate
+    ('const v = { convoy:0, convoyStale:2, convoyOffline:4 }[d.key];',
+     'const v = ({ convoy:0, convoyStale:2, convoyOffline:4 } as Record<string, number>)[d.key];'),
+
     # ResizeObserver re-rigging is best-effort; a comment keeps no-empty quiet
     ('this.docks.forEach(d => this.ro.observe(d.el)); } catch (e) {} }',
      'this.docks.forEach(d => this.ro.observe(d.el)); } catch { /* observer already gone */ } }'),
@@ -293,10 +303,6 @@ TYPE_FIXES = [
 for _old, _new in TYPE_FIXES:
     eng = sub1(eng, _old, _new, _old[:52])
 
-# The top nav stays pinned; the handoff hides it on scroll down.
-eng = sub1(eng, "/* float away when diving down the page, return the moment you look back up */\n    const nav = this.q('[data-nav]');\n    const hide = y > 260 && (this.scrollV || 0) > 2.2;\n    const show = (this.scrollV || 0) < -0.6 || y < 200;\n    if (hide && !this.navHidden) { this.navHidden = true; nav.style.transition = 'transform .42s cubic-bezier(.5,0,.2,1), opacity .3s'; nav.style.transform = 'translateY(-130%)'; nav.style.opacity = '0'; }\n    else if (show && this.navHidden) { this.navHidden = false; nav.style.transform = 'translateY(0)'; nav.style.opacity = '1'; }",
-           '/* The handoff floats the nav away on a fast scroll down and returns it when\n       you look back up. Kept pinned instead: it carries the only route to the\n       policy pages and the Get-the-app CTA, and on a phone the waypoint drawer\n       behind the burger is the only navigation there is. The pill is already\n       position:fixed in the markup, so dropping the transform is all it takes.\n       Declared divergence - CLAUDE.md section 3. */', 'fixed nav')
-
 # Every global listener goes through one shim so teardown can never miss one.
 # React StrictMode double-mounts in dev, so a leaked listener is not theoretical.
 eng = eng.replace('window.addEventListener(', 'this.bind(window, ')
@@ -322,7 +328,7 @@ eng = sub1(eng, '    if (this.ro) { try { this.ro.disconnect(); } catch { /* alr
 IMPORTS = """import { getWaitlistCount, isValidEmail, joinWaitlist } from '../api';
 import { site } from '../content';
 import { CREW, DAYS, MAXD, PASSES, RESTD, TOTAL_KM, TRIP, roleOf } from './data';
-import { KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
+import { CAPS, KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
 
 /** Display base for the social-proof line; live backend signups add to it. */
 const BASE_WAITLIST = site.waitlistCount;
@@ -341,7 +347,7 @@ export interface SiteProps {
 HEAD = """/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * The Qafilaa Site v2 scroll runtime — a 1:1 port of the design handoff's own
- * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1442-3444).
+ * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1521-3744).
  *
  * It owns everything the markup cannot express: the tone interpolation written
  * onto `:root`, the contour field, the spine, the flying phone and its 75-screen

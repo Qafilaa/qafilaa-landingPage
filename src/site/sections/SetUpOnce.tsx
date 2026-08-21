@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 402-417.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 434-449.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -17,7 +17,7 @@ export function SetUpOnce() {
               <p style={{ margin: '10px 0 0', fontSize: '16px', lineHeight: '1.6', color: 'var(--mut)' }}>Blood group, allergies, conditions, emergency contacts. It sits behind a lock screen and rides with you. If you go down, the riders who reach you first can read it without unlocking your phone.</p>
             </div>
           </div>
-          <div data-dock="1" data-screen="medical" data-scale="0.6" data-kind="tab" data-flow="profile,bikes,medical,docsB5"></div>
+          <div data-dock="1" data-screen="medical" data-scale="0.6" data-kind="tab" data-flowname="Set up once" data-flow="profile,bikes,medical,docsB5"></div>
         </div>
       </section>
   );

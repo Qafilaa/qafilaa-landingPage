@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 292-356.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 305-388.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -14,11 +14,30 @@ export function Chrome() {
           <div data-phonepos="1" style={{ position: 'absolute', left: '0', top: '0', transformOrigin: 'top left', willChange: 'transform' }}>
             <div data-phonetilt="1" style={{ position: 'relative', willChange: 'transform' }}>
               <div style={{ position: 'relative', width: '413px', height: '872px', padding: '10px', boxSizing: 'border-box', background: '#0B0E0D', borderRadius: '54px', boxShadow: '0 40px 90px -24px rgba(35,36,31,.42), 0 0 0 1px rgba(35,36,31,.08)' }}>
-                <div data-phonehost="1" style={{ position: 'relative', width: '393px', height: '852px', borderRadius: '44px', overflow: 'hidden', background: '#F1EFE9', pointerEvents: 'auto', cursor: 'pointer' }}></div>
+                <div data-phonehost="1" role="button" tabIndex={0} aria-label="App screen — tap for the next screen in this flow" title="Tap for the next screen" style={{ position: 'relative', width: '393px', height: '852px', borderRadius: '44px', overflow: 'hidden', background: '#F1EFE9', pointerEvents: 'auto', cursor: 'pointer' }}></div>
                 <div data-sheen="1" style={{ position: 'absolute', inset: '10px', borderRadius: '44px', pointerEvents: 'none', background: 'linear-gradient(120deg, rgba(255,255,255,0) 36%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 64%)', opacity: '.07' }}></div>
               </div>
-              <div style={{ position: 'absolute', right: '14px', bottom: '-34px', display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 10px', borderRadius: '999px', background: 'var(--card)', border: '1px solid var(--line)', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>
-                <span data-autodot="1" style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--acc2)' }}></span><span data-autotxt="1">Auto</span>
+            </div>
+          </div>
+          <div data-phonehud="1" style={{ position: 'absolute', left: '0', top: '0', width: '292px', transformOrigin: 'top left', pointerEvents: 'none', opacity: '0', transition: 'opacity .26s ease' }}>
+            <div style={{ pointerEvents: 'none', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '16px', padding: '12px 14px 11px', boxShadow: '0 22px 46px -30px rgba(35,36,31,.6)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '9px' }}>
+                <span data-hudflow="1" style={{ flex: '1', minWidth: '0', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '10px', letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--sur)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Flow · the live convoy</span>
+                <span style={{ flex: 'none', display: 'flex', alignItems: 'center', gap: '5px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '10px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>
+                  <span data-autodot="1" style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--acc2)' }}></span><span data-autotxt="1">Auto</span>
+                </span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '9px', marginTop: '5px' }}>
+                <span data-hudstep="1" style={{ flex: 'none', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.1em', fontVariantNumeric: 'tabular-nums', color: 'var(--acc)' }}>01 / 03</span>
+                <span data-hudlabel="1" style={{ flex: '1', minWidth: '0', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.13em', textTransform: 'uppercase', color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>R1 · Convoy view</span>
+              </div>
+              <div data-hudcap="1" style={{ marginTop: '6px', fontSize: '13.5px', lineHeight: '1.4', color: 'var(--mut)', minHeight: '19px', textWrap: 'pretty' }}>Tap the phone to walk this flow</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                <div data-hudrail="1" style={{ flex: '1', display: 'flex', gap: '4px', minWidth: '0' }}></div>
+                <div style={{ flex: 'none', display: 'flex', gap: '5px' }}>
+                  <button data-hudprev="1" type="button" aria-label="Previous screen" style={{ pointerEvents: 'auto', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0', border: '1px solid var(--line)', borderRadius: '9px', background: 'transparent', color: 'var(--ink)', font: '500 15px \'Space Grotesk\',sans-serif', cursor: 'pointer', transition: 'transform .18s, border-color .18s' }}>‹</button>
+                  <button data-hudnext="1" type="button" aria-label="Next screen" style={{ pointerEvents: 'auto', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0', border: '1px solid var(--acc2)', borderRadius: '9px', background: 'var(--acc2)', color: '#F7F5F0', font: '500 15px \'Space Grotesk\',sans-serif', cursor: 'pointer', transition: 'transform .18s' }}>›</button>
+                </div>
               </div>
             </div>
           </div>

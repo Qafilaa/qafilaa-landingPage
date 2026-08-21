@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 641-658.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 673-690.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -11,7 +11,7 @@ export function RollOut() {
           <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(32px,4.2vw,56px)', lineHeight: '1.06', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>One person calls it. Everyone's phone knows.</h2>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '28px', marginTop: '36px' }} data-strip="1">
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div data-dock="1" data-screen="rollPresence" data-scale="0.52" data-kind="sheet" data-flow="rollPresence,rollPrompt,dayLegs"></div>
+              <div data-dock="1" data-screen="rollPresence" data-scale="0.52" data-kind="sheet" data-flowname="Roll out" data-flow="rollPresence,rollPrompt,dayLegs"></div>
               <button data-rollbtn="1" data-magnet="1" data-tap="1" style={{ marginTop: '20px', padding: '14px 26px', border: '1px solid var(--acc2)', borderRadius: '14px', background: 'var(--acc2)', color: '#F7F5F0', font: '600 16px \'Hanken Grotesk\'', cursor: 'pointer' }}>Roll out</button>
             </div>
             <div data-rollflank="1" style={{ display: 'flex', gap: '22px', opacity: '.32', transition: 'opacity .5s cubic-bezier(.22,.61,.36,1)' }}>

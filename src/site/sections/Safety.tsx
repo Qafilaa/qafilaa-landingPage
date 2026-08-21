@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 711-752.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 743-784.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -12,7 +12,7 @@ export function Safety() {
           <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.65', color: 'var(--mut)', maxWidth: '66ch', margin: '24px 0 0' }}>A crash alert goes to the riders closest to you first, with your position, your bearing and your blood group. If there is no signal, it queues and fires the moment any rider in the convoy gets a bar.</p>
           <div style={{ display: 'flex', gap: '26px', alignItems: 'center', justifyContent: 'center', marginTop: '40px' }} data-strip="1">
             <div data-sosflank="left" style={{ opacity: '.3', transition: 'opacity .5s cubic-bezier(.65,0,.35,1)' }}><div data-static="sendSos" data-scale="0.44" data-sosslot="1"></div></div>
-            <div data-dock="1" data-screen="crash" data-scale="0.58" data-kind="sheet" data-sosdock="1"></div>
+            <div data-dock="1" data-screen="crash" data-scale="0.58" data-kind="sheet" data-sosdock="1" data-flowname="A crash, end to end" data-flow="crash,sosSent,sosIncoming,sosNavigate,medicalScene,sosResolved"></div>
             <div data-sosflank="right" style={{ opacity: '.3', transition: 'opacity .5s cubic-bezier(.65,0,.35,1)' }}><div data-static="convoy" data-scale="0.44" data-sosslot="2"></div></div>
           </div>
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center', marginTop: '32px', flexWrap: 'wrap' }}>

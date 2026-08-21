@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 427-442.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 459-474.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -17,7 +17,7 @@ export function TheSendOff() {
               <span style={{ fontSize: '15px', lineHeight: '1.5', color: 'var(--mut)' }}>Carry a fuel stabiliser, and top up where you can still get 91.</span>
             </div>
           </div>
-          <div data-dock="1" data-screen="e20" data-scale="0.58" data-kind="sheet" data-flow="e20,welcome,trips"></div>
+          <div data-dock="1" data-screen="e20" data-scale="0.58" data-kind="sheet" data-flowname="The send-off" data-flow="e20,welcome,trips"></div>
         </div>
       </section>
   );

@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 506-516.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 538-548.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -12,7 +12,7 @@ export function WhereYouSleep() {
             <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>A base you keep for three nights is one booking, not three. Rest days are marked. Who paid and what each rider owes carries straight through to the money.</p>
             <div data-nights="1" style={{ display: 'flex', gap: '10px', marginTop: '30px', flexWrap: 'wrap' }}></div>
           </div>
-          <div data-dock="1" data-screen="stays" data-scale="0.56" data-kind="tab" data-flow="stays,restDay,money"></div>
+          <div data-dock="1" data-screen="stays" data-scale="0.56" data-kind="tab" data-flowname="Book the nights" data-flow="stays,stayMulti,stayPaidBy,restDay"></div>
         </div>
       </section>
   );

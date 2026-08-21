@@ -20,20 +20,20 @@ ROUTES = ['privacy-policy', 'terms-and-conditions', 'delete-account',
           'delete-data', 'support', 'security']
 
 SECTIONS = [
-    (359, 380, 'Trailhead'), (383, 399, 'TheSplit'), (402, 417, 'SetUpOnce'),
-    (420, 424, 'Permissions'), (427, 442, 'TheSendOff'), (445, 459, 'PlanTheTrip'),
-    (462, 480, 'BringTheCrew'), (483, 503, 'DayWisePlan'), (506, 516, 'WhereYouSleep'),
-    (519, 546, 'TheMoney'), (549, 586, 'PapersAndLists'), (589, 602, 'Notes'),
-    (605, 618, 'AlongTheWay'), (621, 638, 'TheLobby'), (641, 658, 'RollOut'),
-    (661, 692, 'LiveConvoy'), (695, 708, 'Navigation'), (711, 752, 'Safety'),
-    (755, 781, 'NoSignal'), (784, 816, 'SettingsAndSupport'), (819, 846, 'EndOfTheRide'),
-    (849, 874, 'TheEnd'),
+    (391, 412, 'Trailhead'), (415, 431, 'TheSplit'), (434, 449, 'SetUpOnce'),
+    (452, 456, 'Permissions'), (459, 474, 'TheSendOff'), (477, 491, 'PlanTheTrip'),
+    (494, 512, 'BringTheCrew'), (515, 535, 'DayWisePlan'), (538, 548, 'WhereYouSleep'),
+    (551, 578, 'TheMoney'), (581, 618, 'PapersAndLists'), (621, 634, 'Notes'),
+    (637, 650, 'AlongTheWay'), (653, 670, 'TheLobby'), (673, 690, 'RollOut'),
+    (693, 724, 'LiveConvoy'), (727, 740, 'Navigation'), (743, 784, 'Safety'),
+    (787, 813, 'NoSignal'), (816, 848, 'SettingsAndSupport'), (851, 878, 'EndOfTheRide'),
+    (881, 906, 'TheEnd'),
 ]
 
 LEGAL = [
-    (901, 1046, 'PrivacyPolicyBody'), (1049, 1139, 'TermsBody'),
-    (1142, 1211, 'DeleteAccountBody'), (1214, 1286, 'DeleteDataBody'),
-    (1289, 1327, 'SupportBody'), (1330, 1369, 'SecurityBody'),
+    (933, 1078, 'PrivacyPolicyBody'), (1081, 1171, 'TermsBody'),
+    (1174, 1243, 'DeleteAccountBody'), (1246, 1318, 'DeleteDataBody'),
+    (1321, 1359, 'SupportBody'), (1362, 1401, 'SecurityBody'),
 ]
 
 
@@ -64,7 +64,7 @@ def write(path, body):
     print('wrote', path, len(body))
 
 
-HEAD = ('// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines %s.\n'
+HEAD = ('// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines %s.\n'
         '// Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,\n'
         '// which has no compile-time link to this markup. Do not rename them.\n')
 
@@ -212,14 +212,14 @@ for i, (a, b, name) in enumerate(SECTIONS):
     write('sections/%s.tsx' % name, body)
     names.append(name)
 
-index = HEAD % '359-874'
+index = HEAD % '391-906'
 index += '\n' + '\n'.join(
     "export { %s } from './%s';" % (n, n) for n in names) + '\n'
 write('sections/index.ts', index)
 
 # ── chrome ──────────────────────────────────────────────────────────────────
-chrome = convert(seg(292, 356)).strip()
-body = HEAD % '292-356'
+chrome = convert(seg(305, 388)).strip()
+body = HEAD % '305-388'
 body += """
 export function Chrome() {
   return (
@@ -232,8 +232,8 @@ export function Chrome() {
 write('chrome/Chrome.tsx', body)
 
 # the shortcuts dialog is the LAST element in the design, after every section
-shortcuts = convert(seg(1378, 1378)).strip()
-body = HEAD % '1378'
+shortcuts = convert(seg(1410, 1410)).strip()
+body = HEAD % '1410'
 body += """
 export function Shortcuts() {
   return (
@@ -244,7 +244,6 @@ export function Shortcuts() {
 write('chrome/Shortcuts.tsx', body)
 
 # ── legal bodies ────────────────────────────────────────────────────────────
-lnames = []
 for a, b, name in LEGAL:
     raw = relink(seg(a, b))
     # the overlay hid every page but one; as real routes they are always shown
@@ -261,14 +260,13 @@ for a, b, name in LEGAL:
     body += '\nexport function %s() {\n  return (\n%s\n  );\n}\n' % (
         name, reindent(jsx, 4))
     write('legal/%s.tsx' % name, body)
-    lnames.append(name)
 
-write('legal/bodies.ts', (HEAD % '901-1369') + '\n' + '\n'.join(
-    "export { %s } from './%s';" % (n, n) for n in lnames) + '\n')
+# No barrel file here on purpose: LegalRoute.tsx imports each body directly,
+# so a re-export module would only be dead code the next handoff regenerates.
 
 # ── legal footer strip (shared by every legal route) ────────────────────────
-foot = convert(relink(seg(1371, 1374))).strip()
-body = HEAD % "1371-1374"
+foot = convert(relink(seg(1403, 1406))).strip()
+body = HEAD % "1403-1406"
 body += '\nexport function LegalFoot() {\n  return (\n%s\n  );\n}\n' % reindent(foot, 4)
 write('legal/LegalFoot.tsx', body)
 

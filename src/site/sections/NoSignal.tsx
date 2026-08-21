@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 755-781.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 787-813.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -16,7 +16,7 @@ export function NoSignal() {
           <div data-sigchips="1" style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}></div>
         </div>
         <div style={{ marginTop: '26px', alignItems: 'flex-start' }} data-strip="1">
-          <div data-dock="1" data-screen="convoy" data-scale="0.52" data-kind="replace" data-sigdock="1"></div>
+          <div data-dock="1" data-screen="convoy" data-scale="0.52" data-kind="replace" data-sigdock="1" data-flowname="Losing signal" data-flow="convoy,convoyStale,convoyOffline"></div>
           <div data-static="convoyStale" data-scale="0.52" data-sigslot="2"></div>
           <div data-static="convoyOffline" data-scale="0.52" data-sigslot="3"></div>
         </div>

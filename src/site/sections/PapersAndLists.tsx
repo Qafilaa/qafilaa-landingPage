@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 549-586.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 581-618.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -37,7 +37,7 @@ export function PapersAndLists() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="permits" data-scale="0.56" data-kind="push" data-flow="permits,docViewer,checklist,reminders"></div>
+            <div data-dock="1" data-screen="permits" data-scale="0.56" data-kind="push" data-flowname="Papers and lists" data-flow="permits,permitDetail,docViewer,checklist"></div>
             <div data-static="reminders" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
         </div>

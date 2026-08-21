@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 819-846.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 851-878.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -27,7 +27,7 @@ export function EndOfTheRide() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="shareDay" data-scale="0.54" data-kind="push" data-flow="shareDay,dayComplete,endRide,recap,history"></div>
+            <div data-dock="1" data-screen="dayComplete" data-scale="0.54" data-kind="push" data-flowname="End of the ride" data-flow="dayComplete,shareDay,endRide,recap"></div>
             <div data-static="history" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
         </div>

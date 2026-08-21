@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 661-692.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 693-724.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -19,7 +19,7 @@ export function LiveConvoy() {
               <div style={{ fontSize: '13px', color: 'var(--mut)' }}>Stretch is the distance from lead to sweep.</div>
             </div>
           </div>
-          <div data-dock="1" data-screen="convoy" data-scale="0.56" data-kind="tab" data-flow="convoy,convoyList,riderDetail,rallyLive,quickActions,broadcast"></div>
+          <div data-dock="1" data-screen="convoy" data-scale="0.56" data-kind="tab" data-flowname="Ride the convoy" data-flow="convoy,convoyList,riderDetail,quickActions,hazard,broadcast,rideControl"></div>
         </div>
         <div data-rv="1" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 14px', marginTop: '20px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>
           <span>Positions get a dedicated uplink</span><span style={{ opacity: '.4' }}>·</span><span>Freshness measured on the server clock</span>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * The Qafilaa Site v2 scroll runtime — a 1:1 port of the design handoff's own
- * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1442-3444).
+ * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1521-3744).
  *
  * It owns everything the markup cannot express: the tone interpolation written
  * onto `:root`, the contour field, the spine, the flying phone and its 75-screen
@@ -18,7 +18,7 @@
 import { getWaitlistCount, isValidEmail, joinWaitlist } from '../api';
 import { site } from '../content';
 import { CREW, DAYS, MAXD, PASSES, RESTD, TOTAL_KM, TRIP, roleOf } from './data';
-import { KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
+import { CAPS, KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
 
 /** Display base for the social-proof line; live backend signups add to it. */
 const BASE_WAITLIST = site.waitlistCount;
@@ -381,9 +381,15 @@ export class SiteEngine {
       el.style.width = Math.round(PW*sc)+'px';
       el.style.height = Math.round(PH*sc)+'px';
       el.style.flex = 'none';
-      return { el, sc, key: el.getAttribute('data-screen'),
-        kind: el.getAttribute('data-kind')||'replace',
-        flow: (el.getAttribute('data-flow')||'').split(',').filter(Boolean) };
+      const key = el.getAttribute('data-screen');
+      const flow = (el.getAttribute('data-flow')||'').split(',').filter(Boolean);
+      if (!flow.length) flow.push(key);
+      /* the screen the section is about is always a member of its own flow */
+      if (flow.indexOf(key) < 0) flow.unshift(key);
+      const sec = el.closest('section');
+      return { el, sc, key, flow, home: key, sec: sec ? sec.id : '',
+        name: el.getAttribute('data-flowname') || '',
+        kind: el.getAttribute('data-kind')||'replace' };
     });
     this.layer = this.q('[data-phonelayer]');
     this.pos = this.q('[data-phonepos]');
@@ -417,6 +423,11 @@ export class SiteEngine {
     this.layer.insertBefore(tr, this.layer.firstChild);
     this.measureDocks();
     this.host.addEventListener('click', (e: any) => this.phoneTap(e));
+    this.host.addEventListener('keydown', (e: any) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault(); this.phoneTap({});
+    });
+    this.buildHud();
     this.beginFlight(this.docks[0]);
   }
 
@@ -429,13 +440,13 @@ export class SiteEngine {
 
   /* the phone must clear the floating header and still fit a short viewport */
   fitDocks() {
-    const room = window.innerHeight - 150;
-    const f = clamp(room / PH, 0.34, 1);
+    const room = window.innerHeight - 150 - (this.narrow ? 0 : 150);
+    const f = clamp(room / PH, this.narrow ? 0.34 : 0.26, 1);
     if (f === this.fitF) return;
     this.fitF = f;
     this.docks.forEach((d: any) => {
       if (d.sc0 == null) d.sc0 = d.sc;
-      d.sc = Math.max(0.34, Math.min(d.sc0, f));
+      d.sc = Math.max(this.narrow ? 0.34 : 0.26, Math.min(d.sc0, f));
       d.el.style.width = Math.round(PW * d.sc) + 'px';
       d.el.style.height = Math.round(PH * d.sc) + 'px';
     });
@@ -463,12 +474,36 @@ export class SiteEngine {
     el.style.boxShadow = '0 0 0 1px var(--line), 0 18px 42px -28px rgba(35,36,31,.5)';
     d.iw = w;
     el.appendChild(this.skel(w, h, r));
+    if (!d.cap && el.parentElement && d.flow.length > 1) {
+      const cap = document.createElement('button');
+      cap.type = 'button'; cap.setAttribute('data-icap','1');
+      cap.style.cssText = 'display:flex; align-items:center; gap:12px; width:100%; max-width:393px; margin:12px auto 0; padding:11px 14px; border:1px solid var(--line); border-radius:14px; background:var(--card); text-align:left; cursor:pointer; min-height:48px;';
+      cap.innerHTML = '<span data-icapstep="1" style="flex:none; '+SUR+' color:var(--acc); font-variant-numeric:tabular-nums;"></span>' +
+        '<span style="flex:1; min-width:0;"><span data-icaplabel="1" style="display:block; '+SG+' font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);"></span>' +
+        '<span data-icapcap="1" style="display:block; font-size:13.5px; line-height:1.35; color:var(--mut); margin-top:2px;"></span></span>' +
+        '<span style="flex:none; '+SG+' font-size:17px; color:var(--acc2);">›</span>';
+      el.parentElement.insertBefore(cap, el.nextSibling);
+      d.cap = cap;
+      const go = () => {
+        d.iIdx = ((d.iIdx == null ? d.flow.indexOf(d.key) : d.iIdx) + 1) % d.flow.length;
+        d.key = d.flow[d.iIdx];
+        const s3 = (d.iw || w) / 393;
+        el.innerHTML = '';
+        const sc = this.screenEl(d.key, s3, false);
+        if (!this.rm) sc.style.animation = 'qf-screen-in .3s cubic-bezier(.22,.61,.36,1)';
+        el.appendChild(sc);
+        this.inlineCap(d);
+      };
+      cap.addEventListener('click', go);
+      el.addEventListener('click', go);
+    }
     this.addTrig(el, -700, () => {
       const w2 = Math.max(220, Math.min(393, Math.round(el.getBoundingClientRect().width))), s2 = w2/393;
       d.iw = w2;
       el.style.borderRadius = Math.round(30*s2)+'px';
       el.innerHTML = '';
       el.appendChild(this.screenEl(d.key, s2, false));
+      this.inlineCap(d);
     });
   }
 
@@ -478,6 +513,7 @@ export class SiteEngine {
     if (!this.docks) return;
     this.trig = (this.trig||[]).filter((t: any) => !(t.el.hasAttribute('data-dock') || t.el.hasAttribute('data-static')));
     this.qa('[data-dock],[data-static]').forEach((el: any) => { el.innerHTML = ''; el.setAttribute('style', el.__css0 || ''); });
+    this.qa('[data-icap]').forEach((el: any) => el.remove());
     this.cur = null; this.fl = null; this.fitF = null;
     (this.wides||[]).forEach((g: any) => this.applyWide(g));
     this.buildDocks();
@@ -538,7 +574,8 @@ export class SiteEngine {
   beginFlight(next: any) {
     if (!next || this.cur === next) return;
     const prev = this.cur;
-    this.cur = next; this.flowIdx = 0;
+    this.cur = next;
+    this.seedIdx(next);
     if (!prev || this.rm) {
       this.fl = null;
       const r = this.livePos(next);
@@ -580,13 +617,21 @@ export class SiteEngine {
   }
 
   swap(key: any, kind: any) {
-    if (this.hostKey === key) return;
+    if (this.hostKey === key) { this.paintHud(); return; }
     this.hostKey = key;
+    /* a tap inside the outgoing screen's 500ms life must not strand it */
+    while (this.host.children.length > 2) this.host.firstElementChild.remove();
     const el = this.screenEl(key, 1, false, 0, true);
     el.style.cssText += 'position:absolute; inset:0; width:393px; height:852px; border-radius:44px;';
-    const old = this.host.firstElementChild;
-    if (this.rm || kind === 'none' || !old) { this.host.innerHTML = ''; this.host.appendChild(el); return; }
-    if (kind === 'push') {
+    const old = this.hostEl && this.hostEl.parentNode === this.host ? this.hostEl : this.host.lastElementChild;
+    this.hostEl = el;
+    if (this.rm || kind === 'none' || !old) { this.host.innerHTML = ''; this.host.appendChild(el); this.paintHud(); return; }
+    if (old === el) { this.host.appendChild(el); this.paintHud(); return; }
+    if (kind === 'back') {
+      el.style.zIndex = '1'; old.style.zIndex = '2';
+      el.style.animation = 'qf-back-in .4s cubic-bezier(.22,.9,.3,1)';
+      old.style.animation = 'qf-back-out .4s cubic-bezier(.22,.9,.3,1) forwards';
+    } else if (kind === 'push') {
       el.style.animation = 'qf-push-in .42s cubic-bezier(.22,.9,.3,1)';
       old.style.animation = 'qf-push-out .42s cubic-bezier(.22,.9,.3,1) forwards';
     } else if (kind === 'sheet') {
@@ -601,18 +646,18 @@ export class SiteEngine {
       el.style.animation = 'qf-screen-in .32s cubic-bezier(.22,.61,.36,1)';
     }
     this.host.appendChild(el);
-    setTimeout(() => { if (old.parentNode === this.host) old.remove(); }, 500);
+    setTimeout(() => { if (old !== this.hostEl && old.parentNode === this.host) old.remove(); }, 500);
+    this.paintHud();
   }
 
   phoneTap(e: any) {
-    this.userDriving = true; this.lastTouch = performance.now();
-    const t = this.q('[data-autotxt]'), d = this.q('[data-autodot]');
-    if (t) t.textContent = 'You'; if (d) d.style.background = 'var(--warn)';
-    if (!this.rm) {
+    this.userDriving = true; this.tapped = true; this.lastTouch = performance.now();
+    this.mode('You');
+    if (!this.rm && e && e.clientX) {
       const r = this.host.getBoundingClientRect();
       this.ripple((e.clientX-r.left)/ (r.width/393), (e.clientY-r.top)/(r.height/852), .45);
     }
-    this.advance();
+    this.advance(1);
   }
 
   ripple(x: any, y: any, o: any) {
@@ -621,30 +666,187 @@ export class SiteEngine {
     this.host.appendChild(s); setTimeout(() => s.remove(), 640);
   }
 
-  advance() {
-    if (this.fl) return;
-    const d = this.cur; if (!d || !d.flow.length) return;
-    this.flowIdx = (this.flowIdx + 1) % d.flow.length;
-    this.swap(d.flow[this.flowIdx], d.kind);
+  /* ═════ flow player ═════
+     One rule holds the whole thing together: the step index is DERIVED from the
+     screen on the glass. A tap, a section control and the auto-demo all write the
+     key, then re-derive — so the rail can never describe a screen you cannot see. */
+  seedIdx(d: any) {
+    if (!d) return;
+    const f = d.flow;
+    this.flowIdx = f.indexOf(d.key);
+  }
+
+  /* a control inside the section moved the phone */
+  drive(d: any, key: any, kind: any) {
+    if (!d || !key) return;
+    d.key = key;
+    if (this.cur === d && !this.narrow) { this.seedIdx(d); this.swap(key, kind || d.kind); }
+  }
+
+  /* a throttled tab can leave a flight mid-air; a tap must never be swallowed */
+  landFlight() {
+    const fl = this.fl; if (!fl) return;
+    this.fl = null;
+    const b = this.livePos(fl.to);
+    this.pv.x = b.x; this.pv.y = b.y; this.pv.s = b.s;
+    if (!fl.swapped) { this.seedIdx(fl.to); this.swap(fl.to.key, fl.to.kind); }
+    this.dirty = true;
+  }
+
+  advance(dir: any) {
+    if (this.narrow) return;
+    if (this.fl) {
+      if (performance.now() - this.fl.t0 < this.fl.dur + 400) return;
+      this.landFlight();
+    }
+    const d = this.cur; if (!d || d.flow.length < 2) return;
+    const step = dir === -1 ? -1 : 1;
+    this.flowIdx = this.flowIdx < 0 ? (step > 0 ? 0 : d.flow.length - 1)
+      : (this.flowIdx + step + d.flow.length) % d.flow.length;
+    d.key = d.flow[this.flowIdx];
+    this.swap(d.key, step < 0 ? 'back' : d.kind);
+    this.echo(d);
+  }
+
+  goStep(i: any) {
+    if (this.fl && performance.now() - this.fl.t0 > this.fl.dur + 400) this.landFlight();
+    const d = this.cur; if (!d || this.fl) return;
+    i = clamp(i, 0, d.flow.length - 1);
+    if (i === this.flowIdx) return;
+    const back = i < this.flowIdx;
+    this.flowIdx = i; d.key = d.flow[i];
+    this.userDriving = true; this.tapped = true; this.lastTouch = performance.now();
+    this.mode('You');
+    this.swap(d.key, back ? 'back' : d.kind);
+    this.echo(d);
+  }
+
+  mode(txt: any) {
+    const t = this.q('[data-autotxt]'), dot = this.q('[data-autodot]');
+    if (t) t.textContent = txt;
+    if (dot) dot.style.background = txt === 'You' ? 'var(--warn)' : 'var(--acc2)';
+  }
+
+  /* the phone advanced — bring the section's own control along with it */
+  echo(d: any) {
+    if (this.syncing || !d) return;
+    this.syncing = true;
+    try {
+      if (d.sec === 'setup' && this.stepList) {
+        const i = this.stepList.findIndex((s: any) => s[2] === d.key);
+        if (i >= 0 && i !== this.stepIdx) { this.stepIdx = i; this.paintStep(); }
+      } else if (d.sec === 'nav' && this.rungs) {
+        const r = d.key === 'offlineNav' ? 2 : 0;
+        this.rungIdx = r;
+        this.rungs.forEach((x: any,j: any) => {
+          x.style.borderColor = j === r ? 'var(--acc2)' : 'var(--line)';
+          x.style.transform = j === r ? 'translateX(6px)' : '';
+        });
+      } else if (d.sec === 'offline') {
+        const v = ({ convoy:0, convoyStale:2, convoyOffline:4 } as Record<string, number>)[d.key];
+        if (v != null) { const s = this.q('[data-sig]'); if (s) s.value = String(v); this.setSig(v); }
+      } else if (d.sec === 'itinerary' && this.dayBtns) {
+        const i = DAYS.findIndex(x => x.screen === d.key);
+        if (i >= 0 && i !== this.dayIdx) this.setDay(i);
+      }
+    } catch { /* a demo failing to follow the phone must not stall the rig */ }
+    this.syncing = false;
+  }
+
+  buildHud() {
+    this.hud = this.q('[data-phonehud]');
+    if (!this.hud) return;
+    this.hudRail = this.q('[data-hudrail]');
+    this.hudSeg = [];
+    const nudge = (dir: any) => { this.userDriving = true; this.tapped = true; this.lastTouch = performance.now(); this.mode('You'); this.advance(dir); };
+    [['[data-hudprev]',-1],['[data-hudnext]',1]].forEach(([sel,dir]) => {
+      const b = this.q(sel); if (!b) return;
+      b.addEventListener('click', (e: any) => { e.stopPropagation(); nudge(dir); });
+      b.addEventListener('mouseenter', () => { b.style.transform = 'translateY(-1px)'; });
+      b.addEventListener('mouseleave', () => { b.style.transform = ''; });
+    });
+    const roll = this.q('[data-rollbtn]');
+    if (roll) roll.addEventListener('click', () => {
+      const d = this.docks.find((x: any) => x.sec === 'rollout');
+      const fl = this.q('[data-rollflank]');
+      if (fl) fl.style.opacity = '1';
+      if (d && this.cur === d) nudge(1);
+      else if (d) { d.key = d.flow[Math.min(1, d.flow.length-1)]; }
+    });
+    this.bind(document, 'keydown', (e: any) => {
+      if (this.narrow || !this.cur || !this.layer || this.layer.style.opacity !== '1') return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const tag = (e.target.tagName||'').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || this.legalOpen != null) return;
+      e.preventDefault();
+      nudge(e.key === 'ArrowRight' ? 1 : -1);
+    });
+  }
+
+  paintHud() {
+    if (!this.hud || this.narrow) return;
+    const d = this.cur; if (!d) return;
+    const f = d.flow, n = f.length;
+    const i = this.flowIdx < 0 ? -1 : clamp(this.flowIdx, 0, n - 1);
+    const two = (v: any) => (v < 10 ? '0' : '') + v;
+    this.q('[data-hudflow]').textContent = 'Flow · ' + (d.name || d.sec);
+    this.q('[data-hudstep]').textContent = i < 0 ? '— / ' + two(n) : two(i+1) + ' / ' + two(n);
+    this.q('[data-hudlabel]').textContent = this.LB[d.key] || d.key;
+    this.q('[data-hudcap]').textContent = CAPS[d.key] || '';
+    if (this.hudSeg.length !== n) {
+      this.hudRail.innerHTML = ''; this.hudSeg = [];
+      for (let k = 0; k < n; k++) {
+        const s = document.createElement('button');
+        s.type = 'button';
+        s.setAttribute('aria-label', 'Screen ' + (k+1) + ' — ' + (this.LB[f[k]] || f[k]));
+        s.style.cssText = 'pointer-events:auto; flex:1; min-width:0; height:18px; padding:0; border:none; background:transparent; cursor:pointer; display:flex; align-items:center;';
+        const bar = document.createElement('span');
+        bar.style.cssText = 'display:block; width:100%; height:3px; border-radius:2px; background:var(--line); transition:background .25s, height .2s;';
+        s.appendChild(bar);
+        s.addEventListener('click', ev => { ev.stopPropagation(); this.goStep(k); });
+        this.hudRail.appendChild(s); this.hudSeg.push(bar);
+      }
+    }
+    this.hudSeg.forEach((b: any,k: any) => {
+      b.style.background = k === i ? 'var(--acc2)' : (k < i ? alphaOf('#0E7C86', .34) : 'var(--line)');
+      b.style.height = k === i ? '4px' : '3px';
+    });
+    const nx = this.q('[data-hudnext]');
+    if (nx) {
+      nx.title = 'Next — ' + (this.LB[f[(i+1) % n]] || '');
+      const anim = this.tapped ? '' : 'qf-hudnudge 2.6s ease-out infinite';
+      if (nx.style.animation !== anim) nx.style.animation = anim;
+    }
+    this.hudH = 0;
+  }
+
+  /* on a phone each dock is a plain screen with its own caption and its own step */
+  inlineCap(d: any) {
+    if (!d || !d.cap) return;
+    const f = d.flow;
+    let i = f.indexOf(d.key); if (i < 0) i = 0;
+    d.iIdx = i;
+    const two = (v: any) => (v < 10 ? '0' : '') + v;
+    this.q('[data-icapstep]', d.cap).textContent = two(i+1) + '/' + two(f.length);
+    this.q('[data-icaplabel]', d.cap).textContent = this.LB[d.key] || d.key;
+    this.q('[data-icapcap]', d.cap).textContent = CAPS[d.key] || '';
+    d.cap.style.display = f.length > 1 ? 'flex' : 'none';
   }
 
   idle(now: any) {
     if (this.narrow || this.calm || this.props.autoDemo === false) return;
     if (this.userDriving) {
-      if (now - this.lastTouch > 9000) {
-        this.userDriving = false;
-        const t = this.q('[data-autotxt]'), d = this.q('[data-autodot]');
-        if (t) t.textContent = 'Auto'; if (d) d.style.background = 'var(--acc2)';
-      }
+      if (now - this.lastTouch > 9000) { this.userDriving = false; this.mode('Auto'); }
       return;
     }
     if (this.fl) { this.nextIdle = 0; return; }
     if (!this.cur || !this.cur.flow.length || this.layer.style.opacity !== '1') return;
-    if (!this.nextIdle) this.nextIdle = now + 4000;
+    const last = this.flowIdx >= this.cur.flow.length - 1;
+    if (!this.nextIdle) this.nextIdle = now + 4200;
     if (now < this.nextIdle) return;
-    this.nextIdle = now + 4000;
+    this.nextIdle = now + (last ? 7000 : 4200);
     this.ripple(120 + Math.random()*150, 430 + Math.random()*250, .3);
-    setTimeout(() => this.advance(), 180);
+    setTimeout(() => this.advance(1), 180);
   }
 
   /* ═════ headline + survey type ═════ */
@@ -797,7 +999,7 @@ export class SiteEngine {
     const el = this.q('[data-shortcuts]');
     if (el.style.display === 'flex') { el.style.display = 'none'; return; }
     el.innerHTML = '<div style="background:var(--bg); border-radius:20px; padding:30px 34px; max-width:420px;"><div style="'+SUR+'">Keyboard</div>' +
-      ['J / K — next and previous waypoint','Esc — close','? — this list']
+      ['J / K — next and previous waypoint','← / → — walk the flow on the phone','Esc — close','? — this list']
         .map(t => '<div style="font-size:16px; color:var(--ink); margin-top:13px;">'+t+'</div>').join('') + '</div>';
     el.style.display = 'flex';
     el.onclick = () => { el.style.display = 'none'; };
@@ -895,7 +1097,7 @@ export class SiteEngine {
         lift = 1 - arc * 0.065;
       }
       p.s = a.s + (bNow.s - a.s) * e;
-      if (!f.swapped && e > 0.38) { f.swapped = true; this.flowIdx = 0; this.swap(f.to.key, f.to.kind); }
+      if (!f.swapped && e > 0.38) { f.swapped = true; this.seedIdx(f.to); this.swap(f.to.key, f.to.kind); }
       if (t >= 1) { this.fl = null; if (this.dots) this.pulseLead(); }
       flying = true;
     } else if (this.cur) {
@@ -905,6 +1107,22 @@ export class SiteEngine {
     }
 
     this.pos.style.transform = 'translate3d(' + p.x.toFixed(2) + 'px,' + p.y.toFixed(2) + 'px,0) scale(' + (p.s * lift).toFixed(4) + ')';
+
+    if (this.hud) {
+      if (!this.hudW) this.hudW = this.hud.offsetWidth || 292;
+      if (!this.hudH) this.hudH = this.hud.offsetHeight || 96;
+      const pw = PW * p.s, ph = PH * p.s;
+      let hy = p.y + ph + 16;
+      if (hy + this.hudH > vh - 10) hy = p.y - this.hudH - 14;
+      /* whichever side it lands on, the whole card stays inside the viewport */
+      hy = clamp(hy, 10, Math.max(10, vh - this.hudH - 10));
+      const hx = clamp(p.x + pw/2 - this.hudW/2, 12, Math.max(12, window.innerWidth - this.hudW - 12));
+      this.hud.style.transform = 'translate3d(' + hx.toFixed(1) + 'px,' + hy.toFixed(1) + 'px,0)';
+      /* a caption with no phone attached to it is just litter */
+      const onScreen = p.y + ph > 40 && p.y < vh - 40;
+      const vis = (!this.fl && op === '1' && onScreen) ? '1' : '0';
+      if (this.hud.style.opacity !== vis) this.hud.style.opacity = vis;
+    }
 
     if (!this.calm && !this.touch) {
       const k = Math.min(1, dt / 16.67);
@@ -1086,12 +1304,9 @@ export class SiteEngine {
       const lean = clamp(-(this.scrollV || 0) * 0.5, -7, 7);
       this.navMark.style.transform = 'rotate(' + lean.toFixed(2) + 'deg)';
     }
-    /* The handoff floats the nav away on a fast scroll down and returns it when
-       you look back up. Kept pinned instead: it carries the only route to the
-       policy pages and the Get-the-app CTA, and on a phone the waypoint drawer
-       behind the burger is the only navigation there is. The pill is already
-       position:fixed in the markup, so dropping the transform is all it takes.
-       Declared divergence - CLAUDE.md section 3. */
+    /* the bar stays put — it is the only way back to any waypoint */
+    const nav = this.q('[data-nav]');
+    if (this.navHidden !== false) { this.navHidden = false; nav.style.transform = 'translateY(0)'; nav.style.opacity = '1'; }
 
     let act = 0;
     this.secTops.forEach((t: any,k: any) => { if (t - 180 <= y) act = k; });
@@ -1130,8 +1345,7 @@ export class SiteEngine {
       b.style.borderLeftColor = j === this.stepIdx ? 'var(--acc2)' : 'var(--line)';
       b.style.background = j === this.stepIdx ? 'var(--card)' : 'transparent';
     });
-    const d = this.docks && this.docks.find((x: any) => x.el.closest('#setup'));
-    if (d) { d.key = this.stepList[this.stepIdx][2]; if (this.cur === d) this.swap(d.key, 'tab'); }
+    this.drive(this.docks && this.docks.find((x: any) => x.sec === 'setup'), this.stepList[this.stepIdx][2], 'tab');
   }
 
   buildPerms() {
@@ -1267,8 +1481,7 @@ export class SiteEngine {
     const dd = this.q('[data-elevday]');
     if (dd) { dd.setAttribute('cx', this.elevPts[i][0]); dd.setAttribute('cy', this.elevPts[i][1]); }
     this.q('[data-elevlabel]').textContent = 'Day '+d.n+' · '+inr(d.alt)+' m';
-    const dock = this.docks && this.docks.find((x: any) => x.el.closest('#itinerary'));
-    if (dock) { dock.key = d.screen; if (this.cur === dock) this.swap(d.screen, 'push'); }
+    this.drive(this.docks && this.docks.find((x: any) => x.sec === 'itinerary'), d.screen, 'push');
   }
 
   buildNights() {
@@ -1312,6 +1525,7 @@ export class SiteEngine {
 
   renderSplit() {
     const sl = this.q('[data-splitslider]');
+    this.fillRange(sl);
     const amt = parseInt(sl.value,10);
     const payer = this.cats[this.cat][1];
     sl.setAttribute('aria-valuetext', '₹' + inr(amt) + ' paid by ' + payer);
@@ -1528,8 +1742,7 @@ export class SiteEngine {
         CREW.forEach(o => { if (o.role === this.roleSel) o.role = 'Rider'; });
         c.role = this.roleSel;
         this.paintRoles(); this.paintReady();
-        const d = this.docks && this.docks.find((x: any) => x.el.closest('#lobby'));
-        if (d && this.cur === d) this.swap('roles','tab');
+        this.drive(this.docks && this.docks.find((x: any) => x.sec === 'lobby'), 'roles', 'tab');
       });
       w.appendChild(b);
     });
@@ -1682,13 +1895,19 @@ export class SiteEngine {
       const go = () => {
         this.rungIdx = i;
         this.rungs.forEach((x: any,j: any) => { x.style.borderColor = j===i ? 'var(--acc2)' : 'var(--line)'; x.style.transform = j===i ? 'translateX(6px)' : ''; });
-        const d = this.docks && this.docks.find((x: any) => x.el.closest('#nav'));
-        if (d) { d.key = i < 2 ? 'rallyLive' : 'offlineNav'; if (this.cur === d) this.swap(d.key,'tab'); }
+        this.drive(this.docks && this.docks.find((x: any) => x.sec === 'nav'), i < 2 ? 'rallyLive' : 'offlineNav', 'tab');
         this.userDriving = true; this.lastTouch = performance.now();
       };
       el.addEventListener('click', go); el.addEventListener('mouseenter', go);
       w.appendChild(el); return el;
     });
+  }
+
+  /* the webkit track cannot read the value on its own */
+  fillRange(el: any) {
+    if (!el) return;
+    const mn = parseFloat(el.min || 0), mx = parseFloat(el.max || 100), v = parseFloat(el.value);
+    el.style.setProperty('--qf-fill', (mx > mn ? ((v - mn) / (mx - mn)) * 100 : 50).toFixed(2) + '%');
   }
 
   buildSigChips() {
@@ -1700,6 +1919,7 @@ export class SiteEngine {
     });
     this.q('[data-sig]').addEventListener('input', (e: any) => this.setSig(parseInt(e.target.value,10)));
     this.setSig(0);
+    this.fillRange(this.q('[data-sig]'));
   }
 
   setSig(v: any) {
@@ -1708,6 +1928,7 @@ export class SiteEngine {
     lab.textContent = names[v];
     lab.style.color = v >= 3 ? 'var(--warn)' : 'var(--acc)';
     this.q('[data-sig]').setAttribute('aria-valuetext', names[v]);
+    this.fillRange(this.q('[data-sig]'));
     this.sigChips[1].textContent = 'Writes queued · ' + [0,0,2,5,9][v];
     this.sigChips.forEach((c: any,i: any) => {
       const on = v >= [4,2,3,3][i];
@@ -1719,8 +1940,8 @@ export class SiteEngine {
       r.style.borderColor = on ? 'var(--acc2)' : 'var(--line)';
       r.style.transform = on ? 'translateX(6px)' : '';
     });
-    const d = this.docks && this.docks.find((x: any) => x.el.hasAttribute('data-sigdock'));
-    if (d) { d.key = ['convoy','convoy','convoyStale','convoyStale','convoyOffline'][v]; if (this.cur === d) this.swap(d.key,'tab'); }
+    this.drive(this.docks && this.docks.find((x: any) => x.el.hasAttribute('data-sigdock')),
+      ['convoy','convoy','convoyStale','convoyStale','convoyOffline'][v], 'tab');
     /* the three states sit side by side — light the one the slider is on */
     const stage = v >= 4 ? 3 : (v >= 2 ? 2 : 1);
     [2,3].forEach(n => {
@@ -1825,7 +2046,7 @@ export class SiteEngine {
   }
 
   sosScreen(k: any, kind: any) {
-    if (this.sosDock) { this.sosDock.key = k; if (this.cur === this.sosDock) this.swap(k, kind || 'sheet'); }
+    this.drive(this.sosDock, k, kind || 'sheet');
   }
 
   runSos() {
@@ -1884,7 +2105,7 @@ export class SiteEngine {
       this.q('[data-sosnum]').textContent = '—';
       this.q('[data-sosring]').setAttribute('stroke-dashoffset','214');
       this.q('[data-sosstatus]').textContent = 'Cancelled · glad you are OK';
-      this.sosScreen('convoy','tab');
+      this.sosScreen('crashCancelled','tab');
     } else {
       this.q('[data-sosstatus]').textContent = 'Nothing running · press to run';
     }

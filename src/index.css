@@ -2,8 +2,8 @@
  * Qafilaa Site v2 - global stylesheet.
  *
  * Everything above the APPENDIX marker is transcribed 1:1 from the design
- * handoff's <style> block (`Qafilaa Site v2.dc.html`, handoff 12, lines
- * 143-285). This file is GENERATED - do not hand-edit it, or the next handoff
+ * handoff's <style> block (`Qafilaa Site v2.dc.html`, handoff 13, lines
+ * 143-298). This file is GENERATED - do not hand-edit it, or the next handoff
  * will quietly discard your change. Add to the appendix in gencss.py instead.
  *
  * The `:root` values here are only the seed. Once `src/site/engine.ts` boots,
@@ -36,6 +36,19 @@ a:hover{ color:var(--acc2); text-decoration:underline; }
 @keyframes qf-screen-in{ from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
 @keyframes qf-push-in{ from{transform:translateX(100%)} to{transform:translateX(0)} }
 @keyframes qf-push-out{ from{transform:translateX(0);opacity:1} to{transform:translateX(-30%);opacity:.3} }
+@keyframes qf-back-in{ from{transform:translateX(-24%);opacity:.45} to{transform:translateX(0);opacity:1} }
+@keyframes qf-back-out{ from{transform:translateX(0)} to{transform:translateX(100%)} }
+input[type=range]{ -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; }
+input[type=range]:focus{ outline:none; }
+input[type=range]::-webkit-slider-runnable-track{ height:5px; border-radius:3px; background:linear-gradient(90deg, var(--acc2) 0 var(--qf-fill,50%), var(--ctr) var(--qf-fill,50%) 100%); }
+input[type=range]::-moz-range-track{ height:5px; border-radius:3px; background:var(--ctr); }
+input[type=range]::-moz-range-progress{ height:5px; border-radius:3px; background:var(--acc2); }
+input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:22px; height:22px; margin-top:-8.5px; border-radius:50%; background:var(--card); border:2px solid var(--acc2); box-shadow:0 2px 8px rgba(35,36,31,.22); transition:transform .16s, box-shadow .16s; }
+input[type=range]::-moz-range-thumb{ width:22px; height:22px; border-radius:50%; background:var(--card); border:2px solid var(--acc2); box-shadow:0 2px 8px rgba(35,36,31,.22); }
+input[type=range]:hover::-webkit-slider-thumb{ transform:scale(1.09); }
+input[type=range]:active::-webkit-slider-thumb{ transform:scale(.96); }
+input[type=range]:focus-visible::-webkit-slider-thumb{ box-shadow:0 0 0 5px rgba(14,124,134,.22); }
+@keyframes qf-hudnudge{ 0%,100%{ box-shadow:0 0 0 0 rgba(14,124,134,.45) } 50%{ box-shadow:0 0 0 7px rgba(14,124,134,0) } }
 @keyframes qf-sheet-up{ from{transform:translateY(100%)} to{transform:translateY(0)} }
 @keyframes qf-scrim-in{ from{opacity:0} to{opacity:1} }
 @keyframes qf-sos{ 0%{transform:scale(.06);opacity:.9} 100%{transform:scale(3.6);opacity:0} }

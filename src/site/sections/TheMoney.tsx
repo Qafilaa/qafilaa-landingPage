@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 519-546.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 551-578.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -27,7 +27,7 @@ export function TheMoney() {
             </details>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="addExpense" data-scale="0.56" data-kind="sheet" data-flow="addExpense,balances,settle,money"></div>
+            <div data-dock="1" data-screen="money" data-scale="0.56" data-kind="push" data-flowname="Settle the money" data-flow="money,addExpense,settle"></div>
             <div data-static="balances" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
         </div>

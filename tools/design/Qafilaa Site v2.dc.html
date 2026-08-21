@@ -160,6 +160,19 @@
   @keyframes qf-screen-in{ from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
   @keyframes qf-push-in{ from{transform:translateX(100%)} to{transform:translateX(0)} }
   @keyframes qf-push-out{ from{transform:translateX(0);opacity:1} to{transform:translateX(-30%);opacity:.3} }
+  @keyframes qf-back-in{ from{transform:translateX(-24%);opacity:.45} to{transform:translateX(0);opacity:1} }
+  @keyframes qf-back-out{ from{transform:translateX(0)} to{transform:translateX(100%)} }
+  input[type=range]{ -webkit-appearance:none; appearance:none; background:transparent; cursor:pointer; }
+  input[type=range]:focus{ outline:none; }
+  input[type=range]::-webkit-slider-runnable-track{ height:5px; border-radius:3px; background:linear-gradient(90deg, var(--acc2) 0 var(--qf-fill,50%), var(--ctr) var(--qf-fill,50%) 100%); }
+  input[type=range]::-moz-range-track{ height:5px; border-radius:3px; background:var(--ctr); }
+  input[type=range]::-moz-range-progress{ height:5px; border-radius:3px; background:var(--acc2); }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:22px; height:22px; margin-top:-8.5px; border-radius:50%; background:var(--card); border:2px solid var(--acc2); box-shadow:0 2px 8px rgba(35,36,31,.22); transition:transform .16s, box-shadow .16s; }
+  input[type=range]::-moz-range-thumb{ width:22px; height:22px; border-radius:50%; background:var(--card); border:2px solid var(--acc2); box-shadow:0 2px 8px rgba(35,36,31,.22); }
+  input[type=range]:hover::-webkit-slider-thumb{ transform:scale(1.09); }
+  input[type=range]:active::-webkit-slider-thumb{ transform:scale(.96); }
+  input[type=range]:focus-visible::-webkit-slider-thumb{ box-shadow:0 0 0 5px rgba(14,124,134,.22); }
+  @keyframes qf-hudnudge{ 0%,100%{ box-shadow:0 0 0 0 rgba(14,124,134,.45) } 50%{ box-shadow:0 0 0 7px rgba(14,124,134,0) } }
   @keyframes qf-sheet-up{ from{transform:translateY(100%)} to{transform:translateY(0)} }
   @keyframes qf-scrim-in{ from{opacity:0} to{opacity:1} }
   @keyframes qf-sos{ 0%{transform:scale(.06);opacity:.9} 100%{transform:scale(3.6);opacity:0} }
@@ -298,11 +311,30 @@
     <div data-phonepos="1" style="position:absolute; left:0; top:0; transform-origin:top left; will-change:transform;">
       <div data-phonetilt="1" style="position:relative; will-change:transform;">
         <div style="position:relative; width:413px; height:872px; padding:10px; box-sizing:border-box; background:#0B0E0D; border-radius:54px; box-shadow:0 40px 90px -24px rgba(35,36,31,.42), 0 0 0 1px rgba(35,36,31,.08);">
-          <div data-phonehost="1" style="position:relative; width:393px; height:852px; border-radius:44px; overflow:hidden; background:#F1EFE9; pointer-events:auto; cursor:pointer;"></div>
+          <div data-phonehost="1" role="button" tabindex="0" aria-label="App screen — tap for the next screen in this flow" title="Tap for the next screen" style="position:relative; width:393px; height:852px; border-radius:44px; overflow:hidden; background:#F1EFE9; pointer-events:auto; cursor:pointer;"></div>
           <div data-sheen="1" style="position:absolute; inset:10px; border-radius:44px; pointer-events:none; background:linear-gradient(120deg, rgba(255,255,255,0) 36%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 64%); opacity:.07;"></div>
         </div>
-        <div style="position:absolute; right:14px; bottom:-34px; display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; background:var(--card); border:1px solid var(--line); font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur);">
-          <span data-autodot="1" style="width:6px; height:6px; border-radius:50%; background:var(--acc2);"></span><span data-autotxt="1">Auto</span>
+      </div>
+    </div>
+    <div data-phonehud="1" style="position:absolute; left:0; top:0; width:292px; transform-origin:top left; pointer-events:none; opacity:0; transition:opacity .26s ease;">
+      <div style="pointer-events:none; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:12px 14px 11px; box-shadow:0 22px 46px -30px rgba(35,36,31,.6);">
+        <div style="display:flex; align-items:center; gap:9px;">
+          <span data-hudflow="1" style="flex:1; min-width:0; font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--sur); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Flow · the live convoy</span>
+          <span style="flex:none; display:flex; align-items:center; gap:5px; font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur);">
+            <span data-autodot="1" style="width:6px; height:6px; border-radius:50%; background:var(--acc2);"></span><span data-autotxt="1">Auto</span>
+          </span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:9px; margin-top:5px;">
+          <span data-hudstep="1" style="flex:none; font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.1em; font-variant-numeric:tabular-nums; color:var(--acc);">01 / 03</span>
+          <span data-hudlabel="1" style="flex:1; min-width:0; font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">R1 · Convoy view</span>
+        </div>
+        <div data-hudcap="1" style="margin-top:6px; font-size:13.5px; line-height:1.4; color:var(--mut); min-height:19px; text-wrap:pretty;">Tap the phone to walk this flow</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+          <div data-hudrail="1" style="flex:1; display:flex; gap:4px; min-width:0;"></div>
+          <div style="flex:none; display:flex; gap:5px;">
+            <button data-hudprev="1" type="button" aria-label="Previous screen" style="pointer-events:auto; width:30px; height:30px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--line); border-radius:9px; background:transparent; color:var(--ink); font:500 15px 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .18s, border-color .18s;">‹</button>
+            <button data-hudnext="1" type="button" aria-label="Next screen" style="pointer-events:auto; width:30px; height:30px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--acc2); border-radius:9px; background:var(--acc2); color:#F7F5F0; font:500 15px 'Space Grotesk',sans-serif; cursor:pointer; transition:transform .18s;">›</button>
+          </div>
         </div>
       </div>
     </div>
@@ -375,7 +407,7 @@
         </div>
         <div data-plot="1" style="margin-top:13px; font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--warn);">In review · launching this month</div>
       </div>
-      <div data-dock="1" data-screen="convoy" data-scale="0.62" data-kind="replace" data-flow="convoy,convoyList,riderDetail,muster"></div>
+      <div data-dock="1" data-screen="convoy" data-scale="0.62" data-kind="replace" data-flowname="The live convoy" data-flow="convoy,convoyList,muster"></div>
     </div>
   </section>
 
@@ -412,7 +444,7 @@
           <p style="margin:10px 0 0; font-size:16px; line-height:1.6; color:var(--mut);">Blood group, allergies, conditions, emergency contacts. It sits behind a lock screen and rides with you. If you go down, the riders who reach you first can read it without unlocking your phone.</p>
         </div>
       </div>
-      <div data-dock="1" data-screen="medical" data-scale="0.6" data-kind="tab" data-flow="profile,bikes,medical,docsB5"></div>
+      <div data-dock="1" data-screen="medical" data-scale="0.6" data-kind="tab" data-flowname="Set up once" data-flow="profile,bikes,medical,docsB5"></div>
     </div>
   </section>
 
@@ -437,7 +469,7 @@
           <span style="font-size:15px; line-height:1.5; color:var(--mut);">Carry a fuel stabiliser, and top up where you can still get 91.</span>
         </div>
       </div>
-      <div data-dock="1" data-screen="e20" data-scale="0.58" data-kind="sheet" data-flow="e20,welcome,trips"></div>
+      <div data-dock="1" data-screen="e20" data-scale="0.58" data-kind="sheet" data-flowname="The send-off" data-flow="e20,welcome,trips"></div>
     </div>
   </section>
 
@@ -445,7 +477,7 @@
   <section id="plan" data-sec="Plan the trip" data-tone="light" data-pad="1" style="position:relative; z-index:5; padding:110px 56px 110px 132px;">
     <div data-plot="1" style="font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur); margin-bottom:24px;">Waypoint 05 · Plan the trip</div>
     <div style="display:grid; grid-template-columns:auto minmax(0,1fr); gap:64px; align-items:center;" data-cols="1">
-      <div data-dock="1" data-screen="createTrip" data-scale="0.58" data-kind="push" data-flow="createTrip,tripDetail,itinerary"></div>
+      <div data-dock="1" data-screen="createTrip" data-scale="0.58" data-kind="push" data-flowname="Start a trip" data-flow="createTrip,tripDetail,itinerary"></div>
       <div>
         <h2 data-lines="1" style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(30px,3.6vw,48px); line-height:1.1; letter-spacing:-.02em; margin:0; max-width:16ch;">Name it, date it, and the plan builds itself.</h2>
         <div data-tripcard="1" data-rv="1" style="margin-top:30px; max-width:520px; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px;"></div>
@@ -473,7 +505,7 @@
         <div data-crewfan="1" style="display:flex; align-items:center; margin-top:36px; padding-top:26px;"></div>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="invite" data-scale="0.54" data-kind="push" data-flow="invite,crew,joinCode,memberF5"></div>
+        <div data-dock="1" data-screen="invite" data-scale="0.54" data-kind="push" data-flowname="Bring the crew in" data-flow="invite,joinCode,memberF5"></div>
         <div data-static="crew" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -498,7 +530,7 @@
           <p style="margin:0; font-size:17px; line-height:1.6; color:var(--mut);"><b style="color:var(--ink);">A rally point is the plan for when the plan fails.</b> Agreed before you leave. If comms drop, everyone rides to the next one and waits. No phone required.</p>
         </div>
       </div>
-      <div data-dock="1" data-screen="itinerary" data-scale="0.56" data-kind="push" data-flow="itinerary,legDetail,rallySheet,restDay"></div>
+      <div data-dock="1" data-screen="itinerary" data-scale="0.56" data-kind="push" data-flowname="Build the days" data-flow="itinerary,dayLegs,legDetail,rallySheet,restDay,dayComplete"></div>
     </div>
   </section>
 
@@ -511,7 +543,7 @@
         <p data-rv="1" style="font-size:18px; line-height:1.6; color:var(--mut); max-width:58ch; margin:20px 0 0;">A base you keep for three nights is one booking, not three. Rest days are marked. Who paid and what each rider owes carries straight through to the money.</p>
         <div data-nights="1" style="display:flex; gap:10px; margin-top:30px; flex-wrap:wrap;"></div>
       </div>
-      <div data-dock="1" data-screen="stays" data-scale="0.56" data-kind="tab" data-flow="stays,restDay,money"></div>
+      <div data-dock="1" data-screen="stays" data-scale="0.56" data-kind="tab" data-flowname="Book the nights" data-flow="stays,stayMulti,stayPaidBy,restDay"></div>
     </div>
   </section>
 
@@ -539,7 +571,7 @@
         </details>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="addExpense" data-scale="0.56" data-kind="sheet" data-flow="addExpense,balances,settle,money"></div>
+        <div data-dock="1" data-screen="money" data-scale="0.56" data-kind="push" data-flowname="Settle the money" data-flow="money,addExpense,settle"></div>
         <div data-static="balances" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -579,7 +611,7 @@
         </div>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="permits" data-scale="0.56" data-kind="push" data-flow="permits,docViewer,checklist,reminders"></div>
+        <div data-dock="1" data-screen="permits" data-scale="0.56" data-kind="push" data-flowname="Papers and lists" data-flow="permits,permitDetail,docViewer,checklist"></div>
         <div data-static="reminders" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -595,7 +627,7 @@
         <div data-notedemo="1" style="margin-top:30px; max-width:560px;"></div>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="notes" data-scale="0.54" data-kind="push" data-flow="notes,noteDetail,noteWrite"></div>
+        <div data-dock="1" data-screen="notes" data-scale="0.54" data-kind="push" data-flowname="Leave a note" data-flow="notes,noteWrite,notePhoto"></div>
         <div data-static="noteDetail" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -606,7 +638,7 @@
     <div data-plot="1" style="font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur); margin-bottom:24px;">Waypoint 12 · Along the way</div>
     <div style="display:grid; grid-template-columns:auto minmax(0,1fr); gap:56px; align-items:center;" data-cols="1">
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="discovery" data-scale="0.54" data-kind="push" data-flow="discovery,poi,nudge,muted"></div>
+        <div data-dock="1" data-screen="discovery" data-scale="0.54" data-kind="push" data-flowname="Along the way" data-flow="discovery,nudge,muted"></div>
         <div data-static="poi" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
       <div>
@@ -631,7 +663,7 @@
         </div>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="lobby" data-scale="0.54" data-kind="tab" data-flow="lobby,readiness,roles,crewReadiness,offlineMap"></div>
+        <div data-dock="1" data-screen="lobby" data-scale="0.54" data-kind="tab" data-flowname="The pre-ride lobby" data-flow="lobby,readiness,roles,roleChange,offlineMap"></div>
         <div data-static="crewReadiness" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -645,7 +677,7 @@
       <h2 data-lines="1" style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:clamp(32px,4.2vw,56px); line-height:1.06; letter-spacing:-.02em; margin:0; max-width:16ch;">One person calls it. Everyone's phone knows.</h2>
       <div style="display:flex; align-items:flex-start; gap:28px; margin-top:36px;" data-strip="1">
         <div style="display:flex; flex-direction:column; align-items:center;">
-          <div data-dock="1" data-screen="rollPresence" data-scale="0.52" data-kind="sheet" data-flow="rollPresence,rollPrompt,dayLegs"></div>
+          <div data-dock="1" data-screen="rollPresence" data-scale="0.52" data-kind="sheet" data-flowname="Roll out" data-flow="rollPresence,rollPrompt,dayLegs"></div>
           <button data-rollbtn="1" data-magnet="1" data-tap="1" style="margin-top:20px; padding:14px 26px; border:1px solid var(--acc2); border-radius:14px; background:var(--acc2); color:#F7F5F0; font:600 16px 'Hanken Grotesk'; cursor:pointer;">Roll out</button>
         </div>
         <div data-rollflank="1" style="display:flex; gap:22px; opacity:.32; transition:opacity .5s cubic-bezier(.22,.61,.36,1);">
@@ -673,7 +705,7 @@
           <div style="font-size:13px; color:var(--mut);">Stretch is the distance from lead to sweep.</div>
         </div>
       </div>
-      <div data-dock="1" data-screen="convoy" data-scale="0.56" data-kind="tab" data-flow="convoy,convoyList,riderDetail,rallyLive,quickActions,broadcast"></div>
+      <div data-dock="1" data-screen="convoy" data-scale="0.56" data-kind="tab" data-flowname="Ride the convoy" data-flow="convoy,convoyList,riderDetail,quickActions,hazard,broadcast,rideControl"></div>
     </div>
     <div data-rv="1" style="display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:20px; font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur);">
       <span>Positions get a dedicated uplink</span><span style="opacity:.4;">·</span><span>Freshness measured on the server clock</span>
@@ -696,7 +728,7 @@
     <div data-plot="1" style="font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur); margin-bottom:24px;">Waypoint 16 · Navigation that knows it is a group ride</div>
     <div style="display:grid; grid-template-columns:auto minmax(0,1fr); gap:56px; align-items:center;" data-cols="1">
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="rallyLive" data-scale="0.54" data-kind="tab" data-flow="rallyLive,liveActivity,offlineNav"></div>
+        <div data-dock="1" data-screen="rallyLive" data-scale="0.54" data-kind="tab" data-flowname="Navigate as a group" data-flow="rallyLive,offlineNav"></div>
         <div data-static="liveActivity" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
       <div>
@@ -716,7 +748,7 @@
       <p data-rv="1" style="font-size:18px; line-height:1.65; color:var(--mut); max-width:66ch; margin:24px 0 0;">A crash alert goes to the riders closest to you first, with your position, your bearing and your blood group. If there is no signal, it queues and fires the moment any rider in the convoy gets a bar.</p>
       <div style="display:flex; gap:26px; align-items:center; justify-content:center; margin-top:40px;" data-strip="1">
         <div data-sosflank="left" style="opacity:.3; transition:opacity .5s cubic-bezier(.65,0,.35,1);"><div data-static="sendSos" data-scale="0.44" data-sosslot="1"></div></div>
-        <div data-dock="1" data-screen="crash" data-scale="0.58" data-kind="sheet" data-sosdock="1"></div>
+        <div data-dock="1" data-screen="crash" data-scale="0.58" data-kind="sheet" data-sosdock="1" data-flowname="A crash, end to end" data-flow="crash,sosSent,sosIncoming,sosNavigate,medicalScene,sosResolved"></div>
         <div data-sosflank="right" style="opacity:.3; transition:opacity .5s cubic-bezier(.65,0,.35,1);"><div data-static="convoy" data-scale="0.44" data-sosslot="2"></div></div>
       </div>
       <div style="display:flex; gap:20px; align-items:center; justify-content:center; margin-top:32px; flex-wrap:wrap;">
@@ -764,7 +796,7 @@
       <div data-sigchips="1" style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;"></div>
     </div>
     <div style="margin-top:26px; align-items:flex-start;" data-strip="1">
-      <div data-dock="1" data-screen="convoy" data-scale="0.52" data-kind="replace" data-sigdock="1"></div>
+      <div data-dock="1" data-screen="convoy" data-scale="0.52" data-kind="replace" data-sigdock="1" data-flowname="Losing signal" data-flow="convoy,convoyStale,convoyOffline"></div>
       <div data-static="convoyStale" data-scale="0.52" data-sigslot="2"></div>
       <div data-static="convoyOffline" data-scale="0.52" data-sigslot="3"></div>
     </div>
@@ -809,7 +841,7 @@
         </div>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="settings" data-scale="0.54" data-kind="push" data-flow="settings,alerts,privacyT7,account,help,faqs,queries"></div>
+        <div data-dock="1" data-screen="settings" data-scale="0.54" data-kind="push" data-flowname="Settings and support" data-flow="settings,alerts,account,help,faqs,queries"></div>
         <div data-static="privacyT7" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -839,7 +871,7 @@
         </div>
       </div>
       <div style="display:flex; gap:18px; align-items:flex-start;" data-strip="1">
-        <div data-dock="1" data-screen="shareDay" data-scale="0.54" data-kind="push" data-flow="shareDay,dayComplete,endRide,recap,history"></div>
+        <div data-dock="1" data-screen="dayComplete" data-scale="0.54" data-kind="push" data-flowname="End of the ride" data-flow="dayComplete,shareDay,endRide,recap"></div>
         <div data-static="history" data-scale="0.54" style="margin-top:40px;"></div>
       </div>
     </div>
@@ -1385,6 +1417,53 @@ const SG = "font-family:'Space Grotesk',sans-serif;";
 const NARROW = 900;  /* under this the phone rig goes inline and wide graphics scroll */
 const PW = 413, PH = 872;
 
+/* One line per screen — what the rider is actually looking at. Keyed by screen,
+   because a screen means the same thing in whichever flow it turns up. */
+const CAPS = {
+  convoy:'Every rider on one live map', convoyStale:'Positions are last-known, not live',
+  convoyOffline:'No signal. The map still works', convoyList:'Who is rolling, stopped, resting',
+  riderDetail:'One rider: speed, battery, last ping', muster:'The whole group, counted',
+  quickActions:'Rest, regroup, broadcast, or call it', rallyLive:'Bearing and distance to the rally point',
+  offlineNav:'Turn-by-turn from the downloaded pack', broadcast:'One message to the whole convoy',
+  rideControl:'Lead, sweep, and the ride itself', endRide:'Close the ride for everyone at once',
+  rollPresence:'Who has actually thrown a leg over', rollPrompt:'The nudge that starts the day',
+  dayLegs:'Today: legs, fuel, passes', shareDay:'A card for the group chat',
+  dayComplete:'Distance done, altitude gained', crash:'Hard impact. Countdown before it sends',
+  sosReceived:'What the nearest rider sees', sendSos:'Tap, hold, or flip the phone',
+  sosSent:'Sent with position, bearing, blood group', sosResolved:'Resolved, and logged',
+  medicalScene:'Readable without unlocking the phone', medical:'Blood group, allergies, contacts',
+  profile:'Name, phone, photo. Once.', bikes:'Make, model, registration, service due',
+  docsB5:'Licence, RC, insurance, PUC, permits', welcome:'The first screen after setup',
+  trips:'Every trip you are part of', tripDetail:'The trip, its crew, its days',
+  crew:'Who is in, who has not answered', invite:'Send the code, or a link',
+  joinCode:'Six characters. That is the whole join.', memberF5:'One rider, one bike, one readiness',
+  createTrip:'Name it, date it, pick the route', itinerary:'Ten days, drawn out',
+  legDetail:'One leg: distance, altitude, surface', rallySheet:'The plan for when the plan fails',
+  restDay:'A day off the bike, on purpose', stays:'Scoped to nights, not days',
+  settle:'Square in the fewest transfers', money:'Every shared cost against the trip',
+  addExpense:'Who paid, and how it splits', balances:'What each rider owes, live',
+  notes:'Written down beats shouted at a dhaba', noteDetail:'The note, its pin, its seen-by list',
+  noteWrite:'Tag a day, drop a pin, post it', permits:'Inner Line permits, per rider',
+  docViewer:'The paper itself, offline', checklist:'Packed, or not. No maybe.',
+  reminders:'Nudges before they matter', lobby:'Nobody turns a key until this is green',
+  readiness:'Your own four rows', roles:'Lead, sweep, medic, mechanic',
+  crewReadiness:'The whole crew, row by row', offlineMap:'The route corridor, downloaded',
+  recap:'The ride, in numbers', history:'Every ride you have finished',
+  discovery:'Worth stopping for, on this leg', poi:'One stop, in detail',
+  nudge:'Offered once, then it stays quiet', muted:'Told once, never again',
+  settings:'Every default, and how to change it', alerts:'How hard a stop counts as a stop',
+  privacyT7:'Scoped to the trip, ends with it', account:'Export it, or delete all of it',
+  help:'Answers first, then a human', faqs:'The questions riders actually ask',
+  queries:'Your tickets, with a timeline', e20:'Setup done. One last warning.',
+  stayMulti:'Three nights, one booking', stayPaidBy:'Who fronted it, and for whom',
+  permitDetail:'One permit, its dates and its rider', notePhoto:'The photo, full width',
+  roleChange:'Hand the role to someone else', hazard:'Dropped once, seen by everyone',
+  sosIncoming:'The alert, on the nearest phone', sosNavigate:'Straight line to the rider down',
+  crashCancelled:'Cancelled. Nobody was called.',
+  permIntro:'Three permissions, asked honestly', permLoc:'Why always-on, and nothing less',
+  permMotion:'The sensor crash detection needs', permNotif:'An SOS has to reach the lock screen'
+};
+
 const TONES = {
   light:{ bg:'#F7F5F0', ink:'#23241F', mut:'#6E6B63', sur:'#6E6B63', line:'#DCD6C9', card:'#FFFFFF', acc:'#0A6068', acc2:'#0E7C86', ctr:'#E5E2DA', ctaInk:'#F7F5F0', navBg:'#FFFFFF', navA:.80, navLine:'#23241F', navLineA:.17, dens:0.35 },
   paper:{ bg:'#F1EFE9', ink:'#23241F', mut:'#65625A', sur:'#65625A', line:'#E2DDD2', card:'#FBFAF7', acc:'#0A6068', acc2:'#0E7C86', ctr:'#E0DCD2', ctaInk:'#F7F5F0', navBg:'#FFFFFF', navA:.78, navLine:'#23241F', navLineA:.17, dens:0.55 },
@@ -1768,9 +1847,15 @@ class Component extends DCLogic {
       el.style.width = Math.round(PW*sc)+'px';
       el.style.height = Math.round(PH*sc)+'px';
       el.style.flex = 'none';
-      return { el, sc, key: el.getAttribute('data-screen'),
-        kind: el.getAttribute('data-kind')||'replace',
-        flow: (el.getAttribute('data-flow')||'').split(',').filter(Boolean) };
+      const key = el.getAttribute('data-screen');
+      const flow = (el.getAttribute('data-flow')||'').split(',').filter(Boolean);
+      if (!flow.length) flow.push(key);
+      /* the screen the section is about is always a member of its own flow */
+      if (flow.indexOf(key) < 0) flow.unshift(key);
+      const sec = el.closest('section');
+      return { el, sc, key, flow, home: key, sec: sec ? sec.id : '',
+        name: el.getAttribute('data-flowname') || '',
+        kind: el.getAttribute('data-kind')||'replace' };
     });
     this.layer = this.q('[data-phonelayer]');
     this.pos = this.q('[data-phonepos]');
@@ -1804,6 +1889,11 @@ class Component extends DCLogic {
     this.layer.insertBefore(tr, this.layer.firstChild);
     this.measureDocks();
     this.host.addEventListener('click', e => this.phoneTap(e));
+    this.host.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault(); this.phoneTap({});
+    });
+    this.buildHud();
     this.beginFlight(this.docks[0]);
   }
 
@@ -1816,13 +1906,13 @@ class Component extends DCLogic {
 
   /* the phone must clear the floating header and still fit a short viewport */
   fitDocks() {
-    const room = window.innerHeight - 150;
-    const f = clamp(room / PH, 0.34, 1);
+    const room = window.innerHeight - 150 - (this.narrow ? 0 : 150);
+    const f = clamp(room / PH, this.narrow ? 0.34 : 0.26, 1);
     if (f === this.fitF) return;
     this.fitF = f;
     this.docks.forEach(d => {
       if (d.sc0 == null) d.sc0 = d.sc;
-      d.sc = Math.max(0.34, Math.min(d.sc0, f));
+      d.sc = Math.max(this.narrow ? 0.34 : 0.26, Math.min(d.sc0, f));
       d.el.style.width = Math.round(PW * d.sc) + 'px';
       d.el.style.height = Math.round(PH * d.sc) + 'px';
     });
@@ -1850,12 +1940,36 @@ class Component extends DCLogic {
     el.style.boxShadow = '0 0 0 1px var(--line), 0 18px 42px -28px rgba(35,36,31,.5)';
     d.iw = w;
     el.appendChild(this.skel(w, h, r));
+    if (!d.cap && el.parentElement && d.flow.length > 1) {
+      const cap = document.createElement('button');
+      cap.type = 'button'; cap.setAttribute('data-icap','1');
+      cap.style.cssText = 'display:flex; align-items:center; gap:12px; width:100%; max-width:393px; margin:12px auto 0; padding:11px 14px; border:1px solid var(--line); border-radius:14px; background:var(--card); text-align:left; cursor:pointer; min-height:48px;';
+      cap.innerHTML = '<span data-icapstep="1" style="flex:none; '+SUR+' color:var(--acc); font-variant-numeric:tabular-nums;"></span>' +
+        '<span style="flex:1; min-width:0;"><span data-icaplabel="1" style="display:block; '+SG+' font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);"></span>' +
+        '<span data-icapcap="1" style="display:block; font-size:13.5px; line-height:1.35; color:var(--mut); margin-top:2px;"></span></span>' +
+        '<span style="flex:none; '+SG+' font-size:17px; color:var(--acc2);">›</span>';
+      el.parentElement.insertBefore(cap, el.nextSibling);
+      d.cap = cap;
+      const go = () => {
+        d.iIdx = ((d.iIdx == null ? d.flow.indexOf(d.key) : d.iIdx) + 1) % d.flow.length;
+        d.key = d.flow[d.iIdx];
+        const s3 = (d.iw || w) / 393;
+        el.innerHTML = '';
+        const sc = this.screenEl(d.key, s3, false);
+        if (!this.rm) sc.style.animation = 'qf-screen-in .3s cubic-bezier(.22,.61,.36,1)';
+        el.appendChild(sc);
+        this.inlineCap(d);
+      };
+      cap.addEventListener('click', go);
+      el.addEventListener('click', go);
+    }
     this.addTrig(el, -700, () => {
       const w2 = Math.max(220, Math.min(393, Math.round(el.getBoundingClientRect().width))), s2 = w2/393;
       d.iw = w2;
       el.style.borderRadius = Math.round(30*s2)+'px';
       el.innerHTML = '';
       el.appendChild(this.screenEl(d.key, s2, false));
+      this.inlineCap(d);
     });
   }
 
@@ -1865,6 +1979,7 @@ class Component extends DCLogic {
     if (!this.docks) return;
     this.trig = (this.trig||[]).filter(t => !(t.el.hasAttribute('data-dock') || t.el.hasAttribute('data-static')));
     this.qa('[data-dock],[data-static]').forEach(el => { el.innerHTML = ''; el.setAttribute('style', el.__css0 || ''); });
+    this.qa('[data-icap]').forEach(el => el.remove());
     this.cur = null; this.fl = null; this.fitF = null;
     (this.wides||[]).forEach(g => this.applyWide(g));
     this.buildDocks();
@@ -1925,7 +2040,8 @@ class Component extends DCLogic {
   beginFlight(next) {
     if (!next || this.cur === next) return;
     const prev = this.cur;
-    this.cur = next; this.flowIdx = 0;
+    this.cur = next;
+    this.seedIdx(next);
     if (!prev || this.rm) {
       this.fl = null;
       const r = this.livePos(next);
@@ -1967,13 +2083,21 @@ class Component extends DCLogic {
   }
 
   swap(key, kind) {
-    if (this.hostKey === key) return;
+    if (this.hostKey === key) { this.paintHud(); return; }
     this.hostKey = key;
+    /* a tap inside the outgoing screen's 500ms life must not strand it */
+    while (this.host.children.length > 2) this.host.firstElementChild.remove();
     const el = this.screenEl(key, 1, false, 0, true);
     el.style.cssText += 'position:absolute; inset:0; width:393px; height:852px; border-radius:44px;';
-    const old = this.host.firstElementChild;
-    if (this.rm || kind === 'none' || !old) { this.host.innerHTML = ''; this.host.appendChild(el); return; }
-    if (kind === 'push') {
+    const old = this.hostEl && this.hostEl.parentNode === this.host ? this.hostEl : this.host.lastElementChild;
+    this.hostEl = el;
+    if (this.rm || kind === 'none' || !old) { this.host.innerHTML = ''; this.host.appendChild(el); this.paintHud(); return; }
+    if (old === el) { this.host.appendChild(el); this.paintHud(); return; }
+    if (kind === 'back') {
+      el.style.zIndex = '1'; old.style.zIndex = '2';
+      el.style.animation = 'qf-back-in .4s cubic-bezier(.22,.9,.3,1)';
+      old.style.animation = 'qf-back-out .4s cubic-bezier(.22,.9,.3,1) forwards';
+    } else if (kind === 'push') {
       el.style.animation = 'qf-push-in .42s cubic-bezier(.22,.9,.3,1)';
       old.style.animation = 'qf-push-out .42s cubic-bezier(.22,.9,.3,1) forwards';
     } else if (kind === 'sheet') {
@@ -1988,18 +2112,18 @@ class Component extends DCLogic {
       el.style.animation = 'qf-screen-in .32s cubic-bezier(.22,.61,.36,1)';
     }
     this.host.appendChild(el);
-    setTimeout(() => { if (old.parentNode === this.host) old.remove(); }, 500);
+    setTimeout(() => { if (old !== this.hostEl && old.parentNode === this.host) old.remove(); }, 500);
+    this.paintHud();
   }
 
   phoneTap(e) {
-    this.userDriving = true; this.lastTouch = performance.now();
-    const t = this.q('[data-autotxt]'), d = this.q('[data-autodot]');
-    if (t) t.textContent = 'You'; if (d) d.style.background = 'var(--warn)';
-    if (!this.rm) {
+    this.userDriving = true; this.tapped = true; this.lastTouch = performance.now();
+    this.mode('You');
+    if (!this.rm && e && e.clientX) {
       const r = this.host.getBoundingClientRect();
       this.ripple((e.clientX-r.left)/ (r.width/393), (e.clientY-r.top)/(r.height/852), .45);
     }
-    this.advance();
+    this.advance(1);
   }
 
   ripple(x, y, o) {
@@ -2008,30 +2132,187 @@ class Component extends DCLogic {
     this.host.appendChild(s); setTimeout(() => s.remove(), 640);
   }
 
-  advance() {
-    if (this.fl) return;
-    const d = this.cur; if (!d || !d.flow.length) return;
-    this.flowIdx = (this.flowIdx + 1) % d.flow.length;
-    this.swap(d.flow[this.flowIdx], d.kind);
+  /* ═════ flow player ═════
+     One rule holds the whole thing together: the step index is DERIVED from the
+     screen on the glass. A tap, a section control and the auto-demo all write the
+     key, then re-derive — so the rail can never describe a screen you cannot see. */
+  seedIdx(d) {
+    if (!d) return;
+    const f = d.flow;
+    this.flowIdx = f.indexOf(d.key);
+  }
+
+  /* a control inside the section moved the phone */
+  drive(d, key, kind) {
+    if (!d || !key) return;
+    d.key = key;
+    if (this.cur === d && !this.narrow) { this.seedIdx(d); this.swap(key, kind || d.kind); }
+  }
+
+  /* a throttled tab can leave a flight mid-air; a tap must never be swallowed */
+  landFlight() {
+    const fl = this.fl; if (!fl) return;
+    this.fl = null;
+    const b = this.livePos(fl.to);
+    this.pv.x = b.x; this.pv.y = b.y; this.pv.s = b.s;
+    if (!fl.swapped) { this.seedIdx(fl.to); this.swap(fl.to.key, fl.to.kind); }
+    this.dirty = true;
+  }
+
+  advance(dir) {
+    if (this.narrow) return;
+    if (this.fl) {
+      if (performance.now() - this.fl.t0 < this.fl.dur + 400) return;
+      this.landFlight();
+    }
+    const d = this.cur; if (!d || d.flow.length < 2) return;
+    const step = dir === -1 ? -1 : 1;
+    this.flowIdx = this.flowIdx < 0 ? (step > 0 ? 0 : d.flow.length - 1)
+      : (this.flowIdx + step + d.flow.length) % d.flow.length;
+    d.key = d.flow[this.flowIdx];
+    this.swap(d.key, step < 0 ? 'back' : d.kind);
+    this.echo(d);
+  }
+
+  goStep(i) {
+    if (this.fl && performance.now() - this.fl.t0 > this.fl.dur + 400) this.landFlight();
+    const d = this.cur; if (!d || this.fl) return;
+    i = clamp(i, 0, d.flow.length - 1);
+    if (i === this.flowIdx) return;
+    const back = i < this.flowIdx;
+    this.flowIdx = i; d.key = d.flow[i];
+    this.userDriving = true; this.tapped = true; this.lastTouch = performance.now();
+    this.mode('You');
+    this.swap(d.key, back ? 'back' : d.kind);
+    this.echo(d);
+  }
+
+  mode(txt) {
+    const t = this.q('[data-autotxt]'), dot = this.q('[data-autodot]');
+    if (t) t.textContent = txt;
+    if (dot) dot.style.background = txt === 'You' ? 'var(--warn)' : 'var(--acc2)';
+  }
+
+  /* the phone advanced — bring the section's own control along with it */
+  echo(d) {
+    if (this.syncing || !d) return;
+    this.syncing = true;
+    try {
+      if (d.sec === 'setup' && this.stepList) {
+        const i = this.stepList.findIndex(s => s[2] === d.key);
+        if (i >= 0 && i !== this.stepIdx) { this.stepIdx = i; this.paintStep(); }
+      } else if (d.sec === 'nav' && this.rungs) {
+        const r = d.key === 'offlineNav' ? 2 : 0;
+        this.rungIdx = r;
+        this.rungs.forEach((x,j) => {
+          x.style.borderColor = j === r ? 'var(--acc2)' : 'var(--line)';
+          x.style.transform = j === r ? 'translateX(6px)' : '';
+        });
+      } else if (d.sec === 'offline') {
+        const v = { convoy:0, convoyStale:2, convoyOffline:4 }[d.key];
+        if (v != null) { const s = this.q('[data-sig]'); if (s) s.value = String(v); this.setSig(v); }
+      } else if (d.sec === 'itinerary' && this.dayBtns) {
+        const i = DAYS.findIndex(x => x.screen === d.key);
+        if (i >= 0 && i !== this.dayIdx) this.setDay(i);
+      }
+    } catch (e) {}
+    this.syncing = false;
+  }
+
+  buildHud() {
+    this.hud = this.q('[data-phonehud]');
+    if (!this.hud) return;
+    this.hudRail = this.q('[data-hudrail]');
+    this.hudSeg = [];
+    const nudge = dir => { this.userDriving = true; this.tapped = true; this.lastTouch = performance.now(); this.mode('You'); this.advance(dir); };
+    [['[data-hudprev]',-1],['[data-hudnext]',1]].forEach(([sel,dir]) => {
+      const b = this.q(sel); if (!b) return;
+      b.addEventListener('click', e => { e.stopPropagation(); nudge(dir); });
+      b.addEventListener('mouseenter', () => { b.style.transform = 'translateY(-1px)'; });
+      b.addEventListener('mouseleave', () => { b.style.transform = ''; });
+    });
+    const roll = this.q('[data-rollbtn]');
+    if (roll) roll.addEventListener('click', () => {
+      const d = this.docks.find(x => x.sec === 'rollout');
+      const fl = this.q('[data-rollflank]');
+      if (fl) fl.style.opacity = '1';
+      if (d && this.cur === d) nudge(1);
+      else if (d) { d.key = d.flow[Math.min(1, d.flow.length-1)]; }
+    });
+    document.addEventListener('keydown', e => {
+      if (this.narrow || !this.cur || !this.layer || this.layer.style.opacity !== '1') return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const tag = (e.target.tagName||'').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || this.legalOpen != null) return;
+      e.preventDefault();
+      nudge(e.key === 'ArrowRight' ? 1 : -1);
+    });
+  }
+
+  paintHud() {
+    if (!this.hud || this.narrow) return;
+    const d = this.cur; if (!d) return;
+    const f = d.flow, n = f.length;
+    const i = this.flowIdx < 0 ? -1 : clamp(this.flowIdx, 0, n - 1);
+    const two = v => (v < 10 ? '0' : '') + v;
+    this.q('[data-hudflow]').textContent = 'Flow · ' + (d.name || d.sec);
+    this.q('[data-hudstep]').textContent = i < 0 ? '— / ' + two(n) : two(i+1) + ' / ' + two(n);
+    this.q('[data-hudlabel]').textContent = this.LB[d.key] || d.key;
+    this.q('[data-hudcap]').textContent = CAPS[d.key] || '';
+    if (this.hudSeg.length !== n) {
+      this.hudRail.innerHTML = ''; this.hudSeg = [];
+      for (let k = 0; k < n; k++) {
+        const s = document.createElement('button');
+        s.type = 'button';
+        s.setAttribute('aria-label', 'Screen ' + (k+1) + ' — ' + (this.LB[f[k]] || f[k]));
+        s.style.cssText = 'pointer-events:auto; flex:1; min-width:0; height:18px; padding:0; border:none; background:transparent; cursor:pointer; display:flex; align-items:center;';
+        const bar = document.createElement('span');
+        bar.style.cssText = 'display:block; width:100%; height:3px; border-radius:2px; background:var(--line); transition:background .25s, height .2s;';
+        s.appendChild(bar);
+        s.addEventListener('click', ev => { ev.stopPropagation(); this.goStep(k); });
+        this.hudRail.appendChild(s); this.hudSeg.push(bar);
+      }
+    }
+    this.hudSeg.forEach((b,k) => {
+      b.style.background = k === i ? 'var(--acc2)' : (k < i ? alphaOf('#0E7C86', .34) : 'var(--line)');
+      b.style.height = k === i ? '4px' : '3px';
+    });
+    const nx = this.q('[data-hudnext]');
+    if (nx) {
+      nx.title = 'Next — ' + (this.LB[f[(i+1) % n]] || '');
+      const anim = this.tapped ? '' : 'qf-hudnudge 2.6s ease-out infinite';
+      if (nx.style.animation !== anim) nx.style.animation = anim;
+    }
+    this.hudH = 0;
+  }
+
+  /* on a phone each dock is a plain screen with its own caption and its own step */
+  inlineCap(d) {
+    if (!d || !d.cap) return;
+    const f = d.flow;
+    let i = f.indexOf(d.key); if (i < 0) i = 0;
+    d.iIdx = i;
+    const two = v => (v < 10 ? '0' : '') + v;
+    this.q('[data-icapstep]', d.cap).textContent = two(i+1) + '/' + two(f.length);
+    this.q('[data-icaplabel]', d.cap).textContent = this.LB[d.key] || d.key;
+    this.q('[data-icapcap]', d.cap).textContent = CAPS[d.key] || '';
+    d.cap.style.display = f.length > 1 ? 'flex' : 'none';
   }
 
   idle(now) {
     if (this.narrow || this.calm || this.props.autoDemo === false) return;
     if (this.userDriving) {
-      if (now - this.lastTouch > 9000) {
-        this.userDriving = false;
-        const t = this.q('[data-autotxt]'), d = this.q('[data-autodot]');
-        if (t) t.textContent = 'Auto'; if (d) d.style.background = 'var(--acc2)';
-      }
+      if (now - this.lastTouch > 9000) { this.userDriving = false; this.mode('Auto'); }
       return;
     }
     if (this.fl) { this.nextIdle = 0; return; }
     if (!this.cur || !this.cur.flow.length || this.layer.style.opacity !== '1') return;
-    if (!this.nextIdle) this.nextIdle = now + 4000;
+    const last = this.flowIdx >= this.cur.flow.length - 1;
+    if (!this.nextIdle) this.nextIdle = now + 4200;
     if (now < this.nextIdle) return;
-    this.nextIdle = now + 4000;
+    this.nextIdle = now + (last ? 7000 : 4200);
     this.ripple(120 + Math.random()*150, 430 + Math.random()*250, .3);
-    setTimeout(() => this.advance(), 180);
+    setTimeout(() => this.advance(1), 180);
   }
 
   /* ═════ headline + survey type ═════ */
@@ -2185,7 +2466,7 @@ class Component extends DCLogic {
     const el = this.q('[data-shortcuts]');
     if (el.style.display === 'flex') { el.style.display = 'none'; return; }
     el.innerHTML = '<div style="background:var(--bg); border-radius:20px; padding:30px 34px; max-width:420px;"><div style="'+SUR+'">Keyboard</div>' +
-      ['J / K — next and previous waypoint','Esc — close','? — this list']
+      ['J / K — next and previous waypoint','← / → — walk the flow on the phone','Esc — close','? — this list']
         .map(t => '<div style="font-size:16px; color:var(--ink); margin-top:13px;">'+t+'</div>').join('') + '</div>';
     el.style.display = 'flex';
     el.onclick = () => { el.style.display = 'none'; };
@@ -2283,7 +2564,7 @@ class Component extends DCLogic {
         lift = 1 - arc * 0.065;
       }
       p.s = a.s + (bNow.s - a.s) * e;
-      if (!f.swapped && e > 0.38) { f.swapped = true; this.flowIdx = 0; this.swap(f.to.key, f.to.kind); }
+      if (!f.swapped && e > 0.38) { f.swapped = true; this.seedIdx(f.to); this.swap(f.to.key, f.to.kind); }
       if (t >= 1) { this.fl = null; if (this.dots) this.pulseLead(); }
       flying = true;
     } else if (this.cur) {
@@ -2293,6 +2574,22 @@ class Component extends DCLogic {
     }
 
     this.pos.style.transform = 'translate3d(' + p.x.toFixed(2) + 'px,' + p.y.toFixed(2) + 'px,0) scale(' + (p.s * lift).toFixed(4) + ')';
+
+    if (this.hud) {
+      if (!this.hudW) this.hudW = this.hud.offsetWidth || 292;
+      if (!this.hudH) this.hudH = this.hud.offsetHeight || 96;
+      const pw = PW * p.s, ph = PH * p.s;
+      let hy = p.y + ph + 16;
+      if (hy + this.hudH > vh - 10) hy = p.y - this.hudH - 14;
+      /* whichever side it lands on, the whole card stays inside the viewport */
+      hy = clamp(hy, 10, Math.max(10, vh - this.hudH - 10));
+      const hx = clamp(p.x + pw/2 - this.hudW/2, 12, Math.max(12, window.innerWidth - this.hudW - 12));
+      this.hud.style.transform = 'translate3d(' + hx.toFixed(1) + 'px,' + hy.toFixed(1) + 'px,0)';
+      /* a caption with no phone attached to it is just litter */
+      const onScreen = p.y + ph > 40 && p.y < vh - 40;
+      const vis = (!this.fl && op === '1' && onScreen) ? '1' : '0';
+      if (this.hud.style.opacity !== vis) this.hud.style.opacity = vis;
+    }
 
     if (!this.calm && !this.touch) {
       const k = Math.min(1, dt / 16.67);
@@ -2474,12 +2771,9 @@ class Component extends DCLogic {
       const lean = clamp(-(this.scrollV || 0) * 0.5, -7, 7);
       this.navMark.style.transform = 'rotate(' + lean.toFixed(2) + 'deg)';
     }
-    /* float away when diving down the page, return the moment you look back up */
+    /* the bar stays put — it is the only way back to any waypoint */
     const nav = this.q('[data-nav]');
-    const hide = y > 260 && (this.scrollV || 0) > 2.2;
-    const show = (this.scrollV || 0) < -0.6 || y < 200;
-    if (hide && !this.navHidden) { this.navHidden = true; nav.style.transition = 'transform .42s cubic-bezier(.5,0,.2,1), opacity .3s'; nav.style.transform = 'translateY(-130%)'; nav.style.opacity = '0'; }
-    else if (show && this.navHidden) { this.navHidden = false; nav.style.transform = 'translateY(0)'; nav.style.opacity = '1'; }
+    if (this.navHidden !== false) { this.navHidden = false; nav.style.transform = 'translateY(0)'; nav.style.opacity = '1'; }
 
     let act = 0;
     this.secTops.forEach((t,k) => { if (t - 180 <= y) act = k; });
@@ -2518,8 +2812,7 @@ class Component extends DCLogic {
       b.style.borderLeftColor = j === this.stepIdx ? 'var(--acc2)' : 'var(--line)';
       b.style.background = j === this.stepIdx ? 'var(--card)' : 'transparent';
     });
-    const d = this.docks && this.docks.find(x => x.el.closest('#setup'));
-    if (d) { d.key = this.stepList[this.stepIdx][2]; if (this.cur === d) this.swap(d.key, 'tab'); }
+    this.drive(this.docks && this.docks.find(x => x.sec === 'setup'), this.stepList[this.stepIdx][2], 'tab');
   }
 
   buildPerms() {
@@ -2655,8 +2948,7 @@ class Component extends DCLogic {
     const dd = this.q('[data-elevday]');
     if (dd) { dd.setAttribute('cx', this.elevPts[i][0]); dd.setAttribute('cy', this.elevPts[i][1]); }
     this.q('[data-elevlabel]').textContent = 'Day '+d.n+' · '+inr(d.alt)+' m';
-    const dock = this.docks && this.docks.find(x => x.el.closest('#itinerary'));
-    if (dock) { dock.key = d.screen; if (this.cur === dock) this.swap(d.screen, 'push'); }
+    this.drive(this.docks && this.docks.find(x => x.sec === 'itinerary'), d.screen, 'push');
   }
 
   buildNights() {
@@ -2700,6 +2992,7 @@ class Component extends DCLogic {
 
   renderSplit() {
     const sl = this.q('[data-splitslider]');
+    this.fillRange(sl);
     const amt = parseInt(sl.value,10);
     const payer = this.cats[this.cat][1];
     sl.setAttribute('aria-valuetext', '₹' + inr(amt) + ' paid by ' + payer);
@@ -2916,8 +3209,7 @@ class Component extends DCLogic {
         CREW.forEach(o => { if (o.role === this.roleSel) o.role = 'Rider'; });
         c.role = this.roleSel;
         this.paintRoles(); this.paintReady();
-        const d = this.docks && this.docks.find(x => x.el.closest('#lobby'));
-        if (d && this.cur === d) this.swap('roles','tab');
+        this.drive(this.docks && this.docks.find(x => x.sec === 'lobby'), 'roles', 'tab');
       });
       w.appendChild(b);
     });
@@ -3070,13 +3362,19 @@ class Component extends DCLogic {
       const go = () => {
         this.rungIdx = i;
         this.rungs.forEach((x,j) => { x.style.borderColor = j===i ? 'var(--acc2)' : 'var(--line)'; x.style.transform = j===i ? 'translateX(6px)' : ''; });
-        const d = this.docks && this.docks.find(x => x.el.closest('#nav'));
-        if (d) { d.key = i < 2 ? 'rallyLive' : 'offlineNav'; if (this.cur === d) this.swap(d.key,'tab'); }
+        this.drive(this.docks && this.docks.find(x => x.sec === 'nav'), i < 2 ? 'rallyLive' : 'offlineNav', 'tab');
         this.userDriving = true; this.lastTouch = performance.now();
       };
       el.addEventListener('click', go); el.addEventListener('mouseenter', go);
       w.appendChild(el); return el;
     });
+  }
+
+  /* the webkit track cannot read the value on its own */
+  fillRange(el) {
+    if (!el) return;
+    const mn = parseFloat(el.min || 0), mx = parseFloat(el.max || 100), v = parseFloat(el.value);
+    el.style.setProperty('--qf-fill', (mx > mn ? ((v - mn) / (mx - mn)) * 100 : 50).toFixed(2) + '%');
   }
 
   buildSigChips() {
@@ -3088,6 +3386,7 @@ class Component extends DCLogic {
     });
     this.q('[data-sig]').addEventListener('input', e => this.setSig(parseInt(e.target.value,10)));
     this.setSig(0);
+    this.fillRange(this.q('[data-sig]'));
   }
 
   setSig(v) {
@@ -3096,6 +3395,7 @@ class Component extends DCLogic {
     lab.textContent = names[v];
     lab.style.color = v >= 3 ? 'var(--warn)' : 'var(--acc)';
     this.q('[data-sig]').setAttribute('aria-valuetext', names[v]);
+    this.fillRange(this.q('[data-sig]'));
     this.sigChips[1].textContent = 'Writes queued · ' + [0,0,2,5,9][v];
     this.sigChips.forEach((c,i) => {
       const on = v >= [4,2,3,3][i];
@@ -3107,8 +3407,8 @@ class Component extends DCLogic {
       r.style.borderColor = on ? 'var(--acc2)' : 'var(--line)';
       r.style.transform = on ? 'translateX(6px)' : '';
     });
-    const d = this.docks && this.docks.find(x => x.el.hasAttribute('data-sigdock'));
-    if (d) { d.key = ['convoy','convoy','convoyStale','convoyStale','convoyOffline'][v]; if (this.cur === d) this.swap(d.key,'tab'); }
+    this.drive(this.docks && this.docks.find(x => x.el.hasAttribute('data-sigdock')),
+      ['convoy','convoy','convoyStale','convoyStale','convoyOffline'][v], 'tab');
     /* the three states sit side by side — light the one the slider is on */
     const stage = v >= 4 ? 3 : (v >= 2 ? 2 : 1);
     [2,3].forEach(n => {
@@ -3214,7 +3514,7 @@ class Component extends DCLogic {
   }
 
   sosScreen(k, kind) {
-    if (this.sosDock) { this.sosDock.key = k; if (this.cur === this.sosDock) this.swap(k, kind || 'sheet'); }
+    this.drive(this.sosDock, k, kind || 'sheet');
   }
 
   runSos() {
@@ -3273,7 +3573,7 @@ class Component extends DCLogic {
       this.q('[data-sosnum]').textContent = '—';
       this.q('[data-sosring]').setAttribute('stroke-dashoffset','214');
       this.q('[data-sosstatus]').textContent = 'Cancelled · glad you are OK';
-      this.sosScreen('convoy','tab');
+      this.sosScreen('crashCancelled','tab');
     } else {
       this.q('[data-sosstatus]').textContent = 'Nothing running · press to run';
     }

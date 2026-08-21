@@ -72,7 +72,7 @@ def diff(name, ref, cand):
 
 
 # ── home ────────────────────────────────────────────────────────────────────
-ref = '\n'.join(LINES[291:356]) + '\n' + '\n'.join(LINES[357:874]) + '\n' + LINES[1377]
+ref = '\n'.join(LINES[304:388]) + '\n' + '\n'.join(LINES[390:906]) + '\n' + LINES[1409]
 ref = relink(ref)
 form = '<form data-waitlist="1"'
 i = ref.index('>', ref.index(form)) + 1
@@ -106,9 +106,9 @@ if missing:
 results.append(not missing)
 
 # ── legal routes ────────────────────────────────────────────────────────────
-LEGAL = [('privacy-policy', 901, 1046), ('terms-and-conditions', 1049, 1139),
-         ('delete-account', 1142, 1211), ('delete-data', 1214, 1286),
-         ('support', 1289, 1327), ('security', 1330, 1369)]
+LEGAL = [('privacy-policy', 933, 1078), ('terms-and-conditions', 1081, 1171),
+         ('delete-account', 1174, 1243), ('delete-data', 1246, 1318),
+         ('support', 1321, 1359), ('security', 1362, 1401)]
 
 # Apple Guideline 5.1.1 requires the privacy policy itself to name the third
 # parties with access to user data and confirm they give the same or greater
@@ -164,7 +164,7 @@ for route, a, b in LEGAL:
         k = ref.index('</p>', ref.index(MERGER)) + 4
         ref = ref[:k] + EQUAL_PROTECTION + ref[k:]
     ref = re.sub(r'^\s*<article [^>]*>', '<article>', ref, count=1)
-    ref += '\n' + relink(seg(1371, 1374))
+    ref += '\n' + relink(seg(1403, 1406))
 
     body = root_of(os.path.join(DIST, route, 'index.html'))
     # keep only the <article> and the legal footer; the shell is hand-written

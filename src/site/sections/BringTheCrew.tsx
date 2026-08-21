@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 462-480.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 494-512.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -18,7 +18,7 @@ export function BringTheCrew() {
             <div data-crewfan="1" style={{ display: 'flex', alignItems: 'center', marginTop: '36px', paddingTop: '26px' }}></div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="invite" data-scale="0.54" data-kind="push" data-flow="invite,crew,joinCode,memberF5"></div>
+            <div data-dock="1" data-screen="invite" data-scale="0.54" data-kind="push" data-flowname="Bring the crew in" data-flow="invite,joinCode,memberF5"></div>
             <div data-static="crew" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
         </div>

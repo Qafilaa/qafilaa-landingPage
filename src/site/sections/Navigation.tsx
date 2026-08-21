@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 695-708.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 727-740.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -8,7 +8,7 @@ export function Navigation() {
         <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 16 · Navigation that knows it is a group ride</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto minmax(0,1fr)', gap: '56px', alignItems: 'center' }} data-cols="1">
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="rallyLive" data-scale="0.54" data-kind="tab" data-flow="rallyLive,liveActivity,offlineNav"></div>
+            <div data-dock="1" data-screen="rallyLive" data-scale="0.54" data-kind="tab" data-flowname="Navigate as a group" data-flow="rallyLive,offlineNav"></div>
             <div data-static="liveActivity" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
           <div>

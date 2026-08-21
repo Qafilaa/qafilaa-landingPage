@@ -34,39 +34,44 @@ npm run preview
 
 ## 3. The design handoff — this is the source of truth
 
-The whole site is transcribed from **`Qafilaa Site v2.dc.html`** (**handoff 12**). It is a complete, working, standalone implementation, and the repo is a faithful port of it, not an interpretation.
+The whole site is transcribed from **`Qafilaa Site v2.dc.html`** (**handoff 13**). It is a complete, working, standalone implementation, and the repo is a faithful port of it, not an interpretation.
 
 | Repo | Handoff lines |
 |---|---|
 | `index.html` `<head>` | 9–140 (`<helmet>`) |
-| `src/index.css` | 143–285 (`<style>`) |
-| `src/site/chrome/Chrome.tsx` | 292–356 |
-| `src/site/sections/*.tsx` (22 files) | 359–874 |
-| `src/site/chrome/Shortcuts.tsx` | 1378 |
-| `src/site/legal/*Body.tsx` (6 files) | 901–1369 |
-| `src/site/legal/LegalFoot.tsx` | 1371–1374 |
-| `src/site/tokens.ts` | 1383–1407 |
-| `src/site/data.ts` | 1409–1440 |
-| `src/site/engine.ts` | 1442–3444 |
+| `src/index.css` | 143–298 (`<style>`) |
+| `src/site/chrome/Chrome.tsx` | 305–388 |
+| `src/site/sections/*.tsx` (22 files) | 391–906 |
+| `src/site/chrome/Shortcuts.tsx` | 1410 |
+| `src/site/legal/*Body.tsx` (6 files) | 933–1401 |
+| `src/site/legal/LegalFoot.tsx` | 1403–1406 |
+| `src/site/tokens.ts` | 1415–1486 (now includes `CAPS`) |
+| `src/site/data.ts` | 1488–1519 |
+| `src/site/engine.ts` | 1521–3744 |
 
 **Line numbers shift with every handoff.** They are constants in the generator scripts (§9); when a new
-handoff lands, re-derive them rather than nudging them. Handoff 12 was a mobile pass: it added the
-900/480/370 breakpoints, a `NARROW` threshold shared with the engine, four responsive runtime helpers
-(`reflow`, `refitInline`, `wide`, `applyWide`), a ResizeObserver, and the `data-btn` / `data-cta` /
-`data-seg` / `data-navword` / `data-burgertxt` / `data-ctaarrow` / `data-corner` hooks.
+handoff lands, re-derive them rather than nudging them. `genengine.py` asserts every rewrite, so it will
+tell you which string anchors moved.
 
-**Nine deliberate departures from the handoff**, each required by a rule below:
+Handoff 12 was a mobile pass (900/480/370 breakpoints, `NARROW`, `reflow`/`refitInline`/`wide`/`applyWide`,
+a ResizeObserver). **Handoff 13 added the phone HUD**: a caption rail under the flying device with a flow
+name, a step counter, a dot rail and prev/next — `[data-phonehud]` and eight sibling hooks, ten new runtime
+methods (`buildHud`, `paintHud`, `goStep`, `drive`, `mode`, `echo`, `seedIdx`, `landFlight`, `inlineCap`,
+`fillRange`), a `CAPS` caption table, nine new app screens, a `data-flowname` on every dock, and
+Daylight-styled range inputs.
+
+**Eight deliberate departures from the handoff** (numbering is stable across handoffs, so #7 stays struck through rather than closing the gap), each required by a rule below:
 1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§6), and the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
 4. **The site footer carries five link columns instead of three**, and the legal tab row is grouped instead of flat, because the six documents the handoff shipped became fifteen — see §8.
 5. **Privacy policy §5 gained one paragraph** naming the subprocessors page and confirming third parties give the same or greater protection. App Store Review Guideline 5.1.1 requires that confirmation in the policy itself.
 6. **A 404 page** (`src/site/NotFound.tsx` → `dist/404.html`). The handoff has no such screen; a statically prerendered site has no server to render one on demand.
-7. **The top nav stays pinned.** The handoff floats it away on a fast scroll down and returns it on scroll up; that block is dropped in `paint()`. The pill is already `position:fixed` in the markup, so removing the transform is the whole change. It carries the only route to the policy pages and the Get-the-app CTA, and on a phone the waypoint drawer behind the burger is the only navigation there is.
+7. ~~The top nav stays pinned.~~ **No longer a divergence** — handoff 13 pins it upstream (*"the bar stays put — it is the only way back to any waypoint"*). The patch was removed from `genengine.py`.
 8. **The legal shell is a sticky index, not a pill row**, and the four handoff documents that shipped undated (`delete-account`, `delete-data`, `support`, `security`) gained a `Last updated` line. Fifteen documents as four rows of pills pushed the article 478px down the page and left half the width empty; an undated policy page is a defect in its own right. Both are applied by the generators, not by hand — see §9.
 9. **The privacy policy names Firebase Analytics.** The shipped app carries it (`lib/core/analytics/`, wired in `main.dart`), on by default in release and gated by the diagnostics switch in Settings. The handoff's section 2 lists Crashlytics but not Analytics, which left the binding document understating what is collected — Apple 5.1.1 and Play's Data safety both require it named.
 
-Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these nine in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
+Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
 ## 4. Styling — a runtime tone system, not static tokens
 
@@ -208,7 +213,7 @@ vanishes; that has already happened twice. Fold it into the generator and add it
 
 - **`verify.py`** parses the handoff's markup and the prerendered output into trees and compares every tag,
   attribute, CSS declaration and text node, normalising attribute order, declaration order, entity spelling
-  and whitespace. It folds in the five departures from §3 and then demands zero differences. It is the only
+  and whitespace. It folds in the departures from §3 and then demands zero differences. It is the only
   thing standing between "looks right" and "is right".
 - **`gencss.py`** writes `src/index.css` = the handoff's `<style>` block **plus an appendix** holding the legal-shell
   layout (media queries cannot be inline styles). `index.css` is generated — **never hand-edit it**, or the next

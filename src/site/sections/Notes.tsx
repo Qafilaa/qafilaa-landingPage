@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 12), lines 589-602.
+// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 621-634.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -13,7 +13,7 @@ export function Notes() {
             <div data-notedemo="1" style={{ marginTop: '30px', maxWidth: '560px' }}></div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
-            <div data-dock="1" data-screen="notes" data-scale="0.54" data-kind="push" data-flow="notes,noteDetail,noteWrite"></div>
+            <div data-dock="1" data-screen="notes" data-scale="0.54" data-kind="push" data-flowname="Leave a note" data-flow="notes,noteWrite,notePhoto"></div>
             <div data-static="noteDetail" data-scale="0.54" style={{ marginTop: '40px' }}></div>
           </div>
         </div>
