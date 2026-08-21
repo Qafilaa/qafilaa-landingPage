@@ -16,6 +16,8 @@ import subprocess
 import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, TOOLS)
+from divergences import strip_hud  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = _os.path.join(REPO, 'dist')
@@ -74,6 +76,9 @@ def diff(name, ref, cand):
 # ── home ────────────────────────────────────────────────────────────────────
 ref = '\n'.join(LINES[304:388]) + '\n' + '\n'.join(LINES[390:906]) + '\n' + LINES[1409]
 ref = relink(ref)
+# The shipped chrome drops the flying phone's HUD (divergence #10), so the
+# reference has to drop it too or every run reports the same 21 phantom lines.
+ref = strip_hud(ref)
 form = '<form data-waitlist="1"'
 i = ref.index('>', ref.index(form)) + 1
 ref = ref[:i] + '\n' + HONEYPOT + ref[i:]

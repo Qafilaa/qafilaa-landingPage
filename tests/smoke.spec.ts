@@ -27,16 +27,55 @@ test.describe('landing', () => {
     expect(await page.evaluate(() => Object.keys(window.QAF_SCREENS ?? {}).length)).toBeGreaterThanOrEqual(84);
   });
 
-  test('the phone HUD narrates the screen it is showing', async ({ page }) => {
+  test('the flow HUD is not shipped', async ({ page }) => {
     await bootedLanding(page);
-    // New in handoff 13: a caption rail under the flying phone, with its own
-    // step counter and prev/next. Driven by CAPS in src/site/tokens.ts.
-    const cap = await page.locator('[data-hudcap]').first().textContent();
-    expect(cap?.trim(), 'the HUD must name the screen on show').toBeTruthy();
-    await expect(page.locator('[data-hudprev]')).toHaveCount(1);
-    await expect(page.locator('[data-hudnext]')).toHaveCount(1);
-    const step = await page.locator('[data-hudstep]').first().textContent();
-    expect(step?.trim()).toMatch(/\d/);
+    // Handoff 13 hung a caption rail under the flying phone, and a matching
+    // strip under each inline phone on mobile. Both were rejected on review —
+    // divergence #10. buildHud() still runs: its early return had to go, since
+    // the roll-out button and the arrow keys are wired after it. So this also
+    // proves dropping that guard did not put the panel back.
+    await expect(page.locator('[data-phonehud]')).toHaveCount(0);
+    await expect(page.locator('[data-icap]')).toHaveCount(0);
+  });
+
+  test('the arrow keys still walk the flow with the HUD gone', async ({ page }) => {
+    await bootedLanding(page);
+    test.skip((page.viewportSize()?.width ?? 0) < 900, 'the flying rig only exists above NARROW');
+    await page.waitForTimeout(1200);
+
+    const key = () => page.evaluate(() => (window.__QAF as { cur?: { key?: string } })?.cur?.key);
+    const before = await key();
+    expect(before, 'a dock must be current before the keys mean anything').toBeTruthy();
+
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(800);
+    expect(await key(), 'ArrowRight is wired after buildHud()s removed early return').not.toBe(before);
+  });
+
+  test('the flying phone is the same size as the phone beside it', async ({ page }) => {
+    await bootedLanding(page);
+    test.skip((page.viewportSize()?.width ?? 0) < 900, 'below NARROW the docks go inline');
+
+    // #crew authors its dock and its static at the same data-scale, so any gap
+    // between them is fitDocks() shrinking the flying one. It used to shrink by
+    // room/PH, which on a short viewport drew the same device 1.7x smaller than
+    // its own neighbour in the same row. Re-checked short, since that is where
+    // it bit — and where nobody was looking.
+    const widths = () =>
+      page.evaluate(() => {
+        const sec = document.querySelector('#crew')!;
+        const w = (sel: string) => Math.round(sec.querySelector(sel)!.getBoundingClientRect().width);
+        return { dock: w('[data-dock]'), stat: w('[data-static]') };
+      });
+
+    const tall = await widths();
+    expect(tall.dock, 'flying phone vs the static phone beside it').toBe(tall.stat);
+
+    const vw = page.viewportSize()!.width;
+    await page.setViewportSize({ width: vw, height: 600 });
+    await page.waitForTimeout(900);
+    const short = await widths();
+    expect(short.dock, 'and still equal on a short viewport').toBe(short.stat);
   });
 
   test('the flying phone is on screen above NARROW and stood down below it', async ({ page }) => {
@@ -44,25 +83,32 @@ test.describe('landing', () => {
     // NARROW is 900 in src/site/tokens.ts, and the CSS and the JS must agree on it.
     const wide = (page.viewportSize()?.width ?? 0) >= 900;
 
-    const layer = await page.locator('[data-phonelayer]').evaluate((el) => {
-      const cs = getComputedStyle(el);
-      return { opacity: Number(cs.opacity), display: cs.display };
-    });
-    const host = await page.locator('[data-phonehost]').boundingBox();
+    const opacity = () =>
+      page.locator('[data-phonelayer]').evaluate((el) => Number(getComputedStyle(el).opacity));
+    const display = () =>
+      page.locator('[data-phonelayer]').evaluate((el) => getComputedStyle(el).display);
 
     if (wide) {
       // The centrepiece of the page. stepPhone() rewrites this opacity every
       // frame from measured dock offsets, so a regression in measureDocks()
       // fades the phone out silently -- no error, no failed build step, just an
       // empty right-hand column. Nothing else here would catch that.
-      expect(layer.opacity, 'the flying phone must not fade out').toBeGreaterThan(0.9);
-      expect(layer.display).toBe('block');
+      //
+      // Polled, not sampled: the layer fades in over .3s and the engine boots
+      // before that finishes, so a single read races the transition and lands
+      // on whatever frame it caught.
+      await expect
+        .poll(opacity, { message: 'the flying phone must not fade out', timeout: 6000 })
+        .toBeGreaterThan(0.9);
+      expect(await display()).toBe('block');
+
+      const host = await page.locator('[data-phonehost]').boundingBox();
       expect(host?.width ?? 0, 'phone width').toBeGreaterThan(100);
       expect(host?.height ?? 0, 'phone height').toBeGreaterThan(200);
     } else {
       // Below NARROW the engine parks a phone inline in each dock instead, and
       // the flying layer is display:none rather than merely transparent.
-      expect(layer.display, 'the flying layer must be out of the flow on mobile').toBe('none');
+      expect(await display(), 'the flying layer must be out of the flow on mobile').toBe('none');
     }
   });
 

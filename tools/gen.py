@@ -10,6 +10,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from h2jsx import convert  # noqa: E402
+from divergences import strip_hud  # noqa: E402
 
 SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v2.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
@@ -218,7 +219,8 @@ index += '\n' + '\n'.join(
 write('sections/index.ts', index)
 
 # ── chrome ──────────────────────────────────────────────────────────────────
-chrome = convert(seg(305, 388)).strip()
+# strip_hud drops the flying phone's caption rail -- see tools/divergences.py
+chrome = convert(strip_hud(seg(305, 388))).strip()
 body = HEAD % '305-388'
 body += """
 export function Chrome() {

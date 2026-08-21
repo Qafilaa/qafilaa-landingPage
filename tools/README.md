@@ -24,10 +24,11 @@ npm run dist:audit         # routes, heads, links, footer coverage
 | Script | Writes | What it does |
 | --- | --- | --- |
 | `gen.py` | `src/site/{sections,chrome,legal}/` | Slices the handoff by line range and converts HTML to JSX through `h2jsx.py`. Also applies the declared divergences: the footer's store-required columns, the waitlist honeypot, the Apple 5.1.1 equal-protection clause, the analytics disclosure, and the date lines four documents ship without. |
-| `genengine.py` | `src/site/{tokens,data,engine}.ts` | Extracts the runtime class. Every rewrite is asserted, so a drift in the handoff fails loudly instead of emitting a half-ported engine. |
+| `divergences.py` | — | Markup-level departures shared by `gen.py` and `verify.py`, so the shipped component and the reference it is diffed against can never drift apart. Currently `strip_hud()` (divergence #10). |
+| `genengine.py` | `src/site/{tokens,data,engine}.ts` | Extracts the runtime class. Every rewrite is asserted, so a drift in the handoff fails loudly instead of emitting a half-ported engine. Also carries the two engine-side divergences: the phone sizing (#11) and dropping the inline caption plus `buildHud()`'s early return (#10). |
 | `anyfix.py` | `src/site/engine.ts` | Annotates the ported JS for `strict`, driven by tsc's own diagnostics. **Run it after `genengine.py`** or the build fails on implicit anys. |
 | `gencss.py` | `src/index.css` | The handoff's `<style>` block **plus an appendix** for the legal shell (media queries cannot be inline styles). |
-| `verify.py` + `domdiff.py` | — | Diffs every tag, attribute, CSS declaration and text node of the prerendered output against the handoff. Folds in the declared divergences, then demands zero. |
+| `verify.py` + `domdiff.py` | — | Diffs every tag, attribute, CSS declaration and text node of the prerendered output against the handoff. Folds in the declared divergences (via `divergences.py`), then demands zero. |
 | `audit.py` | — | Walks `dist/`: every route has its own title and canonical, no internal link 404s, every route reachable from the footer. |
 | `mkicons.py` | `public/brand/` | Builds the square favicon/PWA set from `brand/logo-mark.png`. Needs Pillow. Every shipped brand asset is landscape, so the square set has to be generated. |
 | `genlicenses.py` | `src/site/legal/LicensesBody.tsx` | Reads the **Flutter app's** `pubspec.yaml`/`.lock`. Set `QAFILAA_APP_DIR` if the app repo is not a sibling. Not run in CI. |

@@ -438,15 +438,18 @@ export class SiteEngine {
     this.docks.forEach((d: any) => { d.dy = d.el.getBoundingClientRect().top + y; });
   }
 
-  /* the phone must clear the floating header and still fit a short viewport */
+  /* The flying phone is sized the way the static phone beside it is sized
+     — buildStatics() floors at .52 and ignores viewport height — so the two
+     read as one device. Fitting it to the window instead made it up to 1.7x
+     smaller than its own neighbour on a short viewport. Narrow is untouched:
+     there the docks go inline and inlineDock() sizes them from their column. */
   fitDocks() {
-    const room = window.innerHeight - 150 - (this.narrow ? 0 : 150);
-    const f = clamp(room / PH, this.narrow ? 0.34 : 0.26, 1);
+    const f = this.narrow ? clamp((window.innerHeight - 150) / PH, 0.34, 1) : 1;
     if (f === this.fitF) return;
     this.fitF = f;
     this.docks.forEach((d: any) => {
       if (d.sc0 == null) d.sc0 = d.sc;
-      d.sc = Math.max(this.narrow ? 0.34 : 0.26, Math.min(d.sc0, f));
+      d.sc = this.narrow ? Math.max(0.34, Math.min(d.sc0, f)) : Math.max(0.52, d.sc0);
       d.el.style.width = Math.round(PW * d.sc) + 'px';
       d.el.style.height = Math.round(PH * d.sc) + 'px';
     });
@@ -474,16 +477,11 @@ export class SiteEngine {
     el.style.boxShadow = '0 0 0 1px var(--line), 0 18px 42px -28px rgba(35,36,31,.5)';
     d.iw = w;
     el.appendChild(this.skel(w, h, r));
-    if (!d.cap && el.parentElement && d.flow.length > 1) {
-      const cap = document.createElement('button');
-      cap.type = 'button'; cap.setAttribute('data-icap','1');
-      cap.style.cssText = 'display:flex; align-items:center; gap:12px; width:100%; max-width:393px; margin:12px auto 0; padding:11px 14px; border:1px solid var(--line); border-radius:14px; background:var(--card); text-align:left; cursor:pointer; min-height:48px;';
-      cap.innerHTML = '<span data-icapstep="1" style="flex:none; '+SUR+' color:var(--acc); font-variant-numeric:tabular-nums;"></span>' +
-        '<span style="flex:1; min-width:0;"><span data-icaplabel="1" style="display:block; '+SG+' font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);"></span>' +
-        '<span data-icapcap="1" style="display:block; font-size:13.5px; line-height:1.35; color:var(--mut); margin-top:2px;"></span></span>' +
-        '<span style="flex:none; '+SG+' font-size:17px; color:var(--acc2);">›</span>';
-      el.parentElement.insertBefore(cap, el.nextSibling);
-      d.cap = cap;
+    /* The caption strip that sat under each inline phone went with the HUD,
+       but tapping the phone still walks its flow. Rebound on every build:
+       buildDocks() hands out a fresh `d` each time, so a listener kept from
+       the previous one would quietly drive a stale dock. */
+    if (el.parentElement && d.flow.length > 1) {
       const go = () => {
         d.iIdx = ((d.iIdx == null ? d.flow.indexOf(d.key) : d.iIdx) + 1) % d.flow.length;
         d.key = d.flow[d.iIdx];
@@ -492,9 +490,9 @@ export class SiteEngine {
         const sc = this.screenEl(d.key, s3, false);
         if (!this.rm) sc.style.animation = 'qf-screen-in .3s cubic-bezier(.22,.61,.36,1)';
         el.appendChild(sc);
-        this.inlineCap(d);
       };
-      cap.addEventListener('click', go);
+      if (el.__tapGo) el.removeEventListener('click', el.__tapGo);
+      el.__tapGo = go;
       el.addEventListener('click', go);
     }
     this.addTrig(el, -700, () => {
@@ -754,8 +752,7 @@ export class SiteEngine {
   }
 
   buildHud() {
-    this.hud = this.q('[data-phonehud]');
-    if (!this.hud) return;
+    this.hud = this.q('[data-phonehud]');   // absent by design — see below
     this.hudRail = this.q('[data-hudrail]');
     this.hudSeg = [];
     const nudge = (dir: any) => { this.userDriving = true; this.tapped = true; this.lastTouch = performance.now(); this.mode('You'); this.advance(dir); };

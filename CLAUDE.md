@@ -60,7 +60,7 @@ methods (`buildHud`, `paintHud`, `goStep`, `drive`, `mode`, `echo`, `seedIdx`, `
 `fillRange`), a `CAPS` caption table, nine new app screens, a `data-flowname` on every dock, and
 Daylight-styled range inputs.
 
-**Eight deliberate departures from the handoff** (numbering is stable across handoffs, so #7 stays struck through rather than closing the gap), each required by a rule below:
+**Ten deliberate departures from the handoff** (numbering is stable across handoffs, so #7 stays struck through rather than closing the gap), each required by a rule below:
 1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§6), and the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
@@ -71,7 +71,10 @@ Daylight-styled range inputs.
 8. **The legal shell is a sticky index, not a pill row**, and the four handoff documents that shipped undated (`delete-account`, `delete-data`, `support`, `security`) gained a `Last updated` line. Fifteen documents as four rows of pills pushed the article 478px down the page and left half the width empty; an undated policy page is a defect in its own right. Both are applied by the generators, not by hand — see §9.
 9. **The privacy policy names Firebase Analytics.** The shipped app carries it (`lib/core/analytics/`, wired in `main.dart`), on by default in release and gated by the diagnostics switch in Settings. The handoff's section 2 lists Crashlytics but not Analytics, which left the binding document understating what is collected — Apple 5.1.1 and Play's Data safety both require it named.
 
-Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9) folds these in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
+10. **The flying phone carries no HUD.** Handoff 13 hung a caption rail under the device — flow name, step counter, dot rail, prev/next — and a matching strip under each inline phone on mobile. Rejected on review: it crowds the section it floats over and reads as chrome rather than as the product. `tools/divergences.py` strips `[data-phonehud]` out of the chrome and `genengine.py` drops the inline strip, keeping the tap that walks the flow. The HUD's engine code stays in place and inert, so putting the block back is the whole of restoring it. **One trap:** `buildHud()`'s `if (!this.hud) return` had to go — the roll-out button and the arrow-key flow navigation are wired *after* it and would have died with the HUD.
+11. **The flying phone is sized like the static phone beside it**, not fitted to the viewport. `buildStatics()` floors a static at `.52` and ignores viewport height; the handoff shrank the *flying* phone by `room / PH`, so on a short laptop viewport (~580px) it drew the same device up to **1.7x smaller than its own neighbour in the same row**. `fitDocks()` now mirrors `buildStatics()` above `NARROW`; below it the docks go inline and `inlineDock()` sizes them from their column, so that path is untouched. Checked settled on all 19 docks at 1280x700, 1366x768, 1440x900 and 1920x1080 — none clipped, none under the 92px nav.
+
+Everything else must match the handoff exactly. `tools/verify.py` (see §9) folds these in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
 ## 4. Styling — a runtime tone system, not static tokens
 
@@ -93,7 +96,7 @@ Everything else must match the handoff exactly. `scratchpad/verify.py` (see §9)
 - The class carries an `[key: string]: any` index signature and a file-level `eslint-disable` for `no-explicit-any`. That is deliberate: it is ported untyped JS whose algorithms are load-bearing for the visual result. **Annotate, do not restructure.**
 - Register cleanups for every listener/RAF/interval — `destroy()` already removes the four global listeners and hands `:root` back.
 
-**`public/qafilaa-screens.js`** (815 KB raw / 79 KB gzipped) is the handoff's library of **75 pre-rendered real app screens** plus their CSS, exposed as `window.QAF_SCREENS` / `QAF_SCREEN_LABELS` / `QAF_SCREEN_CSS`. It **must stay in `public/`** so Vite does not bundle it, and it is loaded by a `<script defer>` in `index.html`. The engine's `wait()` polls for it for ~7 s before giving up.
+**`public/qafilaa-screens.js`** (815 KB raw / 79 KB gzipped) is the handoff's library of **84 pre-rendered real app screens** (75 at handoff 12) plus their CSS, exposed as `window.QAF_SCREENS` / `QAF_SCREEN_LABELS` / `QAF_SCREEN_CSS`. It **must stay in `public/`** so Vite does not bundle it, and it is loaded by a `<script defer>` in `index.html`. The engine's `wait()` polls for it for ~7 s before giving up.
 
 ## 6. Waitlist / API
 
@@ -126,7 +129,7 @@ The waitlist form (in `src/site/sections/TheEnd.tsx`) **POSTs to the live backen
 
 ## 7. SEO / content sync rules
 
-- Adding a route requires updating **all of:** `src/routes.ts`, `src/App.tsx`, `prerender.mjs` `PAGES`, and `public/sitemap.xml`. It must also appear in the site footer (`src/site/sections/TheEnd.tsx`) and in `src/site/legal/groups.ts` — `scratchpad/audit.py` fails if a built route is not linked from the footer.
+- Adding a route requires updating **all of:** `src/routes.ts`, `src/App.tsx`, `prerender.mjs` `PAGES`, and `public/sitemap.xml`. It must also appear in the site footer (`src/site/sections/TheEnd.tsx`) and in `src/site/legal/groups.ts` — `tools/audit.py` fails if a built route is not linked from the footer.
 - Legal content is **prerendered routes** rendered by `src/site/legal/LegalRoute.tsx`, **not a modal**. A route missing from `prerender.mjs` is a hard 404 on a static site, and for most of these that is a store rejection. See §8 for what each one satisfies.
 - Legal pages pin the Daylight palette locally in `LegalShell.tsx`. Note `--mut` is **`#4A4842`** there, darker than the light tone's `#6E6B63` — a deliberate long-prose readability choice from the handoff.
 - Pages written by hand use the typographic primitives in `src/site/legal/prose.tsx`, whose values are lifted from the transcribed pages. Do not hand-roll a new heading style.
@@ -173,7 +176,7 @@ footer and from the grouped tab row on the legal pages.
 | --- | --- | --- |
 | `/privacy-policy` | Apple 5.1.1 · Play App content | Mandatory field in both consoles. Must state what is collected, all uses, third parties **and that they give equal protection**, retention, and how to revoke consent or delete. |
 | `/terms-and-conditions` | Apple 3.1.2 | Serves as the EULA. Apple wants a functional link if you do not use its standard licence. |
-| `/cookies` | GDPR / ePrivacy | Referenced by privacy policy §9. Covers this site's analytics only — the app has no analytics SDK. |
+| `/cookies` | GDPR / ePrivacy | Referenced by privacy policy §9. Covers this site's analytics. **The app ships Firebase Analytics too** (`lib/core/analytics/`, on in release, gated by the diagnostics switch) — say so here, on `/data-safety`, and in both store forms, or they disagree. |
 | `/community-guidelines` | **Apple 1.2** · Play UGC | An app with user-generated content must publish standards, filter, and act on reports. Commits us to a **24-hour** response. |
 | `/child-safety` | **Play Child Safety Standards** | The "published standards against CSAE" URL the Play Console declaration asks for. Must stay globally reachable, name the app as listed, and name a point of contact. |
 | `/report` | **Apple 1.2** · Play UGC · EU DSA | The reporting mechanism reachable from outside the app, and the notice-and-action contact point. |
