@@ -13,7 +13,7 @@ export function AlongTheWay() {
           </div>
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>The app knows the road. It mostly keeps quiet about it.</h2>
-            <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '56ch', margin: '20px 0 0' }}>Fuel, food, viewpoints and workshops along the corridor you are actually riding, not a city guide. Nudges are rare by design, and one switch reduces them to essentials only for the rest of the trip.</p>
+            <p data-rv="1" style={{ fontSize: 'var(--qf-fs-18)', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '56ch', margin: '20px 0 0' }}>Fuel, food, viewpoints and workshops along the corridor you are actually riding, not a city guide. Nudges are rare by design, and one switch reduces them to essentials only for the rest of the trip.</p>
             <div data-nudgedemo="1" style={{ marginTop: '28px', maxWidth: '520px' }}></div>
           </div>
         </div>

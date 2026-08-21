@@ -9,7 +9,7 @@ export function TheLobby() {
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '52px', alignItems: 'start' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>The lobby tells you who is actually ready.</h2>
-            <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>Medical card filled, offline map downloaded, fuel, permits. Rows go teal as they land. One rider stays amber, and everyone can see who.</p>
+            <p data-rv="1" style={{ fontSize: 'var(--qf-fs-18)', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>Medical card filled, offline map downloaded, fuel, permits. Rows go teal as they land. One rider stays amber, and everyone can see who.</p>
             <div data-readiness="1" style={{ marginTop: '28px', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', overflow: 'hidden', maxWidth: '700px' }}></div>
             <div style={{ display: 'flex', gap: '20px', marginTop: '20px', flexWrap: 'wrap' }}>
               <div data-roles="1" style={{ flex: '1 1 240px', minWidth: '0', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}></div>

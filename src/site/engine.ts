@@ -536,7 +536,7 @@ export class SiteEngine {
       cap.innerHTML = '<span data-icapstep="1" style="flex:none; '+SUR+' color:var(--acc); font-variant-numeric:tabular-nums;"></span>' +
         '<span style="flex:1; min-width:0;"><span data-icaplabel="1" style="display:block; '+SG+' font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);"></span>' +
         '<span data-icapcap="1" style="display:block; font-size:13.5px; line-height:1.35; color:var(--mut); margin-top:2px;"></span></span>' +
-        '<span style="flex:none; '+SG+' font-size:17px; color:var(--acc2);">›</span>';
+        '<span style="flex:none; '+SG+' font-size:var(--qf-fs-17); color:var(--acc2);">›</span>';
       el.parentElement.insertBefore(cap, el.nextSibling);
       d.cap = cap;
       const go = () => {
@@ -1408,7 +1408,7 @@ export class SiteEngine {
       const b = document.createElement('button');
       b.type = 'button'; b.setAttribute('data-tap','1');
       b.style.cssText = 'display:flex; gap:16px; align-items:flex-start; text-align:left; width:100%; padding:15px 18px; border:none; border-left:2px solid var(--line); background:transparent; cursor:pointer; transition:background .22s, border-color .22s; min-height:44px;';
-      b.innerHTML = '<span style="'+SUR+' padding-top:3px;">'+s[0]+'</span><span><span style="display:block; '+SG+' font-size:18px; font-weight:500; color:var(--ink);">'+s[1]+'</span><span style="display:block; font-size:15px; color:var(--mut); margin-top:3px;">'+s[3]+'</span></span>';
+      b.innerHTML = '<span style="'+SUR+' padding-top:3px;">'+s[0]+'</span><span><span style="display:block; '+SG+' font-size:var(--qf-fs-18); font-weight:500; color:var(--ink);">'+s[1]+'</span><span style="display:block; font-size:15px; color:var(--mut); margin-top:3px;">'+s[3]+'</span></span>';
       const go = () => { this.stepIdx = i; this.paintStep(); this.userDriving = true; this.lastTouch = performance.now(); };
       b.addEventListener('click', go); b.addEventListener('mouseenter', go);
       wrap.appendChild(b); return b;
@@ -1433,7 +1433,7 @@ export class SiteEngine {
       const el = document.createElement('div');
       el.setAttribute('data-rv','1');
       el.style.cssText = 'background:var(--card); border:1px solid var(--line); border-radius:18px; padding:24px; display:flex; flex-direction:column; gap:11px; transition:transform .24s cubic-bezier(.22,.61,.36,1), box-shadow .24s;';
-      el.innerHTML = '<span style="'+SUR+'">'+c[0]+'</span><span style="'+SG+' font-size:22px; font-weight:500;">'+c[1]+'</span><span style="font-size:15px; line-height:1.6; color:var(--mut);">'+c[2]+'</span>';
+      el.innerHTML = '<span style="'+SUR+'">'+c[0]+'</span><span style="'+SG+' font-size:var(--qf-fs-22); font-weight:500;">'+c[1]+'</span><span style="font-size:15px; line-height:1.6; color:var(--mut);">'+c[2]+'</span>';
       const shot = document.createElement('div');
       shot.style.cssText = 'position:relative; margin-top:4px; border-radius:14px; overflow:hidden; display:flex; justify-content:center;';
       shot.appendChild(this.screenEl(c[3], 0.52, false, 380));
@@ -1576,7 +1576,7 @@ export class SiteEngine {
       const d = document.createElement('div');
       d.setAttribute('data-rv','1');
       d.style.cssText = 'flex:1 1 210px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; transition-delay:'+(i*0.07)+'s;';
-      d.innerHTML = '<div style="'+SUR+' color:var(--acc);">'+n[0]+'</div><div style="'+SG+' font-size:18px; font-weight:500; margin-top:8px;">'+n[1]+'</div><div style="font-size:14px; color:var(--mut); margin-top:4px;">'+n[2]+'</div><div style="font-size:14px; color:var(--mut); margin-top:10px;">'+n[3]+' · paid by '+n[4]+'</div>';
+      d.innerHTML = '<div style="'+SUR+' color:var(--acc);">'+n[0]+'</div><div style="'+SG+' font-size:var(--qf-fs-18); font-weight:500; margin-top:8px;">'+n[1]+'</div><div style="font-size:14px; color:var(--mut); margin-top:4px;">'+n[2]+'</div><div style="font-size:14px; color:var(--mut); margin-top:10px;">'+n[3]+' · paid by '+n[4]+'</div>';
       w.appendChild(d);
     });
   }
@@ -1699,7 +1699,7 @@ export class SiteEngine {
     const w = this.q('[data-notedemo]');
     w.innerHTML = '<div style="background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px;">' +
       '<div style="display:flex; align-items:center; justify-content:space-between; gap:12px;"><span style="'+SUR+'">Day 3 · pinned</span><span style="'+SUR+' color:var(--acc);">'+roleOf('Lead').name+'</span></div>' +
-      '<div style="'+SG+' font-size:19px; font-weight:500; margin-top:10px;">Tanglang La is icing over after 2 pm.</div>' +
+      '<div style="'+SG+' font-size:var(--qf-fs-19); font-weight:500; margin-top:10px;">Tanglang La is icing over after 2 pm.</div>' +
       '<p style="margin:8px 0 0; font-size:15px; line-height:1.55; color:var(--mut);">Leaving Sarchu at 6 instead of 8. Fuel at Pang, nothing after that until Upshi.</p>' +
       '<div data-seenby="1" style="display:flex; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--line);"></div></div>';
     const sb = this.q('[data-seenby]');
@@ -1726,7 +1726,7 @@ export class SiteEngine {
     const w = this.q('[data-nudgedemo]');
     w.innerHTML = '<div style="background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px;">' +
       '<div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">' +
-      '<div><div style="'+SG+' font-size:18px; font-weight:500;">Nudges</div><div data-nudgestate="1" style="font-size:14px; color:var(--mut); margin-top:3px;">Fuel, food and viewpoints on the corridor</div></div>' +
+      '<div><div style="'+SG+' font-size:var(--qf-fs-18); font-weight:500;">Nudges</div><div data-nudgestate="1" style="font-size:14px; color:var(--mut); margin-top:3px;">Fuel, food and viewpoints on the corridor</div></div>' +
       '<button data-nudgebtn="1" type="button" role="switch" aria-checked="false" style="flex:none; width:58px; height:34px; border-radius:999px; border:none; background:var(--acc2); cursor:pointer; position:relative; transition:background .25s;">' +
       '<span data-knob="1" style="position:absolute; top:4px; left:28px; width:26px; height:26px; border-radius:50%; background:#fff; transition:left .25s cubic-bezier(.34,1.56,.64,1);"></span></button></div>' +
       '<div data-nudgelist="1" style="margin-top:14px; display:flex; flex-direction:column; gap:8px;"></div></div>';
@@ -1783,7 +1783,7 @@ export class SiteEngine {
 
   buildRoles() {
     const w = this.q('[data-roles]');
-    w.innerHTML = '<div style="'+SUR+'">F3 · Roles</div><div style="'+SG+' font-size:20px; font-weight:500; margin-top:10px;">Assign lead, sweep, coordinator.</div>' +
+    w.innerHTML = '<div style="'+SUR+'">F3 · Roles</div><div style="'+SG+' font-size:var(--qf-fs-20); font-weight:500; margin-top:10px;">Assign lead, sweep, coordinator.</div>' +
       '<p style="margin:8px 0 14px; font-size:14px; color:var(--mut); line-height:1.5;">Pick a role, then pick the rider. The lobby and the convoy map update together.</p>' +
       '<div data-rolepick="1" style="display:flex; gap:8px; flex-wrap:wrap;"></div><div data-rolelist="1" style="display:flex; flex-direction:column; gap:6px; margin-top:12px;"></div>';
     this.roleSel = 'Lead';
@@ -1825,7 +1825,7 @@ export class SiteEngine {
 
   buildPack() {
     const p = this.q('[data-offlinepack]');
-    p.innerHTML = '<div style="'+SUR+'">F4 · Offline map</div><div style="'+SG+' font-size:20px; font-weight:500; margin-top:10px;">Route corridor, downloaded</div>' +
+    p.innerHTML = '<div style="'+SUR+'">F4 · Offline map</div><div style="'+SG+' font-size:var(--qf-fs-20); font-weight:500; margin-top:10px;">Route corridor, downloaded</div>' +
       '<div data-tiles="1" style="display:grid; grid-template-columns:repeat(14,1fr); gap:3px; margin-top:14px;"></div>' +
       '<div style="display:flex; align-items:center; gap:9px; margin-top:13px;"><span data-packspin="1" style="width:13px; height:13px; border-radius:50%; border:2px solid var(--line); border-top-color:var(--acc2); animation:qf-spin .8s linear infinite;"></span><span data-packstat="1" style="'+SUR+' color:var(--acc);">0 MB</span></div>';
     const tw = this.q('[data-tiles]');
@@ -1941,7 +1941,7 @@ export class SiteEngine {
       c.dataset.k = m.c.id;
       c.style.cssText = 'border:1px solid var(--line); border-radius:14px; padding:17px; background:var(--card); display:flex; flex-direction:column; gap:9px;';
       const ago = m.age < 60 ? Math.round(m.age)+' s ago' : Math.round(m.age/60)+' min ago';
-      c.innerHTML = '<span style="display:flex; align-items:center; gap:9px;"><span style="width:8px; height:8px; border-radius:'+(m.state==='Rolling'?'50%':'2px')+'; background:'+col+';"></span><span style="'+SG+' font-size:18px; font-weight:500;">'+m.c.name+'</span></span>' +
+      c.innerHTML = '<span style="display:flex; align-items:center; gap:9px;"><span style="width:8px; height:8px; border-radius:'+(m.state==='Rolling'?'50%':'2px')+'; background:'+col+';"></span><span style="'+SG+' font-size:var(--qf-fs-18); font-weight:500;">'+m.c.name+'</span></span>' +
         '<span style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+col+';">'+m.state+'</span>' +
         '<span style="font-size:13px; color:'+(stale?'#B26B00':'var(--mut)')+';">Last position '+ago+'</span>';
       board.appendChild(c);
@@ -1965,7 +1965,7 @@ export class SiteEngine {
       ['Straight-line bearing','An arrow and a distance. Enough to reach the rally point.']].map((r,i) => {
       const el = document.createElement('div');
       el.style.cssText = 'display:flex; gap:16px; align-items:flex-start; padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:var(--card); transition:border-color .3s, background .3s, transform .3s;';
-      el.innerHTML = '<span style="'+SUR+' padding-top:3px;">0'+(i+1)+'</span><span><span style="display:block; '+SG+' font-size:18px; font-weight:500;">'+r[0]+'</span><span style="display:block; font-size:15px; color:var(--mut); margin-top:3px;">'+r[1]+'</span></span>';
+      el.innerHTML = '<span style="'+SUR+' padding-top:3px;">0'+(i+1)+'</span><span><span style="display:block; '+SG+' font-size:var(--qf-fs-18); font-weight:500;">'+r[0]+'</span><span style="display:block; font-size:15px; color:var(--mut); margin-top:3px;">'+r[1]+'</span></span>';
       el.style.cursor = 'pointer';
       const go = () => {
         this.rungIdx = i;
@@ -2054,7 +2054,7 @@ export class SiteEngine {
   buildHelp() {
     const w = this.q('[data-help]');
     if (!w) return;
-    w.innerHTML = '<div style="'+SUR+'">U1 · Help centre</div><div style="'+SG+' font-size:20px; font-weight:500; margin-top:10px;">Answers, then a human.</div>' +
+    w.innerHTML = '<div style="'+SUR+'">U1 · Help centre</div><div style="'+SG+' font-size:var(--qf-fs-20); font-weight:500; margin-top:10px;">Answers, then a human.</div>' +
       '<div data-faq="1" style="margin-top:14px; display:flex; flex-direction:column; gap:2px;"></div>' +
       '<div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;"><a href="https://qafilaa.in/support" data-btn="1" style="display:flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:12px; font-size:14px; color:var(--ink);">Help centre</a><a href="mailto:admin@qafilaa.in" data-btn="1" style="display:flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--line); border-radius:12px; font-size:14px; color:var(--ink);">Contact us</a></div>' +
       '<p style="margin:12px 0 0; font-size:14px; color:var(--mut);">Every query gets a ticket and a timeline you can follow inside the app.</p>';
@@ -2108,7 +2108,7 @@ export class SiteEngine {
       '<div style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+'; margin-top:7px;">'+passLine+'</div>' +
       '<svg viewBox="0 0 460 140" style="width:100%; height:140px; margin-top:12px;" aria-hidden="true"><path d="M20 120 C 90 104 120 56 190 50 C 260 44 300 90 360 72 C 400 60 420 36 442 24" fill="none" stroke="#0E7C86" stroke-width="3" stroke-linecap="round"></path><circle cx="20" cy="120" r="6" fill="'+bg+'" stroke="#0E7C86" stroke-width="2.5"></circle><circle cx="442" cy="24" r="6" fill="#0E7C86"></circle></svg>' +
       '<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px;">' +
-      stats.map(s => '<div><div style="'+SG+' font-size:21px; font-weight:600; color:'+fg+'; font-variant-numeric:tabular-nums;">'+s[0]+'</div><div style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">'+s[1]+'</div></div>').join('') + '</div></div>';
+      stats.map(s => '<div><div style="'+SG+' font-size:var(--qf-fs-21); font-weight:600; color:'+fg+'; font-variant-numeric:tabular-nums;">'+s[0]+'</div><div style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">'+s[1]+'</div></div>').join('') + '</div></div>';
   }
 
   /* ═════ SOS ═════ */

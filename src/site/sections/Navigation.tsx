@@ -13,7 +13,7 @@ export function Navigation() {
           </div>
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>Nothing ever goes blank.</h2>
-            <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '56ch', margin: '18px 0 0' }}>Connectivity degrades in steps, and so does navigation. Each rung still gets you to the next rally point.</p>
+            <p data-rv="1" style={{ fontSize: 'var(--qf-fs-18)', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '56ch', margin: '18px 0 0' }}>Connectivity degrades in steps, and so does navigation. Each rung still gets you to the next rally point.</p>
             <div data-ladder="1" style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '560px' }}></div>
           </div>
         </div>

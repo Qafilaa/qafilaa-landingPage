@@ -10,7 +10,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from h2jsx import convert  # noqa: E402
-from divergences import fluid_type  # noqa: E402
+from divergences import add_nav_tagline, fluid_type  # noqa: E402
 
 SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
@@ -229,7 +229,8 @@ index += '\n' + '\n'.join(
 write('sections/index.ts', index)
 
 # ── chrome ──────────────────────────────────────────────────────────────────
-chrome = convert(seg(331, 392)).strip()
+chrome = convert(add_nav_tagline(seg(331, 392))).strip()
+assert 'data-navtag' in chrome, 'the nav tagline did not land — its anchor moved'
 body = HEAD % '305-388'
 body += """
 export function Chrome() {

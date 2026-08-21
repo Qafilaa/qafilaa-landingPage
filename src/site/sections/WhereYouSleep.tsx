@@ -9,7 +9,7 @@ export function WhereYouSleep() {
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '56px', alignItems: 'center' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>Stays are scoped to nights, not days.</h2>
-            <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>A base you keep for three nights is one booking, not three. Rest days are marked. Who paid and what each rider owes carries straight through to the money.</p>
+            <p data-rv="1" style={{ fontSize: 'var(--qf-fs-18)', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>A base you keep for three nights is one booking, not three. Rest days are marked. Who paid and what each rider owes carries straight through to the money.</p>
             <div data-nights="1" style={{ display: 'flex', gap: '10px', marginTop: '30px', flexWrap: 'wrap' }}></div>
           </div>
           <div data-dock="1" data-screen="stays" data-scale="0.56" data-kind="tab" data-flowname="Book the nights" data-flow="stays,stayMulti,stayPaidBy,restDay"></div>

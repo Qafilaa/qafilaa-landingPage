@@ -9,7 +9,7 @@ export function Notes() {
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '56px', alignItems: 'center' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>Written on one phone. On five phones by the next stop.</h2>
-            <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>Notes carry a day tag, a pin, photos and a seen-by list, so you know who has actually read the change of plan. Written offline, delivered when a bar comes back.</p>
+            <p data-rv="1" style={{ fontSize: 'var(--qf-fs-18)', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>Notes carry a day tag, a pin, photos and a seen-by list, so you know who has actually read the change of plan. Written offline, delivered when a bar comes back.</p>
             <div data-notedemo="1" style={{ marginTop: '30px', maxWidth: '560px' }}></div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">

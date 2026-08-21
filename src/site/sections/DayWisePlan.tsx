@@ -19,7 +19,7 @@ export function DayWisePlan() {
                 <span style={{ position: 'absolute', inset: '-6px', borderRadius: '50%', background: 'var(--acc2)', opacity: '.2', animation: 'qf-ring 2.6s ease-out infinite' }}></span>
                 <span style={{ position: 'absolute', inset: '0', borderRadius: '50%', background: 'var(--acc2)' }}></span>
               </span>
-              <p style={{ margin: '0', fontSize: '17px', lineHeight: '1.6', color: 'var(--mut)' }}><b style={{ color: 'var(--ink)' }}>A rally point is the plan for when the plan fails.</b> Agreed before you leave. If comms drop, everyone rides to the next one and waits. No phone required.</p>
+              <p style={{ margin: '0', fontSize: 'var(--qf-fs-17)', lineHeight: '1.6', color: 'var(--mut)' }}><b style={{ color: 'var(--ink)' }}>A rally point is the plan for when the plan fails.</b> Agreed before you leave. If comms drop, everyone rides to the next one and waits. No phone required.</p>
             </div>
           </div>
           <div data-dock="1" data-screen="itinerary" data-scale="0.56" data-kind="push" data-flowname="Build the days" data-flow="itinerary,dayLegs,legDetail,rallySheet,restDay,dayComplete"></div>

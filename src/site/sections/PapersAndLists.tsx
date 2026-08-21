@@ -12,7 +12,7 @@ export function PapersAndLists() {
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
               <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Checklists</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', marginTop: '12px', flexWrap: 'wrap' }}>
-                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500' }}>Pre-departure</div>
+                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-21)', fontWeight: '500' }}>Pre-departure</div>
                 <div data-cltoggle="1" data-seg="1" style={{ display: 'flex', gap: '4px', padding: '4px', background: 'color-mix(in srgb, var(--ink) 7%, transparent)', borderRadius: '999px' }}></div>
               </div>
               <div data-checklist="1" style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '2px' }}></div>
@@ -25,13 +25,13 @@ export function PapersAndLists() {
             </div>
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
               <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Reminders</div>
-              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500', marginTop: '12px' }}>Time, or place.</div>
+              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-21)', fontWeight: '500', marginTop: '12px' }}>Time, or place.</div>
               <p style={{ margin: '10px 0 16px', fontSize: '15px', color: 'var(--mut)', lineHeight: '1.55' }}>Remind me to fill up when I am 10 km from Sarchu.</p>
               <div data-geofence="1" style={{ position: 'relative', height: '190px', borderRadius: '12px', border: '1px solid var(--line)', overflow: 'hidden' }}></div>
             </div>
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
               <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Permits &amp; documents</div>
-              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500', marginTop: '12px' }}>Per-rider, per-permit.</div>
+              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-21)', fontWeight: '500', marginTop: '12px' }}>Per-rider, per-permit.</div>
               <p style={{ margin: '10px 0 14px', fontSize: '15px', color: 'var(--mut)', lineHeight: '1.55' }}>Inner Line permits tracked for every rider, and shared documents any crew member can open at a checkpoint.</p>
               <div data-permitrows="1" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}></div>
             </div>

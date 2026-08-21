@@ -20,7 +20,11 @@ import { expect, test } from '@playwright/test';
 
 test.setTimeout(300_000);
 
-const WIDTHS = [320, 375, 430, 768];
+// Real iPhone widths, and a viewport height that matches what Safari
+// actually leaves after its own chrome (~620px, not the nominal 844).
+// Testing at 800 tall is what hid a hero that ran 2.5 screens deep.
+const WIDTHS = [320, 375, 393, 430, 768];
+const VH = 640;
 
 /** Inline links inside a paragraph are exempt from WCAG 2.5.8 target size. */
 const AUDIT = `() => {
@@ -106,7 +110,7 @@ for (const route of ['/', '/privacy-policy']) {
     test.skip(testInfo.project.name !== 'desktop', 'viewport-driven');
 
     for (const width of WIDTHS) {
-      await page.setViewportSize({ width, height: 800 });
+      await page.setViewportSize({ width, height: VH });
       const r = await audit(page, route);
 
       expect(r.overflowPx, `${route} @${width}: the page must never scroll sideways`).toBeLessThanOrEqual(0);

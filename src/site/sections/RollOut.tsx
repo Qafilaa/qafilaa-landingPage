@@ -19,7 +19,7 @@ export function RollOut() {
               <div data-static="rollPresence" data-scale="0.44" data-rollslot="2"></div>
             </div>
           </div>
-          <p data-rv="1" style={{ margin: '38px 0 0', maxWidth: '62ch', fontSize: '17px', lineHeight: '1.6', color: 'var(--mut)' }}>Roll out only works when you're actually at the start. If GPS can't confirm it, the ride leaves anyway. A bad fix should never hold up a convoy.</p>
+          <p data-rv="1" style={{ margin: '38px 0 0', maxWidth: '62ch', fontSize: 'var(--qf-fs-17)', lineHeight: '1.6', color: 'var(--mut)' }}>Roll out only works when you're actually at the start. If GPS can't confirm it, the ride leaves anyway. A bad fix should never hold up a convoy.</p>
         </div>
       </section>
   );

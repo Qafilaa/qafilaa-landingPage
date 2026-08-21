@@ -169,6 +169,8 @@ RESPONSIVE = """
    reach an inline style at all. */
 :root{
   --qf-fs-9:9px; --qf-fs-10:10px; --qf-fs-105:10.5px; --qf-fs-11:11px; --qf-fs-115:11.5px;
+  --qf-fs-17:17px; --qf-fs-18:18px; --qf-fs-19:19px; --qf-fs-20:20px;
+  --qf-fs-21:21px; --qf-fs-22:22px; --qf-fs-24:24px;
 }
 
 @media (max-width:899px){
@@ -176,12 +178,47 @@ RESPONSIVE = """
      and unreadable on a handset. Raised modestly: a bigger jump would put the
      tracked labels back over the edge, which is what this is fixing. */
   :root{
+    /* the floor goes up: micro-labels are unreadable at 10-11px on a handset */
     --qf-fs-9:12px; --qf-fs-10:12px; --qf-fs-105:12px; --qf-fs-11:12px; --qf-fs-115:12px;
+    /* and the ceiling comes down: the handoff scales its headlines for mobile
+       but never its body copy, so a phone got 19px paragraphs and the page read
+       zoomed in. 17px only loses a point -- it carries the legal prose. */
+    --qf-fs-17:16px; --qf-fs-18:16.5px; --qf-fs-19:17px; --qf-fs-20:18px;
+    --qf-fs-21:18.5px; --qf-fs-22:19px; --qf-fs-24:20px;
   }
 
-  /* The handoff pins this one back down to 10px below 760px, which is exactly
-     what this layer exists to undo. Later in the file, so it wins. */
-  [data-corner]{ font-size:12px !important; }
+  /* Headlines and the call to action came with the desktop scale too: a 37px
+     headline over 56px-tall buttons is most of a phone screen before a word of
+     copy. */
+  [data-h1]{ font-size:clamp(28px,7.4vw,34px) !important; }
+  section h2[data-lines]{ font-size:clamp(23px,5.9vw,28px) !important; }
+  /* Both selectors scoped: a bare [data-btn] also matches the burger in the
+     nav, and 20px of padding inside its 44px box squeezed the icon to a dot. */
+  #top [data-magnet],
+  #top [data-btn]{ padding:13px 20px !important; font-size:15px !important; }
+
+  /* The corner coordinate readout is absolutely positioned at top:96px right:56px
+     and lands straight on top of the waypoint label once the column narrows --
+     two lines of tracked uppercase printed over each other. It is decoration;
+     on a handset it costs a headline. */
+  [data-corner]{ display:none !important; }
+
+  /* The route line is 12.5px at .17em tracking, which breaks mid-unit on a
+     phone ("5,359 / M · 10 DAYS"). Tighten the tracking so it holds together. */
+  #top [data-plot]{ letter-spacing:.1em !important; text-wrap:balance; }
+
+  /* The inline phone is 393x852, so at full width on a 393px screen it is 765px
+     tall -- taller than the whole viewport (622px on an iPhone once Safari's
+     chrome is out). It began below the fold and took another screen and a half
+     to scroll past. Scaling it to fit would render its 11px UI text at 6px, so
+     crop instead: full scale, the top of the screen, with a fade that says
+     there is more. The caption underneath names what you are looking at. */
+  [data-dock]{
+    aspect-ratio:auto !important;
+    height:min(58svh, 470px) !important;
+    -webkit-mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 54px),transparent 100%);
+    mask-image:linear-gradient(180deg,#000 0,#000 calc(100% - 54px),transparent 100%);
+  }
 
   /* The inline phone and its caption stack.
      [data-strip] is a horizontal scroller from 1240px down, which is right
@@ -280,6 +317,12 @@ RESPONSIVE = """
   /* Weighted to match the 44px target rule above -- as a bare [data-legalback]
      this lost on specificity, not on order, and the pill came back at 320px. */
   [data-legalbar] a[data-legalback]{ display:none !important; }
+}
+
+/* The nav tagline sits beside the wordmark. Below 1080px the pill carries only
+   the mark, the menu and the call to action, so it steps out of the way. */
+@media (max-width:1080px){
+  [data-navtag]{ display:none !important; }
 }
 
 /* Gutters. The left inset carries the spine: 46px is right on a tablet and far

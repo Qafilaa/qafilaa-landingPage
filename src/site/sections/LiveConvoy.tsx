@@ -7,7 +7,7 @@ export function LiveConvoy() {
     <section id="ride" data-sec="Live convoy" data-tone="night" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
         <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 15 · The live convoy</div>
         <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(32px,4.2vw,56px)', lineHeight: '1.06', letterSpacing: '-.02em', margin: '0', maxWidth: '20ch' }}>Not "share my location." The whole group, on one screen, all the time.</h2>
-        <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '66ch', margin: '22px 0 0' }}>Positions ride their own lane so they arrive even when everything else is queued. A rider who joins late still sees where everyone is, not an empty map.</p>
+        <p data-rv="1" style={{ fontSize: 'var(--qf-fs-18)', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '66ch', margin: '22px 0 0' }}>Positions ride their own lane so they arrive even when everything else is queued. A rider who joins late still sees where everyone is, not an empty map.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '44px', alignItems: 'center', marginTop: '36px' }} data-cols="1">
           <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '20px', overflow: 'hidden' }}>
             <div data-convoymap="1" style={{ position: 'relative', height: '430px' }}></div>

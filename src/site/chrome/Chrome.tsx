@@ -37,7 +37,8 @@ export function Chrome() {
             </div>
             <a href="#top" data-tap="1" style={{ display: 'flex', alignItems: 'center', gap: '11px', textDecoration: 'none', color: 'var(--ink)', zIndex: '2', flex: 'none' }}>
               <span data-navmark="1" style={{ display: 'block', width: '60px', height: '36px', willChange: 'transform' }}><img src="brand/logo-mark-sm.png" alt="" width="132" height="80" {...{ fetchpriority: 'high' }} decoding="async" style={{ display: 'block', width: '60px', height: '36px', objectFit: 'contain' }} /></span>
-              <span data-navword="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '600', letterSpacing: '-.01em' }}>Qafilaa</span>
+              <span data-navword="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-19)', fontWeight: '600', letterSpacing: '-.01em' }}>Qafilaa</span>
+              <span data-navtag="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', whiteSpace: 'nowrap', paddingLeft: '12px', marginLeft: '2px', borderLeft: '1px solid var(--line)' }}>Built by a rider, for riders</span>
             </a>
             <nav data-navlinks="1" style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '2px', fontSize: '14px', zIndex: '2' }}>
               <span data-navind="1" style={{ position: 'absolute', left: '0', top: '50%', height: '34px', marginTop: '-17px', width: '0', borderRadius: '999px', background: 'color-mix(in srgb, var(--acc2) 16%, transparent)', border: '1px solid color-mix(in srgb, var(--acc2) 34%, transparent)', opacity: '0', transform: 'translateX(0)', transition: 'transform .46s cubic-bezier(.34,1.3,.5,1), width .46s cubic-bezier(.34,1.3,.5,1), opacity .26s', pointerEvents: 'none' }}></span>
