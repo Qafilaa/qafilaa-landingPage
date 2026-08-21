@@ -5,13 +5,13 @@
 export function SecurityBody() {
   return (
     <article>
-            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/security</div>
+            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/security</div>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', color: '#0A6068', marginTop: '22px' }}>How we hold the things you trust us with</div>
             <h1 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(38px,5vw,58px)', lineHeight: '1.04', letterSpacing: '-.025em', margin: '10px 0 0' }}>Security</h1><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63', marginTop: '18px' }}>Last updated: 20/08/2026</div>
             <p style={{ margin: '20px 0 0', maxWidth: '64ch', fontSize: '19px', lineHeight: '1.6', color: '#4A4842', textWrap: 'pretty' }}>Qafilaa holds a live map of where people are and, if they filled it in, their blood group. We take that seriously. No system is perfectly secure, so here is what we actually do rather than a claim that nothing can go wrong.</p>
 
             <div style={{ marginTop: '38px', maxWidth: '70ch', padding: '24px 28px', borderLeft: '2px solid #0E7C86', background: '#FFFFFF' }}>
-              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>In plain English</div>
+              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>In plain English</div>
               <ul style={{ margin: '14px 0 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '16.5px', lineHeight: '1.6', color: '#4A4842' }}>
                 <li>Everything travels encrypted, and documents are stored encrypted at rest.</li>
                 <li>Accelerometer samples never leave your phone. Only the resulting alert does.</li>

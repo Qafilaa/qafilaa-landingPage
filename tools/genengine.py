@@ -10,6 +10,10 @@ REPO = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 TOOLS = _os.path.join(REPO, 'tools')
 import os
 import re
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from divergences import audit_font_sizes, fluid_type  # noqa: E402
 
 SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
@@ -17,7 +21,7 @@ LINES = open(SRC, encoding='utf-8').read().split('\n')
 
 
 def seg(a, b):
-    return '\n'.join(LINES[a - 1:b])
+    return fluid_type('\n'.join(LINES[a - 1:b]))
 
 
 def write(path, body):
@@ -131,6 +135,23 @@ write('data.ts',
 
 # ── engine.ts ───────────────────────────────────────────────────────────────
 eng = seg(1522, 3840)
+
+# A micro size the map does not cover would silently stay unreadable on a
+# handset, so fail the build instead of shipping it.
+_missed = audit_font_sizes(eng) + audit_font_sizes(tokens)
+assert not _missed, ('font sizes with no custom property, so no media query can lift them on '
+                     'mobile — add them to FONT_VARS in divergences.py: ' + ', '.join(_missed))
+
+# `wide()` builds the pannable box for over-wide graphics with no identifying
+# attribute, so the responsive layer has nothing to hang the edge fade on. One
+# hook turns "cut off" into "obviously swipeable".
+eng = sub1(eng,
+           "    box.style.cssText = 'position:relative; overscroll-behavior-x:contain; "
+           "-webkit-overflow-scrolling:touch;';",
+           "    box.style.cssText = 'position:relative; overscroll-behavior-x:contain; "
+           "-webkit-overflow-scrolling:touch;';\n"
+           "    box.setAttribute('data-widebox', '1');   // hook for the responsive layer",
+           'widebox hook')
 
 eng = sub1(eng, 'class Component extends DCLogic {', 'export class SiteEngine {\n'
            '  /* A 1:1 port of a hand-written DOM runtime: it assigns ~120 fields on\n'

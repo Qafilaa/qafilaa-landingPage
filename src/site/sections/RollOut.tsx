@@ -7,7 +7,7 @@ export function RollOut() {
     <section id="rollout" data-sec="Roll out" data-tone="deep" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 116px 132px', overflow: 'hidden' }}>
         <div data-rollwave="1" style={{ position: 'absolute', inset: '0', background: 'linear-gradient(90deg, rgba(14,124,134,0) 0%, rgba(14,124,134,.16) 50%, rgba(14,124,134,0) 100%)', transformOrigin: 'left center', transform: 'scaleX(0)', opacity: '0', pointerEvents: 'none' }}></div>
         <div style={{ position: 'relative' }}>
-          <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 14 · Roll out</div>
+          <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 14 · Roll out</div>
           <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(32px,4.2vw,56px)', lineHeight: '1.06', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>One person calls it. Everyone's phone knows.</h2>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '28px', marginTop: '36px' }} data-strip="1">
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

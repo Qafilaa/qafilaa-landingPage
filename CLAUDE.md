@@ -76,7 +76,7 @@ phone HUD — a caption panel beside the flying device — plus a `CAPS` table a
 The screen library, `tokens.ts`, `data.ts`, all six legal documents and the entire `<head>` are **byte-identical
 to handoff 13** — this handoff is CSS, engine and a few markup attributes.
 
-**Eight live departures from the handoff**, each required by a rule below. Three more (#7, #10, #11) are struck through: the designer adopted them upstream. **Numbering is stable across handoffs** — a retired entry keeps its number rather than closing the gap, so older commit messages still resolve.
+**Nine live departures from the handoff**, each required by a rule below. Three more (#7, #10, #11) are struck through: the designer adopted them upstream. **Numbering is stable across handoffs** — a retired entry keeps its number rather than closing the gap, so older commit messages still resolve.
 1. **Partly retired.** ~~The waitlist submits through `src/api.ts`~~ — handoff 14 removed the form entirely (§6), so the honeypot injection and the `joinWaitlist()` path are dormant rather than gone: both are kept and made conditional, because a signup form is the kind of thing that comes back and it must not come back naked. Still live: the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
@@ -90,6 +90,8 @@ to handoff 13** — this handoff is CSS, engine and a few markup attributes.
 10. ~~The flying phone carries no HUD.~~ **No longer a divergence** — handoff 14 deletes the `[data-phonehud]` block and the whole of `buildHud()`'s panel wiring upstream, which is exactly what the patch did. `tools/divergences.py` was deleted with it. Note the designer **kept** the narrow-width caption strip (`[data-icap]`) that our patch had also removed, so it is back — that is the handoff's call, and the smoke test now asserts it exists below `NARROW`.
 11. ~~The flying phone is sized like the static phone beside it.~~ **No longer a divergence** — handoff 14 rewrites `fitDocks()` to keep each dock at its declared scale ("*it only gives ground when the frame cannot fit at all*"). The upstream version goes further than the patch did: it caps by **width** as well as height, so the phone can never crowd the copy out of its column.
 
+12. **A responsive layer of our own.** The handoff carries a mobile pass, but it stops once the phone rig goes inline. Measured across 320-899px it left 56 labels under 12px, 14 touch targets under 40px, the inline caption strip laid out **off-screen to the right**, and the policy header hanging 66px past the edge below 480. `gencss.py` emits a RESPONSIVE block after the appendix, and `divergences.py` rewrites the handoff's hard-coded 9-11.5px **inline** font sizes to custom properties -- the only way a media query can reach an inline style. The same rewrite is applied to `verify.py`'s reference, so fidelity stays a true 8/8. Guarded by `tests/responsive.spec.ts`; see §4.
+
 Everything else must match the handoff exactly. `tools/verify.py` (see §9) folds these in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
 ## 4. Styling — a runtime tone system, not static tokens
@@ -99,6 +101,8 @@ Everything else must match the handoff exactly. `tools/verify.py` (see §9) fold
 - Section markup is **inline-style objects transcribed literally from the handoff**, hex values included. Do not "tokenise" them — they are already the design's own values, and drift from the handoff is the only thing that can break fidelity.
 - `src/index.css` holds the `:root` seed values, the reset, all `@keyframes`, the `[data-*]` behaviour rules and the media queries. Breakpoints: **1500 / 1240 / 1080 / 900 / 899 / 760 / 480 / 370** (899 is new in handoff 14: the two-track composition stacks just under the rig's own `NARROW`), plus `max-height: 760 / 620` for the readout instrument. Below **900** the engine also switches to its `narrow` path in JS — the phone rig goes inline and wide graphics scroll. That number is `NARROW` in `src/site/tokens.ts`; the CSS and the JS must agree.
 - Fonts are **Hanken Grotesk** (body) + **Space Grotesk** (display), from Google Fonts.
+- **Mobile is ours, not the handoff's** (divergence #12). `src/index.css` ends with a RESPONSIVE block emitted by `gencss.py`. Two things to know before touching it: (a) the handoff sets its micro-labels in **inline styles**, which no media query can reach, so `divergences.py` rewrites 9-11.5px to `var(--qf-fs-*)` and the block raises the floor to 12px below 900; (b) over-wide graphics stay **pannable on purpose** -- a 900x430 map cannot be shown whole on a 360px screen with legible labels -- so they get an edge-fade affordance rather than being scaled into illegibility.
+- **Watch specificity when overriding.** `[data-legalbar] a` is (0,1,1) and silently beat a later `[data-legalback] { display:none }` at (0,1,0), putting a hidden control back on screen at 320px. Match the weight, do not rely on source order.
 - `prefers-reduced-motion` is honoured in `index.css` and again in the engine (`this.calm` disables flight arcs and the auto-demo).
 
 ## 5. The engine
@@ -262,6 +266,7 @@ vanishes; that has already happened twice. Fold it into the generator and add it
   and that an unknown path returns a real 404. It runs against `tools/serve-dist.mjs`, which mirrors S3 +
   CloudFront rather than `vite preview` — preview answers every unknown path with index.html and would hide
   exactly those failures.
+- **`tests/responsive.spec.ts`** walks 320 / 375 / 430 / 768 on the landing page and a policy page and fails on: any sideways document scroll, any text under 12px, any non-prose touch target under 40px, and any element with text sitting past the edge without a scroller to reach it. It knows the three traps that make naive measurement lie -- the `[data-line]` reveal transform, deliberately pannable graphics, and the `inert` app-screen renders. Desktop project only; every case sets its own viewport.
 - Both were also run at **375 / 320 / 768 px** against the handoff served side by side: all 22 section offsets
   match and no page scrolls horizontally at any width down to 320.
 

@@ -5,12 +5,12 @@
 export function PapersAndLists() {
   return (
     <section id="papers" data-sec="Papers &amp; lists" data-tone="paper" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 10 · Papers, permits and lists</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 10 · Papers, permits and lists</div>
         <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0 0 34px', maxWidth: '20ch' }}>The dull things that end rides when they are missing.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '48px', alignItems: 'start' }} data-cols="1">
           <div data-autogrid="1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '20px', alignItems: 'start' }}>
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Checklists</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Checklists</div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '14px', marginTop: '12px', flexWrap: 'wrap' }}>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500' }}>Pre-departure</div>
                 <div data-cltoggle="1" data-seg="1" style={{ display: 'flex', gap: '4px', padding: '4px', background: 'color-mix(in srgb, var(--ink) 7%, transparent)', borderRadius: '999px' }}></div>
@@ -24,13 +24,13 @@ export function PapersAndLists() {
               <p style={{ margin: '14px 0 0', fontSize: '14px', color: 'var(--mut)' }}>Your personal list stays private.</p>
             </div>
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Reminders</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Reminders</div>
               <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500', marginTop: '12px' }}>Time, or place.</div>
               <p style={{ margin: '10px 0 16px', fontSize: '15px', color: 'var(--mut)', lineHeight: '1.55' }}>Remind me to fill up when I am 10 km from Sarchu.</p>
               <div data-geofence="1" style={{ position: 'relative', height: '190px', borderRadius: '12px', border: '1px solid var(--line)', overflow: 'hidden' }}></div>
             </div>
             <div style={{ background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Permits &amp; documents</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Permits &amp; documents</div>
               <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '21px', fontWeight: '500', marginTop: '12px' }}>Per-rider, per-permit.</div>
               <p style={{ margin: '10px 0 14px', fontSize: '15px', color: 'var(--mut)', lineHeight: '1.55' }}>Inner Line permits tracked for every rider, and shared documents any crew member can open at a checkpoint.</p>
               <div data-permitrows="1" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}></div>

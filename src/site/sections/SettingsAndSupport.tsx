@@ -5,14 +5,14 @@
 export function SettingsAndSupport() {
   return (
     <section id="settings" data-sec="Settings &amp; support" data-tone="light" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 19 · Settings, privacy and help</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 19 · Settings, privacy and help</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '52px', alignItems: 'start' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '18ch' }}>You can turn the safety net off. We would rather you didn't.</h2>
             <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>Every safety default is on, and every one of them is yours to change. Location sharing is scoped to the trip and ends when the trip does. Your data can be exported or deleted from inside the app, without emailing anyone.</p>
             <div data-toggles="1" style={{ marginTop: '28px', maxWidth: '620px', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', overflow: 'hidden' }}></div>
             <div style={{ marginTop: '20px', maxWidth: '620px', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>U1 · Help centre</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>U1 · Help centre</div>
               <h3 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '20px', fontWeight: '500', margin: '10px 0 0' }}>Answers, then a human.</h3>
               <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <details className="qf-rcpt" style={{ borderBottom: '1px solid var(--line)', padding: '11px 0' }}><summary style={{ cursor: 'pointer', fontSize: '15px', fontWeight: '500', minHeight: '24px' }}>Is there an app to track a group of bikers on a ride?</summary><p style={{ margin: '8px 0 0', fontSize: '14px', lineHeight: '1.55', color: 'var(--mut)' }}>Yes. Qafilaa shows every rider in the group on one live map for the whole trip, not just a one-off location share. You can see who is rolling, who is stopped and who is resting, how far the convoy is stretched from lead to sweep, and each rider's last known position and how fresh it is.</p></details>

@@ -302,7 +302,7 @@ export class SiteEngine {
       a.style.cssText = 'display:flex; align-items:center; gap:9px; justify-content:flex-end; padding:3px 0; text-decoration:none;';
       const l = document.createElement('span');
       l.textContent = sec.getAttribute('data-sec');
-      l.style.cssText = SUR + ' font-size:10px; opacity:0; transition:opacity .2s; white-space:nowrap;';
+      l.style.cssText = SUR + ' font-size:var(--qf-fs-10); opacity:0; transition:opacity .2s; white-space:nowrap;';
       const b = document.createElement('span');
       b.style.cssText = 'width:16px; height:2px; border-radius:2px; background:var(--line); transition:width .22s, background .22s;';
       a.appendChild(l); a.appendChild(b);
@@ -319,7 +319,7 @@ export class SiteEngine {
       const a = document.createElement('a');
       a.href = '#' + sec.id;
       a.style.cssText = 'display:flex; gap:12px; align-items:baseline; padding:13px 12px; border-radius:10px; text-decoration:none; color:var(--ink); font-size:16px; min-height:44px; box-sizing:border-box;';
-      a.innerHTML = '<span style="' + SUR + ' font-size:10px; min-width:22px;">' + String(i).padStart(2,'0') + '</span><span>' + sec.getAttribute('data-sec') + '</span>';
+      a.innerHTML = '<span style="' + SUR + ' font-size:var(--qf-fs-10); min-width:22px;">' + String(i).padStart(2,'0') + '</span><span>' + sec.getAttribute('data-sec') + '</span>';
       a.addEventListener('click', () => this.drawer(false));
       p.appendChild(a);
     });
@@ -597,6 +597,7 @@ export class SiteEngine {
     if (!els.length || !els[0].parentElement) return;
     const box = document.createElement('div');
     box.style.cssText = 'position:relative; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;';
+    box.setAttribute('data-widebox', '1');   // hook for the responsive layer
     els[0].parentElement.insertBefore(box, els[0]);
     const g = { box, els, w, h, h0: els.map((e: any) => e.style.height || '') };
     els.forEach((e: any) => box.appendChild(e));
@@ -1463,7 +1464,7 @@ export class SiteEngine {
     const av: any[] = CREW.map((c,i) => {
       const a = document.createElement('div');
       a.style.cssText = 'position:relative; width:52px; height:52px; border-radius:50%; background:'+c.c+'; color:#F7F5F0; display:flex; align-items:center; justify-content:center; '+SG+' font-weight:600; font-size:16px; border:3px solid var(--bg); margin-left:'+(i?'-16px':'0')+'; transition:margin .3s cubic-bezier(.34,1.56,.64,1);';
-      a.innerHTML = c.id + '<span style="position:absolute; top:-24px; left:50%; transform:translateX(-50%); '+SUR+' font-size:10px; opacity:0; transition:opacity .2s; white-space:nowrap;">'+c.role+'</span>';
+      a.innerHTML = c.id + '<span style="position:absolute; top:-24px; left:50%; transform:translateX(-50%); '+SUR+' font-size:var(--qf-fs-10); opacity:0; transition:opacity .2s; white-space:nowrap;">'+c.role+'</span>';
       w.appendChild(a); return a;
     });
     w.addEventListener('mouseenter', () => av.forEach((a: any, i: any) => { a.style.marginLeft = i?'10px':'0'; a.firstElementChild.style.opacity = '1'; }));
@@ -1512,7 +1513,7 @@ export class SiteEngine {
       '<circle cx="'+mx[0]+'" cy="'+mx[1]+'" r="5" fill="none" stroke="var(--acc2)" stroke-width="2"></circle>' +
       '<circle data-elevday="1" r="5" fill="var(--acc2)" cx="'+pts[0][0]+'" cy="'+pts[0][1]+'" style="transition:cx .4s cubic-bezier(.22,.9,.3,1), cy .4s cubic-bezier(.22,.9,.3,1);"></circle></svg>' +
       '<div style="position:absolute; left:'+(mx[0]/760*100)+'%; top:6px; transform:translateX(-50%); '+SUR+' white-space:nowrap; color:var(--acc);">Trip max ' + inr(MAXD.alt) + ' m · ' + MAXD.pass + '</div>' +
-      '<div style="position:absolute; left:'+(dip[0]/760*100)+'%; bottom:7px; transform:translateX(-50%); width:200px; text-align:center; '+SG+' font-size:11.5px; line-height:1.35; color:var(--warn);">Rest day. Altitude is not something you power through.</div>' +
+      '<div style="position:absolute; left:'+(dip[0]/760*100)+'%; bottom:7px; transform:translateX(-50%); width:200px; text-align:center; '+SG+' font-size:var(--qf-fs-115); line-height:1.35; color:var(--warn);">Rest day. Altitude is not something you power through.</div>' +
       '<div data-elevlabel="1" style="position:absolute; right:14px; top:6px; '+SUR+'">Day 1 · 3,200 m</div>';
     this.elevPts = pts;
     const ln = this.q('[data-elevline]');
@@ -1640,7 +1641,7 @@ export class SiteEngine {
     ['Whole group','Just me'].forEach((t,i) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.style.cssText = 'min-height:36px; padding:8px 13px; border:none; border-radius:999px; cursor:pointer; '+SUR+' font-size:10px;';
+      b.style.cssText = 'min-height:36px; padding:8px 13px; border:none; border-radius:999px; cursor:pointer; '+SUR+' font-size:var(--qf-fs-10);';
       b.textContent = t;
       b.addEventListener('click', () => { this.clMode = i; this.renderCl(); });
       tog.appendChild(b);
@@ -1712,7 +1713,7 @@ export class SiteEngine {
     this.addTrig(w, -80, () => {
       CREW.slice(1).forEach((c,i) => setTimeout(() => {
         const a = document.createElement('span');
-        a.style.cssText = 'width:26px; height:26px; border-radius:50%; background:'+c.c+'; color:#F7F5F0; display:flex; align-items:center; justify-content:center; '+SG+' font-size:10px; font-weight:600; border:2px solid var(--card); margin-left:'+(i?'-8px':'0')+'; opacity:0; transform:scale(.4); transition:opacity .3s, transform .4s cubic-bezier(.34,1.56,.64,1);';
+        a.style.cssText = 'width:26px; height:26px; border-radius:50%; background:'+c.c+'; color:#F7F5F0; display:flex; align-items:center; justify-content:center; '+SG+' font-size:var(--qf-fs-10); font-weight:600; border:2px solid var(--card); margin-left:'+(i?'-8px':'0')+'; opacity:0; transform:scale(.4); transition:opacity .3s, transform .4s cubic-bezier(.34,1.56,.64,1);';
         a.textContent = c.id;
         holder.appendChild(a);
         requestAnimationFrame(() => { a.style.opacity = '1'; a.style.transform = 'none'; });
@@ -1775,8 +1776,8 @@ export class SiteEngine {
       this.readyRows[i].innerHTML =
         '<span style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;"><span style="width:8px; height:8px; border-radius:'+(ok?'50%':'2px')+'; background:'+(ok?'var(--acc2)':'var(--warn)')+';"></span>' +
         '<span style="font-size:15px; font-weight:'+(ok?'400':'600')+';">'+c.name+'</span>' +
-        '<span data-rolechip="'+i+'" style="'+SUR+' font-size:10px; border:1px solid var(--line); border-radius:999px; padding:3px 8px;">'+c.role+'</span></span>' +
-        st.map((v: any) => '<span style="font-size:14px; display:flex; align-items:center; gap:5px; color:'+(v?'var(--acc)':'var(--warn)')+';">'+(v?'✓':'✕')+'<span style="'+SUR+' font-size:9px; color:inherit;">'+(v?'Done':'Open')+'</span></span>').join('');
+        '<span data-rolechip="'+i+'" style="'+SUR+' font-size:var(--qf-fs-10); border:1px solid var(--line); border-radius:999px; padding:3px 8px;">'+c.role+'</span></span>' +
+        st.map((v: any) => '<span style="font-size:14px; display:flex; align-items:center; gap:5px; color:'+(v?'var(--acc)':'var(--warn)')+';">'+(v?'✓':'✕')+'<span style="'+SUR+' font-size:var(--qf-fs-9); color:inherit;">'+(v?'Done':'Open')+'</span></span>').join('');
     });
   }
 
@@ -1811,7 +1812,7 @@ export class SiteEngine {
       b.type = 'button'; b.setAttribute('data-tap','1');
       const has = c.role === this.roleSel;
       b.style.cssText = 'display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:44px; padding:10px 13px; border:1px solid '+(has?'var(--acc2)':'var(--line)')+'; border-radius:10px; background:'+(has?'color-mix(in srgb, var(--acc2) 10%, transparent)':'transparent')+'; cursor:pointer; text-align:left;';
-      b.innerHTML = '<span style="display:flex; align-items:center; gap:9px;"><span style="width:26px; height:26px; border-radius:50%; background:'+c.c+'; color:#F7F5F0; display:flex; align-items:center; justify-content:center; '+SG+' font-size:10px; font-weight:600;">'+c.id+'</span><span style="font-size:15px;">'+c.name+'</span></span><span style="'+SUR+' color:'+(has?'var(--acc)':'var(--sur)')+';">'+c.role+'</span>';
+      b.innerHTML = '<span style="display:flex; align-items:center; gap:9px;"><span style="width:26px; height:26px; border-radius:50%; background:'+c.c+'; color:#F7F5F0; display:flex; align-items:center; justify-content:center; '+SG+' font-size:var(--qf-fs-10); font-weight:600;">'+c.id+'</span><span style="font-size:15px;">'+c.name+'</span></span><span style="'+SUR+' color:'+(has?'var(--acc)':'var(--sur)')+';">'+c.role+'</span>';
       b.addEventListener('click', () => {
         CREW.forEach(o => { if (o.role === this.roleSel) o.role = 'Rider'; });
         c.role = this.roleSel;
@@ -1874,7 +1875,7 @@ export class SiteEngine {
       g.appendChild(n); return n;
     });
     this.q('[data-cinfo]').innerHTML = ['Lead · '+roleOf('Lead').name,'Sweep · '+roleOf('Sweep').name,'Convoy stretch 4.8 km']
-      .map(t => '<span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 11px; width:max-content;">'+t+'</span>').join('');
+      .map(t => '<span style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:var(--sur); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:6px 11px; width:max-content;">'+t+'</span>').join('');
     const sc = this.q('[data-scrub]');
     sc.addEventListener('input', () => { this.scrubUser = true; this.renderConvoy(parseInt(sc.value,10)/100); });
     this.convT = 1; this.convPhase = 0;
@@ -1941,7 +1942,7 @@ export class SiteEngine {
       c.style.cssText = 'border:1px solid var(--line); border-radius:14px; padding:17px; background:var(--card); display:flex; flex-direction:column; gap:9px;';
       const ago = m.age < 60 ? Math.round(m.age)+' s ago' : Math.round(m.age/60)+' min ago';
       c.innerHTML = '<span style="display:flex; align-items:center; gap:9px;"><span style="width:8px; height:8px; border-radius:'+(m.state==='Rolling'?'50%':'2px')+'; background:'+col+';"></span><span style="'+SG+' font-size:18px; font-weight:500;">'+m.c.name+'</span></span>' +
-        '<span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:'+col+';">'+m.state+'</span>' +
+        '<span style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+col+';">'+m.state+'</span>' +
         '<span style="font-size:13px; color:'+(stale?'#B26B00':'var(--mut)')+';">Last position '+ago+'</span>';
       board.appendChild(c);
     });
@@ -2075,7 +2076,7 @@ export class SiteEngine {
     ['Day card','Trip recap'].forEach((t,i) => {
       const b = document.createElement('button');
       b.type = 'button';
-      b.style.cssText = 'min-height:38px; padding:9px 16px; border:none; border-radius:999px; cursor:pointer; '+SUR+' font-size:10px;';
+      b.style.cssText = 'min-height:38px; padding:9px 16px; border:none; border-radius:999px; cursor:pointer; '+SUR+' font-size:var(--qf-fs-10);';
       b.textContent = t;
       b.addEventListener('click', () => { this.cardMode = i; this.renderCard(); });
       tabs.appendChild(b);
@@ -2102,12 +2103,12 @@ export class SiteEngine {
       : [[String(D.km),'km'],['6h 14m','moving'],[inr(D.alt),'m max'],[String(CREW.length),'riders']];
     const passLine = trip ? PASSES.join('  ·  ') : D.pass + '  ·  ' + inr(D.alt) + ' m';
     this.q('[data-sharecard]').innerHTML = '<div style="background:'+bg+'; border:1px solid '+(dark?'#23241F':'var(--line)')+'; border-radius:20px; padding:24px;">' +
-      '<div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">'+(trip?'Trip recap':'Day '+D.n+' · '+D.date+' 2026')+'</span><span style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">Qafilaa</span></div>' +
+      '<div style="display:flex; justify-content:space-between; align-items:baseline;"><span style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">'+(trip?'Trip recap':'Day '+D.n+' · '+D.date+' 2026')+'</span><span style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">Qafilaa</span></div>' +
       '<div style="'+SG+' font-size:27px; font-weight:600; color:'+fg+'; margin-top:9px; letter-spacing:-.01em;">'+(trip?TRIP.route:D.from+' → '+D.to)+'</div>' +
-      '<div style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:'+mu+'; margin-top:7px;">'+passLine+'</div>' +
+      '<div style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+'; margin-top:7px;">'+passLine+'</div>' +
       '<svg viewBox="0 0 460 140" style="width:100%; height:140px; margin-top:12px;" aria-hidden="true"><path d="M20 120 C 90 104 120 56 190 50 C 260 44 300 90 360 72 C 400 60 420 36 442 24" fill="none" stroke="#0E7C86" stroke-width="3" stroke-linecap="round"></path><circle cx="20" cy="120" r="6" fill="'+bg+'" stroke="#0E7C86" stroke-width="2.5"></circle><circle cx="442" cy="24" r="6" fill="#0E7C86"></circle></svg>' +
       '<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px;">' +
-      stats.map(s => '<div><div style="'+SG+' font-size:21px; font-weight:600; color:'+fg+'; font-variant-numeric:tabular-nums;">'+s[0]+'</div><div style="'+SG+' font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">'+s[1]+'</div></div>').join('') + '</div></div>';
+      stats.map(s => '<div><div style="'+SG+' font-size:21px; font-weight:600; color:'+fg+'; font-variant-numeric:tabular-nums;">'+s[0]+'</div><div style="'+SG+' font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:'+mu+';">'+s[1]+'</div></div>').join('') + '</div></div>';
   }
 
   /* ═════ SOS ═════ */

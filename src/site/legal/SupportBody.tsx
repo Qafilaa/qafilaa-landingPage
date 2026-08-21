@@ -5,24 +5,24 @@
 export function SupportBody() {
   return (
     <article>
-            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/support</div>
+            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/support</div>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', color: '#0A6068', marginTop: '22px' }}>Answers, then a human</div>
             <h1 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(38px,5vw,58px)', lineHeight: '1.04', letterSpacing: '-.025em', margin: '10px 0 0' }}>Help centre</h1><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63', marginTop: '18px' }}>Last updated: 20/08/2026</div>
             <p style={{ margin: '20px 0 0', maxWidth: '64ch', fontSize: '19px', lineHeight: '1.6', color: '#4A4842', textWrap: 'pretty' }}>Every query gets a ticket and a timeline you can follow inside the app. Twelve answers are stored on your phone so they work in a dead zone, which is usually where you need them.</p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '18px', marginTop: '40px', maxWidth: '1000px' }}>
               <div style={{ background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '16px', padding: '24px' }}>
-                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Email</div>
+                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Email</div>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', marginTop: '9px' }}><a href="mailto:admin@qafilaa.in">admin@qafilaa.in</a></div>
                 <p style={{ margin: '9px 0 0', fontSize: '15.5px', lineHeight: '1.6', color: '#4A4842' }}>Anything at all. We answer within two working days.</p>
               </div>
               <div style={{ background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '16px', padding: '24px' }}>
-                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>WhatsApp</div>
+                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>WhatsApp</div>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', marginTop: '9px' }}><a href="https://wa.me/918830997757" target="_blank" rel="noopener">+91 88309 97757</a></div>
                 <p style={{ margin: '9px 0 0', fontSize: '15.5px', lineHeight: '1.6', color: '#4A4842' }}>Quickest for a question mid-trip.</p>
               </div>
               <div style={{ background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '16px', padding: '24px' }}>
-                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#B26B00' }}>In an emergency</div>
+                <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: '#B26B00' }}>In an emergency</div>
                 <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', marginTop: '9px' }}>Call 112, not us</div>
                 <p style={{ margin: '9px 0 0', fontSize: '15.5px', lineHeight: '1.6', color: '#4A4842' }}>Qafilaa alerts your crew. It does not contact emergency services.</p>
               </div>

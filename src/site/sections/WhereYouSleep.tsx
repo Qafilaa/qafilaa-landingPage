@@ -5,7 +5,7 @@
 export function WhereYouSleep() {
   return (
     <section id="stays" data-sec="Where you sleep" data-tone="paper" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 08 · Where you sleep</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 08 · Where you sleep</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '56px', alignItems: 'center' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>Stays are scoped to nights, not days.</h2>

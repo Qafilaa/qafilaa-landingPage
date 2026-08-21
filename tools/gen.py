@@ -10,6 +10,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from h2jsx import convert  # noqa: E402
+from divergences import fluid_type  # noqa: E402
 
 SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
@@ -38,7 +39,9 @@ LEGAL = [
 
 
 def seg(a, b):
-    return '\n'.join(LINES[a - 1:b])
+    # fluid_type rewrites the hard-coded micro font sizes to custom properties
+    # so a media query can raise the floor on small screens — see divergences.py
+    return fluid_type('\n'.join(LINES[a - 1:b]))
 
 
 def relink(html):
@@ -98,7 +101,8 @@ def add_honeypot(jsx):
 
 NL = chr(10)
 
-SUR_STYLE = ("{ fontFamily: \"'Space Grotesk',sans-serif\", fontSize: '11px', letterSpacing: '.14em', "
+SUR_STYLE = ("{ fontFamily: \"'Space Grotesk',sans-serif\", fontSize: 'var(--qf-fs-11)', "
+             "letterSpacing: '.14em', "
              "textTransform: 'uppercase', color: 'var(--sur)' }")
 
 # The handoff ships three footer columns. Every policy route has to be reachable

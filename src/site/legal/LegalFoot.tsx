@@ -5,7 +5,7 @@
 export function LegalFoot() {
   return (
     <div data-legalfoot="1" style={{ marginTop: '80px', paddingTop: '30px', borderTop: '1px solid #DCD6C9', display: 'flex', gap: '34px', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>Qafilaa.in · Kolhapur, Maharashtra</span>
+            <span style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>Qafilaa.in · Kolhapur, Maharashtra</span>
             <a href="mailto:admin@qafilaa.in" style={{ fontSize: '14px' }}>admin@qafilaa.in</a>
           </div>
   );

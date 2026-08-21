@@ -121,15 +121,19 @@ export function LegalShell({ path, children }: { path: string; children: ReactNo
             <a href="/#join" style={{ ...PILL, background: '#0E7C86', color: '#F7F5F0', border: '1px solid #0E7C86' }}>
               Get the app
             </a>
+            {/* The label is dropped below 560px and the whole control below 400px —
+                see the responsive layer. aria-label carries the meaning either way. */}
             <a
               href="/"
+              data-legalback="1"
+              aria-label="Back to the ride"
               style={{ ...PILL, background: 'transparent', color: '#23241F', border: '1px solid rgba(35,36,31,.22)' }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                 <path d="M19 12H6" />
                 <path d="m12 19-7-7 7-7" />
               </svg>
-              Back to the ride
+              <span>Back to the ride</span>
             </a>
           </div>
         </div>

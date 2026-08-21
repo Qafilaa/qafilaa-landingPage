@@ -5,13 +5,13 @@
 export function PrivacyPolicyBody() {
   return (
     <article>
-            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/privacy-policy</div>
+            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/privacy-policy</div>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', color: '#0A6068', marginTop: '22px' }}>Your data, handled with care</div>
             <h1 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(38px,5vw,58px)', lineHeight: '1.04', letterSpacing: '-.025em', margin: '10px 0 0' }}>Privacy Policy</h1>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63', marginTop: '18px' }}>Last updated: 31/07/2026</div>
 
             <div style={{ marginTop: '38px', maxWidth: '70ch', padding: '24px 28px', borderLeft: '2px solid #0E7C86', background: '#FFFFFF' }}>
-              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>In plain English</div>
+              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>In plain English</div>
               <ul style={{ margin: '14px 0 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '16.5px', lineHeight: '1.6', color: '#4A4842' }}>
                 <li>Your live location goes to the riders in your active ride, and only while that ride is active. There is no public map.</li>
                 <li>Raw location traces are deleted after <b style={{ color: '#23241F' }}>90 days</b>. You can shorten that to <b style={{ color: '#23241F' }}>7 days</b> in Settings.</li>
@@ -137,9 +137,9 @@ export function PrivacyPolicyBody() {
               <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '23px', lineHeight: '1.25', letterSpacing: '-.01em', margin: '56px 0 0' }}>12 · Grievance Officer</h2>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>In line with applicable Indian law, you can contact our Grievance Officer for any concern about your personal data:</p>
               <div style={{ marginTop: '16px', padding: '22px 24px', background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '14px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(210px,1fr))', gap: '18px' }}>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Name</div><div style={{ fontSize: '16.5px', color: '#23241F', marginTop: '5px' }}>Yash Turmbekar</div></div>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Email</div><div style={{ fontSize: '16.5px', marginTop: '5px' }}><a href="mailto:admin@qafilaa.in">admin@qafilaa.in</a></div></div>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Address</div><div style={{ fontSize: '16.5px', color: '#4A4842', marginTop: '5px', lineHeight: '1.5' }}>Yashree, Plot no. 41 &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur, Maharashtra 416011</div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Name</div><div style={{ fontSize: '16.5px', color: '#23241F', marginTop: '5px' }}>Yash Turmbekar</div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Email</div><div style={{ fontSize: '16.5px', marginTop: '5px' }}><a href="mailto:admin@qafilaa.in">admin@qafilaa.in</a></div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63' }}>Address</div><div style={{ fontSize: '16.5px', color: '#4A4842', marginTop: '5px', lineHeight: '1.5' }}>Yashree, Plot no. 41 &amp; 42, Shanti Udyan, Apate Nagar, Radhanagari Road, Kolhapur, Maharashtra 416011</div></div>
               </div>
               <p style={{ margin: '14px 0 0', fontSize: '17px', lineHeight: '1.72', color: '#4A4842', textWrap: 'pretty' }}>We will acknowledge and respond to grievances within the timelines required by law.</p>
 

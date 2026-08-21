@@ -233,7 +233,7 @@ details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-det
 
 [data-legalgroup] {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
+  font-size: var(--qf-fs-11);
   letter-spacing: .16em;
   text-transform: uppercase;
   color: #6E6B63;
@@ -294,7 +294,7 @@ details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-det
     cursor: pointer;
     list-style: none;
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 11px;
+    font-size: var(--qf-fs-11);
     letter-spacing: .16em;
     text-transform: uppercase;
     color: #6E6B63;
@@ -304,4 +304,149 @@ details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-det
   [data-legalpicker][open] > summary { border-bottom: 1px solid #DCD6C9; }
   [data-legalpicker] [data-legalindex] { padding: 8px 14px 14px; }
   [data-legalpicker] [data-legalgroup] { margin-top: 16px; }
+}
+
+
+/* ═══════════════ RESPONSIVE LAYER - ours, not the handoff's ════════════════
+ *
+ * The handoff ships a mobile pass, but it stops once the phone rig goes inline.
+ * Measured across 320-899px it left behind: 56 labels under 12px, 14 touch
+ * targets under 40px, the inline caption strip laid out off-screen to the
+ * right, and the policy header hanging 66px past the edge below 480px.
+ *
+ * Every rule here closes a measured defect and says which one. Desktop is
+ * untouched -- all of it sits inside a max-width query, except the :root
+ * defaults, which restate the handoff's own values to the pixel.
+ */
+
+/* Micro-type floor. divergences.py rewrites the handoff's hard-coded 9-11.5px
+   *inline* sizes to these properties, which is the only way a media query can
+   reach an inline style at all. */
+:root{
+  --qf-fs-9:9px; --qf-fs-10:10px; --qf-fs-105:10.5px; --qf-fs-11:11px; --qf-fs-115:11.5px;
+}
+
+@media (max-width:899px){
+  /* 11px uppercase at .14em tracking is a considered choice on a 27" display
+     and unreadable on a handset. Raised modestly: a bigger jump would put the
+     tracked labels back over the edge, which is what this is fixing. */
+  :root{
+    --qf-fs-9:12px; --qf-fs-10:12px; --qf-fs-105:12px; --qf-fs-11:12px; --qf-fs-115:12px;
+  }
+
+  /* The handoff pins this one back down to 10px below 760px, which is exactly
+     what this layer exists to undo. Later in the file, so it wins. */
+  [data-corner]{ font-size:12px !important; }
+
+  /* The inline phone and its caption stack.
+     [data-strip] is a horizontal scroller from 1240px down, which is right
+     while it carries a phone AND its companion screen. Below NARROW the engine
+     appends the caption as a sibling, so the scroller parked it off to the
+     right -- at 320px the caption's first character sat at x=331, past the
+     edge of the screen. Nobody has ever seen these captions on a phone. */
+  [data-strip]{
+    flex-direction:column !important;
+    align-items:center !important;
+    overflow-x:visible !important;
+    scroll-snap-type:none !important;
+    gap:0 !important;
+    padding-bottom:0 !important;
+  }
+  [data-strip] > *{ max-width:100% !important; }
+
+  /* Thumb-sized targets: 44px is the smallest comfortable one. Policy pages
+     were the worst offenders, with 18-22px index links. */
+  [data-social] a,
+  [data-stores] > *,
+  [data-legalnav] a,
+  [data-legalfoot] a,
+  [data-legalbar] a,
+  [data-legalbody] a[href^="mailto:"],
+  [data-legalbody] a[href^="tel:"],
+  #join footer a{
+    min-height:44px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+  }
+  /* the columns already space themselves once every row is 44px tall */
+  #join footer a{ padding-block:0 !important; }
+
+  /* the wordmark doubles as the route home, and was a 28px target */
+  [data-navpill] > a[data-tap]{ min-height:44px !important; }
+
+  /* the demo controls inside the panels, which the first pass did not reach */
+  [data-nudgebtn],
+  [data-seg] button,
+  [data-cltoggle] button,
+  [data-cardtabs] button,
+  #permissions button,
+  #papers button,
+  #settings button,
+  #recap button,
+  #discovery button{
+    min-height:44px !important;
+  }
+
+  /* Over-wide graphics stay pannable, and that is the right call: a 900x430
+     map cannot be shown whole on a 360px screen with legible labels. What was
+     missing is the affordance -- with a hard edge it reads as broken rather
+     than as "there is more this way". */
+  [data-widebox]{
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 40px),transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 40px),transparent 100%);
+    scroll-snap-type:x proximity;
+  }
+  [data-widebox] > *{ scroll-snap-align:start; }
+
+  /* The readiness board is a five-column grid, so its chips ran 39px past the
+     edge at 320px and no amount of wrapping helps -- a grid does not wrap. It
+     is a table, so let it behave like one: keep the shape, pan it, and use the
+     same fade affordance as the wide graphics. */
+  [data-readiness]{
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 32px),transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 32px),transparent 100%);
+  }
+  [data-readiness] > *{ min-width:430px !important; }
+
+  /* The geofence drawing is authored 350px wide -- wider than a 320px screen
+     minus its gutters. It carries a viewBox, so it scales cleanly. */
+  [data-geofence]{ width:100% !important; max-width:100% !important; }
+
+  /* The "Copied" stamp is scaled 2.4x and rotated, which threw it 30px past
+     the edge on the narrowest screens. */
+  [data-stamp]{
+    transform:translateY(-50%) scale(1.7) rotate(-13deg) !important;
+    right:14px !important;
+  }
+}
+
+/* The policy header put a logo and two pills on one row: 282px of content in a
+   295px box at 375px, so "Back to the ride" hung 66px off the screen. Drop the
+   label first, then the whole control -- "Get the app" is the one that earns
+   its place, and the logo already goes home. */
+@media (max-width:560px){
+  [data-legalbar] a[data-legalback] span{ display:none !important; }
+  [data-legalbar] a[data-legalback]{ padding:0 13px !important; }
+}
+@media (max-width:400px){
+  /* Weighted to match the 44px target rule above -- as a bare [data-legalback]
+     this lost on specificity, not on order, and the pill came back at 320px. */
+  [data-legalbar] a[data-legalback]{ display:none !important; }
+}
+
+/* Gutters. The left inset carries the spine: 46px is right on a tablet and far
+   too much of a 360px screen, where it costs an eighth of the usable width. */
+/* The "Copied" stamp is scaled and rotated, so it reached past the edge on
+   anything narrower than a small tablet. */
+@media (max-width:520px){
+  [data-stamp]{ transform:translateY(-50%) scale(1.35) rotate(-13deg) !important; right:10px !important; }
+}
+@media (max-width:430px){
+  [data-pad]{ padding-left:26px !important; padding-right:14px !important; }
+}
+@media (max-width:370px){
+  [data-pad]{ padding-left:18px !important; padding-right:12px !important; }
 }

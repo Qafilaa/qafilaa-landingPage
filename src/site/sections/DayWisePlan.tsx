@@ -5,7 +5,7 @@
 export function DayWisePlan() {
   return (
     <section id="itinerary" data-sec="Day-wise plan" data-tone="light" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 07 · Day-wise itinerary</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 07 · Day-wise itinerary</div>
         <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0 0 32px', maxWidth: '18ch' }}>Legs, stays, rally points. Ten days, drawn out.</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '48px', alignItems: 'start' }} data-cols="1">
           <div>

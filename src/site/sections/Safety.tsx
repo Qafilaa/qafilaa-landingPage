@@ -7,7 +7,7 @@ export function Safety() {
     <section id="safety" data-sec="Safety" data-tone="night" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '118px 56px 118px 132px', overflow: 'hidden' }}>
         <div data-soswrap="1" style={{ position: 'absolute', inset: '0', pointerEvents: 'none', overflow: 'hidden' }}></div>
         <div style={{ position: 'relative' }}>
-          <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '26px' }}>Waypoint 17 · The reason this exists</div>
+          <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '26px' }}>Waypoint 17 · The reason this exists</div>
           <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(32px,4.2vw,56px)', lineHeight: '1.08', letterSpacing: '-.02em', margin: '0', maxWidth: '22ch' }}>The nearest help is the rider behind you, not a call centre.</h2>
           <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.65', color: 'var(--mut)', maxWidth: '66ch', margin: '24px 0 0' }}>A crash alert goes to the riders closest to you first, with your position, your bearing and your blood group. If there is no signal, it queues and fires the moment any rider in the convoy gets a bar.</p>
           <div style={{ display: 'flex', gap: '26px', alignItems: 'center', justifyContent: 'center', marginTop: '40px' }} data-strip="1">
@@ -29,18 +29,18 @@ export function Safety() {
               <button data-sosreset="1" data-btn="1" data-tap="1" style={{ padding: '14px 24px', border: '1px solid var(--line)', borderRadius: '12px', background: 'transparent', color: 'var(--mut)', font: '600 15px \'Hanken Grotesk\'', cursor: 'pointer' }}>Reset</button>
             </div>
           </div>
-          <div data-sosstatus="1" aria-live="polite" style={{ textAlign: 'center', marginTop: '16px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', minHeight: '16px' }}>Armed · press to run</div>
+          <div data-sosstatus="1" aria-live="polite" style={{ textAlign: 'center', marginTop: '16px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', minHeight: '16px' }}>Armed · press to run</div>
           <div data-autogrid="1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '20px', marginTop: '44px', maxWidth: '1240px' }}>
             <div data-rv="1" style={{ border: '1px solid var(--line)', borderRadius: '16px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Manual SOS</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Manual SOS</div>
               <p style={{ margin: '12px 0 0', fontSize: '15px', lineHeight: '1.6', color: 'var(--mut)' }}>Tap, hold the overlay, or flip the phone. Three ways in, because gloves and adrenaline are real.</p>
             </div>
             <div data-rv="1" style={{ border: '1px solid var(--line)', borderRadius: '16px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Fail-safe default</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Fail-safe default</div>
               <p style={{ margin: '12px 0 0', fontSize: '15px', lineHeight: '1.6', color: 'var(--mut)' }}>Crash detection is on unless you turn it off. The default protects the rider who never opened settings.</p>
             </div>
             <div data-rv="1" style={{ border: '1px solid var(--line)', borderRadius: '16px', padding: '22px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Not every stop is an emergency</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Not every stop is an emergency</div>
               <p style={{ margin: '12px 0 0', fontSize: '15px', lineHeight: '1.6', color: 'var(--mut)' }}>A rider can post a resting notice and rejoin. A coordinator can take a rider off the ride without anyone raising an alarm.</p>
             </div>
           </div>

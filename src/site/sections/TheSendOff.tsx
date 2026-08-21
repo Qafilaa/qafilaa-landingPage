@@ -5,7 +5,7 @@
 export function TheSendOff() {
   return (
     <section id="sendoff" data-sec="The send-off" data-tone="deep" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '106px 56px 106px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '22px' }}>Waypoint 04 · Shown once, then never again</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '22px' }}>Waypoint 04 · Shown once, then never again</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '56px', alignItems: 'center' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.8vw,50px)', lineHeight: '1.08', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>Setup ends with a warning, not a welcome.</h2>

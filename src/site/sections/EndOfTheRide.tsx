@@ -5,7 +5,7 @@
 export function EndOfTheRide() {
   return (
     <section id="recap" data-sec="End of the ride" data-tone="paper" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 20 · End of the day, end of the ride</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 20 · End of the day, end of the ride</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) auto', gap: '52px', alignItems: 'start' }} data-cols="1">
           <div>
             <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(30px,3.6vw,48px)', lineHeight: '1.1', letterSpacing: '-.02em', margin: '0', maxWidth: '16ch' }}>The card writes itself.</h2>
@@ -17,12 +17,12 @@ export function EndOfTheRide() {
             </div>
             <div data-sharecard="1" style={{ marginTop: '18px', maxWidth: '520px' }}></div>
             <div style={{ marginTop: '32px' }}>
-              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '14px' }}>Lifetime</div>
+              <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '14px' }}>Lifetime</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))', gap: '18px', maxWidth: '700px' }}>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="18">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Trips</div></div>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="11420">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Km</div></div>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="5359">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>M max</div></div>
-                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="47">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Riding days</div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="18">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Trips</div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="11420">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Km</div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="5359">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>M max</div></div>
+                <div><div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '36px', fontWeight: '600', fontVariantNumeric: 'tabular-nums' }}><span data-count="47">0</span></div><div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)' }}>Riding days</div></div>
               </div>
             </div>
           </div>

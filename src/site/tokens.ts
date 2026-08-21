@@ -11,7 +11,7 @@ export interface Tone {
   navBg: string; navA: number; navLine: string; navLineA: number; dens: number;
 }
 
-export const SUR = "font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--sur);";
+export const SUR = "font-family:'Space Grotesk',sans-serif; font-size:var(--qf-fs-11); letter-spacing:.14em; text-transform:uppercase; color:var(--sur);";
 export const SG = "font-family:'Space Grotesk',sans-serif;";
 export const NARROW = 900;  /* under this the phone rig goes inline and wide graphics scroll */
 export const PW = 413;

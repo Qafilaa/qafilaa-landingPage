@@ -16,6 +16,8 @@ import subprocess
 import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, TOOLS)
+from divergences import fluid_type  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = _os.path.join(REPO, 'dist')
@@ -31,7 +33,7 @@ HONEYPOT = ('<input data-wlcompany="1" type="text" name="company" tabindex="-1" 
 
 
 def seg(a, b):
-    return '\n'.join(LINES[a - 1:b])
+    return fluid_type('\n'.join(LINES[a - 1:b]))
 
 
 def relink(html):
@@ -73,6 +75,7 @@ def diff(name, ref, cand):
 
 # ── home ────────────────────────────────────────────────────────────────────
 ref = '\n'.join(LINES[330:392]) + '\n' + '\n'.join(LINES[394:907]) + '\n' + LINES[1410]
+ref = fluid_type(ref)
 ref = relink(ref)
 # Handoff 14 replaced the email form with store badges, so there is no form to
 # fold the honeypot into. Kept conditional rather than deleted: the form is the

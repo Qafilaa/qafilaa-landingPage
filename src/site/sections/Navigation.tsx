@@ -5,7 +5,7 @@
 export function Navigation() {
   return (
     <section id="nav" data-sec="Navigation" data-tone="light" data-pad="1" style={{ position: 'relative', zIndex: '5', padding: '110px 56px 110px 132px' }}>
-        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 16 · Navigation that knows it is a group ride</div>
+        <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 16 · Navigation that knows it is a group ride</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto minmax(0,1fr)', gap: '56px', alignItems: 'center' }} data-cols="1">
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">
             <div data-dock="1" data-screen="rallyLive" data-scale="0.54" data-kind="tab" data-flowname="Navigate as a group" data-flow="rallyLive,offlineNav"></div>

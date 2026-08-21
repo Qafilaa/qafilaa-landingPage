@@ -5,13 +5,13 @@
 export function TermsBody() {
   return (
     <article>
-            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/terms-and-conditions</div>
+            <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#6E6B63' }}>qafilaa.in/terms-and-conditions</div>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '19px', fontWeight: '500', color: '#0A6068', marginTop: '22px' }}>The agreement between you and Qafilaa</div>
             <h1 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(38px,5vw,58px)', lineHeight: '1.04', letterSpacing: '-.025em', margin: '10px 0 0' }}>Terms of Service</h1>
             <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '12px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#6E6B63', marginTop: '18px' }}>Effective date: 20/07/2026</div>
 
             <div style={{ marginTop: '38px', maxWidth: '70ch', padding: '24px 28px', borderLeft: '2px solid #B26B00', background: '#FFFFFF' }}>
-              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '11px', letterSpacing: '.16em', textTransform: 'uppercase', color: '#B26B00' }}>In plain English</div>
+              <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#B26B00' }}>In plain English</div>
               <ul style={{ margin: '14px 0 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '16.5px', lineHeight: '1.6', color: '#4A4842' }}>
                 <li>Qafilaa is a coordination tool. It is <b style={{ color: '#23241F' }}>not</b> an emergency, rescue, medical or navigation service, and it does not contact emergency services.</li>
                 <li>SOS only reaches riders who have signal and a working device. Carry independent safety equipment and tell someone outside the ride your route.</li>

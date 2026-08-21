@@ -23,7 +23,7 @@ export function Chrome() {
 
         <div data-rail="1" style={{ position: 'fixed', right: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: '60', display: 'flex', flexDirection: 'column', gap: '1px', alignItems: 'flex-end' }}></div>
 
-        <div data-readout="1" aria-hidden="true" style={{ position: 'fixed', left: '16px', bottom: '16px', zIndex: '60', pointerEvents: 'none', display: 'flex', flexDirection: 'column', gap: '3px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '10.5px', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', background: 'var(--card)', padding: '8px 11px', border: '1px solid var(--line)', borderRadius: '12px' }}>
+        <div data-readout="1" aria-hidden="true" style={{ position: 'fixed', left: '16px', bottom: '16px', zIndex: '60', pointerEvents: 'none', display: 'flex', flexDirection: 'column', gap: '3px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-105)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', background: 'var(--card)', padding: '8px 11px', border: '1px solid var(--line)', borderRadius: '12px' }}>
           <span data-ro-alt="1">ALT 3,200 M</span>
           <span data-ro-km="1">KM 0 / 1,640</span>
           <span data-ro-st="1">STRETCH 0.0 KM</span>
@@ -47,7 +47,7 @@ export function Chrome() {
               <a href="#offline" data-navlink="1" style={{ padding: '8px 13px', borderRadius: '999px', color: 'var(--mut)', transition: 'color .26s', whiteSpace: 'nowrap' }}>No signal</a>
             </nav>
             <div style={{ display: 'flex', alignItems: 'center', gap: '9px', zIndex: '2', flex: 'none' }}>
-              <div data-wpbadge="1" style={{ display: 'flex', alignItems: 'center', gap: '7px', height: '34px', padding: '0 11px', borderRadius: '999px', border: '1px solid var(--line)', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: '10px', letterSpacing: '.13em', textTransform: 'uppercase', color: 'var(--sur)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
+              <div data-wpbadge="1" style={{ display: 'flex', alignItems: 'center', gap: '7px', height: '34px', padding: '0 11px', borderRadius: '999px', border: '1px solid var(--line)', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-10)', letterSpacing: '.13em', textTransform: 'uppercase', color: 'var(--sur)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap' }}>
                 <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--acc2)', animation: 'qf-navdot 2.4s ease-in-out infinite' }}></span>
                 <span data-wpnum="1">00 / 22</span>
               </div>
