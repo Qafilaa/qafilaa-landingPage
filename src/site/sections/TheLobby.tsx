@@ -1,4 +1,4 @@
-// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 653-670.
+// Generated from `Qafilaa Site v3.dc.html` (handoff 14), lines 657-674.
 // Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,
 // which has no compile-time link to this markup. Do not rename them.
 
@@ -12,8 +12,8 @@ export function TheLobby() {
             <p data-rv="1" style={{ fontSize: '18px', lineHeight: '1.6', color: 'var(--mut)', maxWidth: '58ch', margin: '20px 0 0' }}>Medical card filled, offline map downloaded, fuel, permits. Rows go teal as they land. One rider stays amber, and everyone can see who.</p>
             <div data-readiness="1" style={{ marginTop: '28px', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', overflow: 'hidden', maxWidth: '700px' }}></div>
             <div style={{ display: 'flex', gap: '20px', marginTop: '20px', flexWrap: 'wrap' }}>
-              <div data-roles="1" style={{ flex: '1 1 330px', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}></div>
-              <div data-offlinepack="1" style={{ flex: '1 1 300px', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}></div>
+              <div data-roles="1" style={{ flex: '1 1 240px', minWidth: '0', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}></div>
+              <div data-offlinepack="1" style={{ flex: '1 1 240px', minWidth: '0', background: 'var(--card)', border: '1px solid var(--line)', borderRadius: '18px', padding: '22px' }}></div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }} data-strip="1">

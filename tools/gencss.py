@@ -15,15 +15,15 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v2.dc.html')
+SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'index.css')
-STYLE_FROM, STYLE_TO = 143, 298          # inside <style> ... </style>
+STYLE_FROM, STYLE_TO = 143, 324          # inside <style> ... </style>
 
 HEADER = """/*
- * Qafilaa Site v2 - global stylesheet.
+ * Qafilaa Site v3 - global stylesheet.
  *
  * Everything above the APPENDIX marker is transcribed 1:1 from the design
- * handoff's <style> block (`Qafilaa Site v2.dc.html`, handoff 13, lines
+ * handoff's <style> block (`Qafilaa Site v3.dc.html`, handoff 14, lines
  * %d-%d). This file is GENERATED - do not hand-edit it, or the next handoff
  * will quietly discard your change. Add to the appendix in gencss.py instead.
  *

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * The Qafilaa Site v2 scroll runtime — a 1:1 port of the design handoff's own
- * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1521-3744).
+ * The Qafilaa Site v3 scroll runtime — a 1:1 port of the design handoff's own
+ * `class Component extends DCLogic` (`Qafilaa Site v3.dc.html`, lines 1522-3840).
  *
  * It owns everything the markup cannot express: the tone interpolation written
- * onto `:root`, the contour field, the spine, the flying phone and its 75-screen
+ * onto `:root`, the contour field, the spine, the flying phone and its 84-screen
  * library, and ~20 built-in demos. It drives the DOM imperatively via `data-*`
  * hooks in `src/site/sections` and `src/site/chrome` — there is NO compile-time
  * link between the two, so renaming a hook silently kills a demo.
@@ -25,6 +25,8 @@ const BASE_WAITLIST = site.waitlistCount;
 
 /** Behaviour + integration knobs, mirroring the design's authored `data-props`. */
 export interface SiteProps {
+  /** Waypoint paging: one gesture moves one panel. New in handoff 14. */
+  snapSections: boolean;
   motion: 'full' | 'calm';
   autoDemo: boolean;
   instagramUrl: string;
@@ -90,6 +92,7 @@ export class SiteEngine {
       st.textContent = window.QAF_SCREEN_CSS; document.head.appendChild(st);
     }
     this.narrow = window.innerWidth < NARROW;
+    this.applySnap();
     try {
       const de = document.documentElement;
       if (de.lang !== 'en-IN') de.lang = 'en-IN';
@@ -175,7 +178,7 @@ export class SiteEngine {
   capGrids() {
     const vw = window.innerWidth;
     const secs = this.qa('section[data-sec]');
-    if (vw <= 1080) {
+    if (vw < NARROW) {
       secs.forEach((s: any) => { s.style.paddingLeft = ''; s.style.paddingRight = ''; });
       this.qa('[data-cols]').forEach((g: any) => {
         if (g.dataset.gtc) g.style.gridTemplateColumns = g.dataset.gtc;
@@ -195,7 +198,7 @@ export class SiteEngine {
       const phoneFirst = tpl.trim().indexOf('auto') === 0;
       const gap = parseInt(getComputedStyle(g).columnGap, 10) || 56;
       const aside = g.querySelector('[data-strip]') || g.querySelector('[data-dock]');
-      const asideW = aside ? Math.round(aside.getBoundingClientRect().width) : 250;
+      const asideW = aside ? Math.round(Math.max(aside.getBoundingClientRect().width, aside.scrollWidth)) : 250;
       const prev = g.style.gridTemplateColumns;
       g.style.gridTemplateColumns = phoneFirst ? 'auto max-content' : 'max-content auto';
       const col = phoneFirst ? g.children[g.children.length - 1] : g.children[0];
@@ -207,10 +210,17 @@ export class SiteEngine {
     /* one page measure so every section shares a left edge */
     let nat = 1000;
     plan.forEach(p => { nat = Math.max(nat, p.textW + p.gap + p.asideW); });
-    const M = clamp(nat, 1000, 1360);
-    const side = Math.round((vw - M) / 2);
-    const padL = Math.max(132, side), padR = Math.max(56, side);
-    secs.forEach((s: any) => { s.style.paddingLeft = padL + 'px'; s.style.paddingRight = padR + 'px'; });
+    const tight = vw <= 1080;   /* the stylesheet owns the padding in this band */
+    let padL = 132, padR = 56;
+    if (tight) {
+      padL = 74; padR = 26;
+      secs.forEach((s: any) => { s.style.paddingLeft = ''; s.style.paddingRight = ''; });
+    } else {
+      const M = clamp(nat, 1000, 1360);
+      const side = Math.round((vw - M) / 2);
+      padL = Math.max(132, side); padR = Math.max(56, side);
+      secs.forEach((s: any) => { s.style.paddingLeft = padL + 'px'; s.style.paddingRight = padR + 'px'; });
+    }
     const box = vw - padL - padR;
 
     plan.forEach(p => {
@@ -240,6 +250,48 @@ export class SiteEngine {
     this.secTops = this.sections.map((s: any) => s.getBoundingClientRect().top + y);
     this.docH = Math.max(1, this.root.scrollHeight - window.innerHeight);
     if (this.trig) this.trig.forEach((t: any) => { if (!t.done) t.top = null; });
+    this.markTall();
+  }
+
+  /* panels with more content than the viewport are flagged so a fling can pass
+     through them instead of being forced to stop on their top edge */
+  markTall() {
+    const vh = window.innerHeight;
+    this.sections.forEach((s: any) => {
+      const tall = s.getBoundingClientRect().height > vh + 4;
+      if (tall) s.setAttribute('data-tall', '1');
+      else s.removeAttribute('data-tall');
+    });
+  }
+
+  /* one gesture moves one panel. A panel taller than the viewport scrolls itself
+     first; only at its far edge does the wheel hand over to the next waypoint. */
+  onWheel(e: any) {
+    if (this.legalOpen != null || this.props.snapSections === false || !this.sections) return;
+    if (e.ctrlKey || e.altKey || e.metaKey) return;
+    if (Math.abs(e.deltaY) < 2 || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    if (e.target.closest && e.target.closest('[data-strip],[data-drawerpanel],[data-legal],[data-phonehost]')) return;
+    const dir = e.deltaY > 0 ? 1 : -1;
+    const i = this.curIndex(), cur = this.sections[i];
+    if (!cur) return;
+    const r = cur.getBoundingClientRect(), vh = window.innerHeight;
+    if (r.height > vh + 4) {
+      if (dir > 0 && r.bottom > vh + 6) return;
+      if (dir < 0 && r.top < -6) return;
+    }
+    e.preventDefault();
+    if (this.snapBusy) return;
+    const next = clamp(i + dir, 0, this.sections.length - 1);
+    if (next === i) return;
+    this.snapBusy = true;
+    clearTimeout(this.snapT);
+    this.snapT = setTimeout(() => { this.snapBusy = false; }, this.rm ? 80 : 640);
+    this.snapTo(this.sections[next]);
+  }
+
+  snapTo(sec: any) {
+    if (!sec) return;
+    window.scrollTo({ top: sec.offsetTop, behavior: this.rm ? 'auto' : 'smooth' });
   }
 
   buildRail() {
@@ -438,18 +490,18 @@ export class SiteEngine {
     this.docks.forEach((d: any) => { d.dy = d.el.getBoundingClientRect().top + y; });
   }
 
-  /* The flying phone is sized the way the static phone beside it is sized
-     — buildStatics() floors at .52 and ignores viewport height — so the two
-     read as one device. Fitting it to the window instead made it up to 1.7x
-     smaller than its own neighbour on a short viewport. Narrow is untouched:
-     there the docks go inline and inlineDock() sizes them from their column. */
+  /* the flying phone keeps the size its dock declares, so it reads the same as the
+     static screen beside it; it only gives ground when the frame cannot fit at all */
   fitDocks() {
-    const f = this.narrow ? clamp((window.innerHeight - 150) / PH, 0.34, 1) : 1;
+    const room = window.innerHeight - (this.narrow ? 0 : 40);
+    /* the frame also has to leave the copy a readable column, so width caps it too */
+    const wRoom = this.narrow ? Infinity : Math.max(210, (window.innerWidth - 100) * 0.34);
+    const f = clamp(Math.min(room / PH, wRoom / PW), this.narrow ? 0.34 : 0.26, 1);
     if (f === this.fitF) return;
     this.fitF = f;
     this.docks.forEach((d: any) => {
       if (d.sc0 == null) d.sc0 = d.sc;
-      d.sc = this.narrow ? Math.max(0.34, Math.min(d.sc0, f)) : Math.max(0.52, d.sc0);
+      d.sc = Math.max(this.narrow ? 0.34 : 0.26, Math.min(d.sc0, f));
       d.el.style.width = Math.round(PW * d.sc) + 'px';
       d.el.style.height = Math.round(PH * d.sc) + 'px';
     });
@@ -477,11 +529,16 @@ export class SiteEngine {
     el.style.boxShadow = '0 0 0 1px var(--line), 0 18px 42px -28px rgba(35,36,31,.5)';
     d.iw = w;
     el.appendChild(this.skel(w, h, r));
-    /* The caption strip that sat under each inline phone went with the HUD,
-       but tapping the phone still walks its flow. Rebound on every build:
-       buildDocks() hands out a fresh `d` each time, so a listener kept from
-       the previous one would quietly drive a stale dock. */
-    if (el.parentElement && d.flow.length > 1) {
+    if (!d.cap && el.parentElement && d.flow.length > 1) {
+      const cap = document.createElement('button');
+      cap.type = 'button'; cap.setAttribute('data-icap','1');
+      cap.style.cssText = 'display:flex; align-items:center; gap:12px; width:100%; max-width:393px; margin:12px auto 0; padding:11px 14px; border:1px solid var(--line); border-radius:14px; background:var(--card); text-align:left; cursor:pointer; min-height:48px;';
+      cap.innerHTML = '<span data-icapstep="1" style="flex:none; '+SUR+' color:var(--acc); font-variant-numeric:tabular-nums;"></span>' +
+        '<span style="flex:1; min-width:0;"><span data-icaplabel="1" style="display:block; '+SG+' font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink);"></span>' +
+        '<span data-icapcap="1" style="display:block; font-size:13.5px; line-height:1.35; color:var(--mut); margin-top:2px;"></span></span>' +
+        '<span style="flex:none; '+SG+' font-size:17px; color:var(--acc2);">›</span>';
+      el.parentElement.insertBefore(cap, el.nextSibling);
+      d.cap = cap;
       const go = () => {
         d.iIdx = ((d.iIdx == null ? d.flow.indexOf(d.key) : d.iIdx) + 1) % d.flow.length;
         d.key = d.flow[d.iIdx];
@@ -490,9 +547,9 @@ export class SiteEngine {
         const sc = this.screenEl(d.key, s3, false);
         if (!this.rm) sc.style.animation = 'qf-screen-in .3s cubic-bezier(.22,.61,.36,1)';
         el.appendChild(sc);
+        this.inlineCap(d);
       };
-      if (el.__tapGo) el.removeEventListener('click', el.__tapGo);
-      el.__tapGo = go;
+      cap.addEventListener('click', go);
       el.addEventListener('click', go);
     }
     this.addTrig(el, -700, () => {
@@ -752,16 +809,7 @@ export class SiteEngine {
   }
 
   buildHud() {
-    this.hud = this.q('[data-phonehud]');   // absent by design — see below
-    this.hudRail = this.q('[data-hudrail]');
-    this.hudSeg = [];
     const nudge = (dir: any) => { this.userDriving = true; this.tapped = true; this.lastTouch = performance.now(); this.mode('You'); this.advance(dir); };
-    [['[data-hudprev]',-1],['[data-hudnext]',1]].forEach(([sel,dir]) => {
-      const b = this.q(sel); if (!b) return;
-      b.addEventListener('click', (e: any) => { e.stopPropagation(); nudge(dir); });
-      b.addEventListener('mouseenter', () => { b.style.transform = 'translateY(-1px)'; });
-      b.addEventListener('mouseleave', () => { b.style.transform = ''; });
-    });
     const roll = this.q('[data-rollbtn]');
     if (roll) roll.addEventListener('click', () => {
       const d = this.docks.find((x: any) => x.sec === 'rollout');
@@ -891,7 +939,7 @@ export class SiteEngine {
       const t = this.q(a.getAttribute('href'));
       if (!t) return;
       e.preventDefault();
-      window.scrollTo({ top: t.offsetTop - 26, behavior: this.rm ? 'auto' : 'smooth' });
+      window.scrollTo({ top: t.offsetTop, behavior: this.rm ? 'auto' : 'smooth' });
     }));
 
     if (!this.touch) {
@@ -910,10 +958,21 @@ export class SiteEngine {
 
     this.bind(document, 'keydown', (e: KeyboardEvent) => {
       const tag = ((e.target as HTMLElement | null)?.tagName || '').toLowerCase();
-      if (tag === 'input' || tag === 'textarea') return;
+      if (tag === 'input' || tag === 'textarea' || (e.target as HTMLElement | null)?.isContentEditable) return;
       const k = e.key.toLowerCase();
       if (k === 'j') this.step(1);
       if (k === 'k') this.step(-1);
+      /* keyboard paging lands on whole waypoints, same as wheel and swipe */
+      const held = /^(button|a|summary|select|option)$/.test(tag);
+      if (e.key === 'PageDown' || (e.key === ' ' && !e.shiftKey && !held)) { e.preventDefault(); this.step(1); }
+      if (e.key === 'PageUp' || (e.key === ' ' && e.shiftKey && !held)) { e.preventDefault(); this.step(-1); }
+      if (e.key === 'Home' && !held) { e.preventDefault(); this.snapTo(this.sections[0]); }
+      if (e.key === 'End' && !held) { e.preventDefault(); this.snapTo(this.sections[this.sections.length-1]); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        const cur = this.sections[this.curIndex()];
+        if (cur && cur.hasAttribute('data-tall')) return;
+        e.preventDefault(); this.step(e.key === 'ArrowDown' ? 1 : -1);
+      }
       if (e.key === '?') this.shortcuts();
       if (e.key === 'Escape') { this.q('[data-shortcuts]').style.display = 'none'; this.drawer(false); }
     });
@@ -927,6 +986,10 @@ export class SiteEngine {
         this.capGrids(); this.measure(); this.measureDocks(); this.buildSpine(); this.dirty = true;
       } else if (n) this.refitInline();
     }, 1200);
+
+    if (this.onWheelBound) window.removeEventListener('wheel', this.onWheelBound);
+    this.onWheelBound = (e: any) => this.onWheel(e);
+    this.bind(window, 'wheel', this.onWheelBound, { passive:false });
 
     this.bind(window, 'scroll', () => { this.dirty = true; }, { passive:true });
     this.bind(window, 'resize', () => {
@@ -984,12 +1047,26 @@ export class SiteEngine {
     });
   }
 
-  step(dir: any) {
+  curIndex() {
     const y = window.scrollY + 90;
     let i = 0;
-    this.secTops.forEach((t: any,k: any) => { if (t <= y) i = k; });
-    const t = this.sections[clamp(i+dir, 0, this.sections.length-1)];
-    window.scrollTo({ top: t.offsetTop-26, behavior:'smooth' });
+    (this.secTops || []).forEach((t: any,k: any) => { if (t <= y) i = k; });
+    return i;
+  }
+
+  step(dir: any) {
+    if (!this.sections || !this.sections.length) return;
+    const i = this.curIndex(), cur = this.sections[i];
+    const vh = window.innerHeight, y = window.scrollY;
+    /* a panel taller than the viewport pages through itself first, so its own
+       overflow stays reachable before the next waypoint takes over */
+    if (cur && cur.hasAttribute('data-tall')) {
+      const top = this.secTops[i], bot = top + cur.getBoundingClientRect().height;
+      const to = y + dir * Math.round(vh * 0.86);
+      if (dir > 0 && to < bot - vh - 12) { window.scrollTo({ top:to, behavior: this.rm ? 'auto' : 'smooth' }); return; }
+      if (dir < 0 && to > top + 12) { window.scrollTo({ top:to, behavior: this.rm ? 'auto' : 'smooth' }); return; }
+    }
+    this.snapTo(this.sections[clamp(i+dir, 0, this.sections.length-1)]);
   }
 
   shortcuts() {
@@ -2126,28 +2203,46 @@ export class SiteEngine {
 
 
   /* ═════ close ═════ */
+  inlineIcon(el: any, url: any, size: any) {
+    fetch(url).then(r => r.text()).then(t => {
+      const svg = new DOMParser().parseFromString(t, 'image/svg+xml').documentElement;
+      if (!svg || svg.nodeName === 'parsererror') return;
+      const ti = svg.querySelector('title'); if (ti) ti.remove();
+      svg.setAttribute('width', size); svg.setAttribute('height', size);
+      svg.setAttribute('aria-hidden', 'true');
+      svg.style.display = 'block';
+      el.innerHTML = ''; el.appendChild(svg);
+    }).catch(() => {});
+  }
+
   buildStores() {
     const w = this.q('[data-stores]'); w.innerHTML = '';
-    [['App Store','In review'],['Google Play','Rolling out']].forEach(s => {
+    [['App Store','Coming soon','brand/icon-appstore.svg'],['Google Play','Coming soon','brand/icon-googleplay.svg']].forEach(s => {
       const d = document.createElement('span');
-      d.style.cssText = 'display:flex; align-items:center; gap:10px; min-height:44px; padding:0 20px; border:1px solid var(--line); border-radius:12px; background:var(--card); font-size:14px; color:var(--mut);';
-      d.innerHTML = '<span style="font-weight:600; color:var(--ink);">'+s[0]+'</span><span style="'+SUR+'">'+s[1]+'</span>';
+      d.style.cssText = 'display:flex; align-items:center; gap:10px; min-height:44px; padding:0 18px; border:1px solid var(--line); border-radius:12px; background:var(--card); font-size:14px; color:var(--mut);';
+      d.innerHTML = '<span data-ic="1" style="display:flex; width:17px; height:17px; color:var(--ink);"></span><span style="font-weight:600; color:var(--ink);">'+s[0]+'</span><span style="'+SUR+'">'+s[1]+'</span>';
       w.appendChild(d);
+      this.inlineIcon(d.querySelector('[data-ic]'), s[2], 17);
     });
   }
 
   buildSocial() {
     const w = this.q('[data-social]'); w.innerHTML = '';
     const P = this.props;
-    [['Instagram', P.instagramUrl || 'https://instagram.com/qafilaa.in'],
-     ['LinkedIn',  P.linkedinUrl  || 'https://www.linkedin.com/company/qafilaa/'],
-     ['X',         P.xUrl         || 'https://x.com/Qafilaa'],
-     ['WhatsApp',  P.whatsappUrl  || 'https://wa.me/918830997757']].forEach(s => {
+    const ic = (p: any) => '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'+p+'</svg>';
+    const LI = ic('<path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5M3 9.5h4v11H3zM9.5 9.5h3.83v1.5h.05c.53-.95 1.83-1.78 3.42-1.78 3.1 0 3.7 1.9 3.7 4.6v6.68h-4v-5.92c0-1.42-.28-2.6-1.75-2.6-1.42 0-1.83 1.06-1.83 2.5v6.02h-3.9z"></path>');
+    const X  = ic('<path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.63l-5.2-6.8-5.94 6.8H1.74l7.73-8.84L1.32 2.25h6.8l4.71 6.23zm-1.17 17.52h1.83L6.87 4.13H4.9z"></path>');
+    const WA = ic('<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2m0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38 8.26 8.26 0 1 1 8.25 8.24m4.52-6.17c-.25-.12-1.47-.72-1.7-.8-.22-.09-.39-.13-.55.12-.16.25-.64.8-.78.96-.14.17-.29.18-.53.06-.25-.12-1.06-.39-2.02-1.25-.75-.66-1.25-1.48-1.4-1.73-.14-.25-.01-.39.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.55-1.34-.76-1.83-.2-.48-.4-.42-.55-.42h-.47c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.19.86 2.33.98 2.49.12.17 1.7 2.6 4.12 3.64.57.25 1.02.4 1.37.51.58.18 1.1.16 1.52.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.47-.28"></path>');
+    [['Instagram', P.instagramUrl || 'https://instagram.com/qafilaa.in', ''],
+     ['LinkedIn',  P.linkedinUrl  || 'https://www.linkedin.com/company/qafilaa/', LI],
+     ['X',         P.xUrl         || 'https://x.com/Qafilaa', X],
+     ['WhatsApp',  P.whatsappUrl  || 'https://wa.me/918830997757', WA]].forEach(s => {
       if (!s[1]) return;
       const a = document.createElement('a');
       a.href = s[1]; a.target = '_blank'; a.rel = 'noopener';
-      a.style.cssText = 'display:flex; align-items:center; min-height:38px; padding:0 14px; border:1px solid var(--line); border-radius:999px; font-size:13px; color:var(--ink);';
-      a.textContent = s[0];
+      a.style.cssText = 'display:flex; align-items:center; gap:7px; min-height:38px; padding:0 14px; border:1px solid var(--line); border-radius:999px; font-size:13px; color:var(--ink); text-decoration:none;';
+      a.innerHTML = '<span data-ic="1" style="display:flex; width:14px; height:14px;">' + s[2] + '</span><span>' + s[0] + '</span>';
+      if (s[0] === 'Instagram') this.inlineIcon(a.querySelector('[data-ic]'), 'brand/icon-instagram.svg', 14);
       w.appendChild(a);
     });
     if (!w.children.length) {
@@ -2203,5 +2298,10 @@ export class SiteEngine {
       this.q('[data-gaplabel]').textContent = spread > 0.86 ? 'Gap — —' : 'Gap ' + (2.1 + 7.2*spread).toFixed(1) + ' km';
     };
   }
+
+  applySnap() {
+    try { document.documentElement.dataset.snap = this.props.snapSections === false ? 'off' : 'on'; } catch { /* no documentElement to flag */ }
+  }
+
 
 }

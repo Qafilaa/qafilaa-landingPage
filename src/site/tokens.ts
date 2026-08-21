@@ -1,5 +1,5 @@
 /**
- * Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines 1415-1486.
+ * Generated from `Qafilaa Site v3.dc.html` (handoff 14), lines 1416-1487.
  * Daylight palette, tone table and colour helpers.
  */
 

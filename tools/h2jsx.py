@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Mechanical HTML -> JSX converter for the Qafilaa Site v2 handoff.
+"""Mechanical HTML -> JSX converter for the Qafilaa Site v3 handoff.
 
 Deliberately dumb and total: it tokenises tags/text/comments and rewrites
 attributes. It never reflows or "improves" markup, so the output is a 1:1

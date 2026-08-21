@@ -1,16 +1,16 @@
 # CLAUDE.md — Qafilaa Landing Page
 
-> Read automatically by Claude Code at the start of every session. Operating manual for the Qafilaa marketing/waitlist site. Keep it accurate to the code.
+> Read automatically by Claude Code at the start of every session. Operating manual for the Qafilaa marketing site. Keep it accurate to the code.
 
 ---
 
 ## 1. What this is
 
-The **public marketing + waitlist site** for Qafilaa (a group motorcycle-riding safety app) at **qafilaa.in**. It is a **standalone repo, separate** from the Flutter app and the .NET backend — it only talks to the backend through the public waitlist API.
+The **public marketing site** for Qafilaa (a group motorcycle-riding safety app) at **qafilaa.in**. It is a **standalone repo, separate** from the Flutter app and the .NET backend — it only talks to the backend through the public waitlist API.
 
 Stack: **Vite 5 + React 18 + TypeScript 5**, statically **prerendered** (SSR-at-build) then hydrated. **No CSS framework.** Deploys as **static files to S3 + CloudFront**.
 
-The site is a 1:1 implementation of the **"Qafilaa Site v2"** design handoff (`Qafilaa Site v2.dc.html`). See §3.
+The site is a 1:1 implementation of the **"Qafilaa Site v3"** design handoff (`Qafilaa Site v3.dc.html`). See §3.
 
 ---
 
@@ -34,34 +34,50 @@ npm run preview
 
 ## 3. The design handoff — this is the source of truth
 
-The whole site is transcribed from **`Qafilaa Site v2.dc.html`** (**handoff 13**). It is a complete, working, standalone implementation, and the repo is a faithful port of it, not an interpretation.
+The whole site is transcribed from **`Qafilaa Site v3.dc.html`** (**handoff 14**). It is a complete, working, standalone implementation, and the repo is a faithful port of it, not an interpretation.
 
 | Repo | Handoff lines |
 |---|---|
-| `index.html` `<head>` | 9–140 (`<helmet>`) |
-| `src/index.css` | 143–298 (`<style>`) |
-| `src/site/chrome/Chrome.tsx` | 305–388 |
-| `src/site/sections/*.tsx` (22 files) | 391–906 |
-| `src/site/chrome/Shortcuts.tsx` | 1410 |
-| `src/site/legal/*Body.tsx` (6 files) | 933–1401 |
-| `src/site/legal/LegalFoot.tsx` | 1403–1406 |
-| `src/site/tokens.ts` | 1415–1486 (now includes `CAPS`) |
-| `src/site/data.ts` | 1488–1519 |
-| `src/site/engine.ts` | 1521–3744 |
+| `index.html` `<head>` | 9–140 (`<helmet>`) — byte-identical to handoff 13 |
+| `src/index.css` | 143–324 (`<style>`) |
+| `src/site/chrome/Chrome.tsx` | 331–392 |
+| `src/site/sections/*.tsx` (22 files) | 395–907 |
+| `src/site/chrome/Shortcuts.tsx` | 1411 |
+| `src/site/legal/*Body.tsx` (6 files) | 934–1402 |
+| `src/site/legal/LegalFoot.tsx` | 1404–1407 |
+| `src/site/tokens.ts` | 1416–1487 |
+| `src/site/data.ts` | 1489–1520 |
+| `src/site/engine.ts` | 1522–3840 |
 
 **Line numbers shift with every handoff.** They are constants in the generator scripts (§9); when a new
 handoff lands, re-derive them rather than nudging them. `genengine.py` asserts every rewrite, so it will
 tell you which string anchors moved.
 
-Handoff 12 was a mobile pass (900/480/370 breakpoints, `NARROW`, `reflow`/`refitInline`/`wide`/`applyWide`,
-a ResizeObserver). **Handoff 13 added the phone HUD**: a caption rail under the flying device with a flow
-name, a step counter, a dot rail and prev/next — `[data-phonehud]` and eight sibling hooks, ten new runtime
-methods (`buildHud`, `paintHud`, `goStep`, `drive`, `mode`, `echo`, `seedIdx`, `landFlight`, `inlineCap`,
-`fillRange`), a `CAPS` caption table, nine new app screens, a `data-flowname` on every dock, and
-Daylight-styled range inputs.
+Handoff 12 was a mobile pass (900/480/370 breakpoints, `NARROW`, a ResizeObserver). Handoff 13 added the
+phone HUD — a caption panel beside the flying device — plus a `CAPS` table and nine new screens.
 
-**Ten deliberate departures from the handoff** (numbering is stable across handoffs, so #7 stays struck through rather than closing the gap), each required by a rule below:
-1. The waitlist submits through `src/api.ts` so the honeypot + email validation survive (§6), and the hero's social-proof line takes the live backend count.
+**Handoff 14 (Site v3) is the waypoint-paging pass**, and it is the largest behavioural change since v2:
+
+- **One gesture moves one waypoint.** Every `section[data-sec]` is now `min-height:100svh`, vertically
+  centred, with `scroll-snap-align:start` and `scroll-snap-stop:always`. Seven new runtime methods carry
+  it: `onWheel`, `snapTo`, `curIndex`, `markTall`, `applySnap`, plus `inlineIcon`.
+- **A panel taller than the viewport scrolls itself first.** `markTall()` stamps `data-tall` on those, which
+  relaxes `scroll-snap-stop` to `normal` and adds top padding so the first line clears the nav pill. Without
+  it a fling would be pinned to the top edge of a long panel forever.
+- **`snapSections` is a new prop** (default true). `applySnap()` mirrors it onto `<html data-snap>`, and the
+  stylesheet reads that — the attribute is the only thing joining the two, so a smoke test asserts both states.
+- **The waitlist form is gone**, replaced by App Store / Google Play "Coming soon" badges. See §6.
+- **The store and social buttons carry real icons**, fetched at runtime by `inlineIcon()` from
+  `public/brand/icon-{appstore,googleplay,instagram}.svg`. Those three files are new and are **fetched by
+  relative URL**, so they only resolve because the engine mounts on `/` — do not move them.
+- `fitDocks()` was rewritten upstream, and `capGrids()` gained a "tight" band at ≤1080 where the stylesheet
+  owns the padding and the companion `[data-static]` screen is hidden.
+
+The screen library, `tokens.ts`, `data.ts`, all six legal documents and the entire `<head>` are **byte-identical
+to handoff 13** — this handoff is CSS, engine and a few markup attributes.
+
+**Eight live departures from the handoff**, each required by a rule below. Three more (#7, #10, #11) are struck through: the designer adopted them upstream. **Numbering is stable across handoffs** — a retired entry keeps its number rather than closing the gap, so older commit messages still resolve.
+1. **Partly retired.** ~~The waitlist submits through `src/api.ts`~~ — handoff 14 removed the form entirely (§6), so the honeypot injection and the `joinWaitlist()` path are dormant rather than gone: both are kept and made conditional, because a signup form is the kind of thing that comes back and it must not come back naked. Still live: the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
 4. **The site footer carries five link columns instead of three**, and the legal tab row is grouped instead of flat, because the six documents the handoff shipped became fifteen — see §8.
@@ -71,8 +87,8 @@ Daylight-styled range inputs.
 8. **The legal shell is a sticky index, not a pill row**, and the four handoff documents that shipped undated (`delete-account`, `delete-data`, `support`, `security`) gained a `Last updated` line. Fifteen documents as four rows of pills pushed the article 478px down the page and left half the width empty; an undated policy page is a defect in its own right. Both are applied by the generators, not by hand — see §9.
 9. **The privacy policy names Firebase Analytics.** The shipped app carries it (`lib/core/analytics/`, wired in `main.dart`), on by default in release and gated by the diagnostics switch in Settings. The handoff's section 2 lists Crashlytics but not Analytics, which left the binding document understating what is collected — Apple 5.1.1 and Play's Data safety both require it named.
 
-10. **The flying phone carries no HUD.** Handoff 13 hung a caption rail under the device — flow name, step counter, dot rail, prev/next — and a matching strip under each inline phone on mobile. Rejected on review: it crowds the section it floats over and reads as chrome rather than as the product. `tools/divergences.py` strips `[data-phonehud]` out of the chrome and `genengine.py` drops the inline strip, keeping the tap that walks the flow. The HUD's engine code stays in place and inert, so putting the block back is the whole of restoring it. **One trap:** `buildHud()`'s `if (!this.hud) return` had to go — the roll-out button and the arrow-key flow navigation are wired *after* it and would have died with the HUD.
-11. **The flying phone is sized like the static phone beside it**, not fitted to the viewport. `buildStatics()` floors a static at `.52` and ignores viewport height; the handoff shrank the *flying* phone by `room / PH`, so on a short laptop viewport (~580px) it drew the same device up to **1.7x smaller than its own neighbour in the same row**. `fitDocks()` now mirrors `buildStatics()` above `NARROW`; below it the docks go inline and `inlineDock()` sizes them from their column, so that path is untouched. Checked settled on all 19 docks at 1280x700, 1366x768, 1440x900 and 1920x1080 — none clipped, none under the 92px nav.
+10. ~~The flying phone carries no HUD.~~ **No longer a divergence** — handoff 14 deletes the `[data-phonehud]` block and the whole of `buildHud()`'s panel wiring upstream, which is exactly what the patch did. `tools/divergences.py` was deleted with it. Note the designer **kept** the narrow-width caption strip (`[data-icap]`) that our patch had also removed, so it is back — that is the handoff's call, and the smoke test now asserts it exists below `NARROW`.
+11. ~~The flying phone is sized like the static phone beside it.~~ **No longer a divergence** — handoff 14 rewrites `fitDocks()` to keep each dock at its declared scale ("*it only gives ground when the frame cannot fit at all*"). The upstream version goes further than the patch did: it caps by **width** as well as height, so the phone can never crowd the copy out of its column.
 
 Everything else must match the handoff exactly. `tools/verify.py` (see §9) folds these in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
@@ -81,7 +97,7 @@ Everything else must match the handoff exactly. `tools/verify.py` (see §9) fold
 - The page is a **22-waypoint scroll journey**, and each section declares a `data-tone` (`light` / `paper` / `clay` / `night` / `deep`). `engine.ts`'s `paint()` interpolates between the tones of adjacent sections and writes **`--bg --ink --mut --sur --line --card --acc --acc2 --ctr --ctaInk --navbg --navline` onto `document.documentElement`** every frame the tone signature changes.
 - So **components reference CSS variables (`var(--ink)`), never imported colour constants.** The tone table lives in `src/site/tokens.ts` (`TONES`), which is the single source of truth for the palette. There is no `src/theme.ts`.
 - Section markup is **inline-style objects transcribed literally from the handoff**, hex values included. Do not "tokenise" them — they are already the design's own values, and drift from the handoff is the only thing that can break fidelity.
-- `src/index.css` holds the `:root` seed values, the reset, all `@keyframes`, the `[data-*]` behaviour rules and the media queries. Breakpoints: **1500 / 1240 / 1080 / 900 / 760 / 480 / 370**, plus `max-height: 760 / 620` for the readout instrument. Below **900** the engine also switches to its `narrow` path in JS — the phone rig goes inline and wide graphics scroll. That number is `NARROW` in `src/site/tokens.ts`; the CSS and the JS must agree.
+- `src/index.css` holds the `:root` seed values, the reset, all `@keyframes`, the `[data-*]` behaviour rules and the media queries. Breakpoints: **1500 / 1240 / 1080 / 900 / 899 / 760 / 480 / 370** (899 is new in handoff 14: the two-track composition stacks just under the rig's own `NARROW`), plus `max-height: 760 / 620` for the readout instrument. Below **900** the engine also switches to its `narrow` path in JS — the phone rig goes inline and wide graphics scroll. That number is `NARROW` in `src/site/tokens.ts`; the CSS and the JS must agree.
 - Fonts are **Hanken Grotesk** (body) + **Space Grotesk** (display), from Google Fonts.
 - `prefers-reduced-motion` is honoured in `index.css` and again in the engine (`this.calm` disables flight arcs and the auto-demo).
 
@@ -98,12 +114,28 @@ Everything else must match the handoff exactly. `tools/verify.py` (see §9) fold
 
 **`public/qafilaa-screens.js`** (815 KB raw / 79 KB gzipped) is the handoff's library of **84 pre-rendered real app screens** (75 at handoff 12) plus their CSS, exposed as `window.QAF_SCREENS` / `QAF_SCREEN_LABELS` / `QAF_SCREEN_CSS`. It **must stay in `public/`** so Vite does not bundle it, and it is loaded by a `<script defer>` in `index.html`. The engine's `wait()` polls for it for ~7 s before giving up.
 
-## 6. Waitlist / API
+## 6. Backend API / the waitlist that was
 
-The waitlist form (in `src/site/sections/TheEnd.tsx`) **POSTs to the live backend** via `src/api.ts`:
-- `joinWaitlist()` → `POST /api/v1/waitlist`; `getWaitlistCount()` → `GET /api/v1/waitlist/count`.
+**Handoff 14 removed the email form.** The end panel carries App Store / Google Play "Coming soon" badges
+instead, so **the site currently has no email capture at all**. That was the designer's call, not a porting
+loss — but it is worth knowing before anyone asks where the signups went.
+
+What is still live:
+
+- `getWaitlistCount()` → `GET /api/v1/waitlist/count` feeds the hero's social-proof line
+  (`[data-waitline]`, still in the Trailhead panel), with the handoff's static copy as a silent fallback.
 - API base is `VITE_API_BASE_URL` (defaults to `https://api.qafilaa.in`, trailing slash normalized).
-- Keep the honeypot (`[data-wlcompany]`, `name="company"`), client-side email validation (mirror the backend's FluentValidation), and the silent-fallback count behavior on `[data-waitline]`. **Do not reintroduce a "wire this up" TODO** — it's done.
+
+What is dormant, deliberately:
+
+- `joinWaitlist()` → `POST /api/v1/waitlist` is still wired in the engine's `wire()` and still routes through
+  `src/api.ts`. Nothing reaches it: `wire()` guards on `[data-waitlist]`, which no longer exists in the markup.
+- `gen.py`'s `add_honeypot()` is still there and now **conditional** rather than asserting. It re-arms the
+  moment a handoff ships a `<form data-waitlist>` again.
+
+**If the form comes back it must come back with the honeypot** (`[data-wlcompany]`, `name="company"`) and the
+client-side email validation that mirrors the backend's FluentValidation. That is the whole reason both halves
+were kept rather than deleted.
 
 ### Analytics consent
 

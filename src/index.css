@@ -1,9 +1,9 @@
 /*
- * Qafilaa Site v2 - global stylesheet.
+ * Qafilaa Site v3 - global stylesheet.
  *
  * Everything above the APPENDIX marker is transcribed 1:1 from the design
- * handoff's <style> block (`Qafilaa Site v2.dc.html`, handoff 13, lines
- * 143-298). This file is GENERATED - do not hand-edit it, or the next handoff
+ * handoff's <style> block (`Qafilaa Site v3.dc.html`, handoff 14, lines
+ * 143-324). This file is GENERATED - do not hand-edit it, or the next handoff
  * will quietly discard your change. Add to the appendix in gencss.py instead.
  *
  * The `:root` values here are only the seed. Once `src/site/engine.ts` boots,
@@ -94,6 +94,23 @@ section[data-pad]{ padding-top:72px !important; padding-bottom:72px !important; 
 #top{ padding-top:124px !important; padding-bottom:76px !important; }
 #join{ padding-bottom:40px !important; }
 [data-strip] > *{ flex:none; scroll-snap-align:start; }
+
+/* ── full-section paging: one waypoint fills the viewport per scroll action ── */
+html{ scroll-snap-type:y proximity; scroll-behavior:smooth; }
+html[data-snap="off"]{ scroll-snap-type:none; }
+section[data-sec]{
+  min-height:100vh; min-height:100svh; box-sizing:border-box;
+  display:flex; flex-direction:column; justify-content:safe center;
+  scroll-snap-align:start; scroll-snap-stop:always;
+}
+#top{ min-height:100svh !important; }
+/* a panel with more content than the viewport keeps its own free scroll: the snap
+   area is taller than the snapport, so the reader can rest anywhere inside it */
+section[data-sec][data-tall]{ scroll-snap-stop:normal; }
+/* a tall panel rests at its own top edge, so its first line has to clear the nav pill */
+section[data-sec][data-tall]{ padding-top:96px !important; }
+@media (max-width:760px){ section[data-sec][data-tall]{ padding-top:84px !important; } }
+@media (max-width:480px){ section[data-sec][data-tall]{ padding-top:78px !important; } }
 details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-details-marker{ display:none; }
 ::-webkit-scrollbar{ height:9px; width:9px; }
 ::-webkit-scrollbar-thumb{ background:rgba(120,116,108,.32); border-radius:8px; }
@@ -110,9 +127,17 @@ details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-det
   [data-nights],[data-ladder],[data-notedemo],[data-nudgedemo],[data-tripcard],[data-sharecard]{ max-width:660px !important; }
 }
 @media (max-width:1080px){
-  [data-cols]{ grid-template-columns:minmax(0,1fr) !important; max-width:none !important; }
+  [data-cols]{ max-width:none !important; }
+  [data-cols][data-cols]{ column-gap:40px !important; }
   [data-pad]{ padding-left:74px !important; padding-right:26px !important; }
   [data-navlinks]{ display:none !important; }
+  /* the two-track band has room for the live phone only, not its companion screen */
+  [data-cols] [data-strip] [data-static]{ display:none !important; }
+}
+
+/* under the rig's own breakpoint the two-track composition stacks */
+@media (max-width:899px){
+  [data-cols]{ grid-template-columns:minmax(0,1fr) !important; }
 }
 
 /* ── tablet: the composition stacks, so the vertical rhythm tightens with it ── */
@@ -169,6 +194,7 @@ details.qf-rcpt summary{ list-style:none; } details.qf-rcpt summary::-webkit-det
   [data-navword]{ display:none !important; }
 }
 @media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
   [data-line] > span{ transform:none !important; }
   [data-rv]{ opacity:1 !important; transform:none !important; }
 }

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Extract tokens.ts / data.ts / engine.ts from the Qafilaa Site v2 handoff.
+"""Extract tokens.ts / data.ts / engine.ts from the Qafilaa Site v3 handoff.
 
 Every rewrite is asserted, so a drift in the source file fails loudly instead
 of silently emitting a half-ported engine.
@@ -11,7 +11,7 @@ TOOLS = _os.path.join(REPO, 'tools')
 import os
 import re
 
-SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v2.dc.html')
+SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
 LINES = open(SRC, encoding='utf-8').read().split('\n')
 
@@ -59,12 +59,12 @@ def cut_method(text, name):
 
 
 HDR = ('/**\n'
-       ' * Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines %s.\n'
+       ' * Generated from `Qafilaa Site v3.dc.html` (handoff 14), lines %s.\n'
        ' * %s\n'
        ' */\n')
 
 # ── tokens.ts ───────────────────────────────────────────────────────────────
-tokens = seg(1415, 1486)
+tokens = seg(1416, 1487)
 tokens = tokens.replace('const SUR =', 'export const SUR =')
 tokens = tokens.replace('const SG =', 'export const SG =')
 tokens = tokens.replace('const PW = 413, PH = 872;',
@@ -97,11 +97,11 @@ export interface Tone {
 }
 """
 write('tokens.ts',
-      (HDR % ('1415-1486', 'Daylight palette, tone table and colour helpers.'))
+      (HDR % ('1416-1487', 'Daylight palette, tone table and colour helpers.'))
       + TONE_T + '\n' + tokens + '\n')
 
 # ── data.ts ─────────────────────────────────────────────────────────────────
-data = seg(1488, 1519)
+data = seg(1489, 1520)
 for name in ('TRIP', 'DAYS', 'TOTAL_KM', 'MAXD', 'RESTD', 'PASSES', 'CREW', 'roleOf'):
     data = data.replace('const %s ' % name, 'export const %s ' % name)
     data = data.replace('const %s=' % name, 'export const %s=' % name)
@@ -126,11 +126,11 @@ export interface CrewMember { id: string; name: string; role: string; c: string;
 """
 data = data.replace('export const CREW = [', 'export const CREW: CrewMember[] = [')
 write('data.ts',
-      (HDR % ('1488-1519', 'The trip, the ten days, and the crew the demos are built from.'))
+      (HDR % ('1489-1520', 'The trip, the ten days, and the crew the demos are built from.'))
       + DAY_T + '\n' + data + '\n')
 
 # ── engine.ts ───────────────────────────────────────────────────────────────
-eng = seg(1521, 3744)
+eng = seg(1522, 3840)
 
 eng = sub1(eng, 'class Component extends DCLogic {', 'export class SiteEngine {\n'
            '  /* A 1:1 port of a hand-written DOM runtime: it assigns ~120 fields on\n'
@@ -173,7 +173,11 @@ eng = sub1(eng,
 eng = sub1(eng, '  wait(n) {', '  wait(n: number) {', 'wait sig')
 
 # Legal is a set of real prerendered routes in this app, not a hash overlay.
-for m in ('buildLegal', 'openLegal', 'closeLegal', 'renderVals'):
+# `renderVals` and `componentDidUpdate` are React lifecycle stubs the host class
+# no longer has: SiteEngine is a plain class, so neither can ever fire. Cutting
+# them keeps the port honest -- componentDidUpdate only re-ran applySnap(), and
+# mount() already calls that.
+for m in ('buildLegal', 'openLegal', 'closeLegal', 'renderVals', 'componentDidUpdate'):
     eng = cut_method(eng, m)
 eng = sub1(eng, "'buildStores','buildSocial','buildEnd','buildSplitRoad','buildSos','buildLegal','splitHeads','wire','loop'",
            "'buildStores','buildSocial','buildEnd','buildSplitRoad','buildSos','splitHeads','wire','loop'", 'boot order')
@@ -216,75 +220,10 @@ new_wl = """    const wl = this.q('[data-waitlist]');
 """
 eng = eng.replace(old_wl, new_wl, 1)
 
-# ── divergence #11: the flying phone is the size of the phone beside it ─────
-# buildStatics() floors a static phone at .52 and ignores viewport height. The
-# handoff shrank the *flying* phone by room/PH instead, so on a short laptop
-# viewport (~580px) it landed near .32 while its own neighbour in the same row
-# held .54 — the same device drawn 1.7x smaller. Size it like a static one.
-eng = sub1(
-    eng,
-    "  /* the phone must clear the floating header and still fit a short viewport */" + NL +
-    "  fitDocks() {" + NL +
-    "    const room = window.innerHeight - 150 - (this.narrow ? 0 : 150);" + NL +
-    "    const f = clamp(room / PH, this.narrow ? 0.34 : 0.26, 1);" + NL +
-    "    if (f === this.fitF) return;" + NL +
-    "    this.fitF = f;" + NL +
-    "    this.docks.forEach(d => {" + NL +
-    "      if (d.sc0 == null) d.sc0 = d.sc;" + NL +
-    "      d.sc = Math.max(this.narrow ? 0.34 : 0.26, Math.min(d.sc0, f));",
-
-    "  /* The flying phone is sized the way the static phone beside it is sized" + NL +
-    "     — buildStatics() floors at .52 and ignores viewport height — so the two" + NL +
-    "     read as one device. Fitting it to the window instead made it up to 1.7x" + NL +
-    "     smaller than its own neighbour on a short viewport. Narrow is untouched:" + NL +
-    "     there the docks go inline and inlineDock() sizes them from their column. */" + NL +
-    "  fitDocks() {" + NL +
-    "    const f = this.narrow ? clamp((window.innerHeight - 150) / PH, 0.34, 1) : 1;" + NL +
-    "    if (f === this.fitF) return;" + NL +
-    "    this.fitF = f;" + NL +
-    "    this.docks.forEach(d => {" + NL +
-    "      if (d.sc0 == null) d.sc0 = d.sc;" + NL +
-    "      d.sc = this.narrow ? Math.max(0.34, Math.min(d.sc0, f)) : Math.max(0.52, d.sc0);",
-    'fitDocks viewport shrink')
-
-# ── divergence #10, engine side ─────────────────────────────────────────────
-# The HUD markup is stripped in tools/divergences.py, so buildHud() would hit
-# its `if (!this.hud) return`. The roll-out button and the arrow-key flow
-# navigation are wired *after* that return, so the guard has to go or they die
-# with the HUD. Everything it protected is separately null-guarded already.
-eng = sub1(eng,
-           "    this.hud = this.q('[data-phonehud]');" + NL +
-           "    if (!this.hud) return;" + NL,
-           "    this.hud = this.q('[data-phonehud]');   // absent by design — see below" + NL,
-           'buildHud early return')
-
-# The caption strip under each inline phone is the HUD's narrow-width twin, so
-# it goes with it. The tap that walks the flow stays: it is the only way to see
-# the rest of a flow on a phone.
-i0 = eng.index("    if (!d.cap && el.parentElement && d.flow.length > 1) {")
-i1 = eng.index("    this.addTrig(el, -700, () => {", i0)
-old_cap = eng[i0:i1]
-assert 'data-icap' in old_cap and "el.addEventListener('click', go);" in old_cap, old_cap
-
-g0 = old_cap.index("      const go = () => {")
-g1 = old_cap.index("      };", g0) + len("      };")
-go_src = old_cap[g0:g1]
-assert "        this.inlineCap(d);" + NL in go_src, go_src
-go_src = go_src.replace("        this.inlineCap(d);" + NL, "")   # nothing left to caption
-
-eng = eng.replace(
-    old_cap,
-    "    /* The caption strip that sat under each inline phone went with the HUD," + NL +
-    "       but tapping the phone still walks its flow. Rebound on every build:" + NL +
-    "       buildDocks() hands out a fresh `d` each time, so a listener kept from" + NL +
-    "       the previous one would quietly drive a stale dock. */" + NL +
-    "    if (el.parentElement && d.flow.length > 1) {" + NL +
-    go_src + NL +
-    "      if (el.__tapGo) el.removeEventListener('click', el.__tapGo);" + NL +
-    "      el.__tapGo = go;" + NL +
-    "      el.addEventListener('click', go);" + NL +
-    "    }" + NL,
-    1)
+# Divergences #10 and #11 lived here and are both retired: handoff 14 drops the
+# HUD block itself and rewrites fitDocks() to keep each dock at its declared
+# scale, which is what the patches were for. The designer went further than the
+# patch did and caps the phone by width too, so the copy keeps a readable column.
 
 # Strict-mode annotations. Type-level only — nothing here changes runtime
 # behaviour. See CLAUDE.md: annotate the ported engine, never restructure it.
@@ -303,6 +242,19 @@ TYPE_FIXES = [
      'this.docks.forEach(d => this.ro.observe(d.el)); } catch { /* observer already gone */ } }'),
     ('    if (this.ro) { try { this.ro.disconnect(); } catch (e) {} }',
      '    if (this.ro) { try { this.ro.disconnect(); } catch { /* observer already gone */ } }'),
+
+    # new in handoff 14: applySnap() writes the snap flag onto <html>; a comment
+    # keeps eslint's no-empty quiet on the deliberate best-effort catch
+    ("    try { document.documentElement.dataset.snap = this.props.snapSections === false"
+     " ? 'off' : 'on'; } catch (e) {}",
+     "    try { document.documentElement.dataset.snap = this.props.snapSections === false"
+     " ? 'off' : 'on'; } catch { /* no documentElement to flag */ }"),
+
+    # new in handoff 14: the J/K guard also asks whether the focus is in a
+    # contenteditable, and `e.target` is `EventTarget | null` under strict
+    ("if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;",
+     "if (tag === 'input' || tag === 'textarea'"
+     " || (e.target as HTMLElement | null)?.isContentEditable) return;"),
 
     # `wide()` is called with two args as well as three
     ('  wide(els, w, h) {',
@@ -405,6 +357,8 @@ const BASE_WAITLIST = site.waitlistCount;
 
 /** Behaviour + integration knobs, mirroring the design's authored `data-props`. */
 export interface SiteProps {
+  /** Waypoint paging: one gesture moves one panel. New in handoff 14. */
+  snapSections: boolean;
   motion: 'full' | 'calm';
   autoDemo: boolean;
   instagramUrl: string;
@@ -416,11 +370,11 @@ export interface SiteProps {
 
 HEAD = """/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * The Qafilaa Site v2 scroll runtime — a 1:1 port of the design handoff's own
- * `class Component extends DCLogic` (`Qafilaa Site v2.dc.html`, lines 1521-3744).
+ * The Qafilaa Site v3 scroll runtime — a 1:1 port of the design handoff's own
+ * `class Component extends DCLogic` (`Qafilaa Site v3.dc.html`, lines 1522-3840).
  *
  * It owns everything the markup cannot express: the tone interpolation written
- * onto `:root`, the contour field, the spine, the flying phone and its 75-screen
+ * onto `:root`, the contour field, the spine, the flying phone and its 84-screen
  * library, and ~20 built-in demos. It drives the DOM imperatively via `data-*`
  * hooks in `src/site/sections` and `src/site/chrome` — there is NO compile-time
  * link between the two, so renaming a hook silently kills a demo.

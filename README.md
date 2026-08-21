@@ -2,7 +2,7 @@
 
 > **Ride together. No one left behind.**
 
-A pixel-faithful React implementation of the **Qafilaa Site v2** design — a light "Daylight" themed site
+A pixel-faithful React implementation of the **Qafilaa Site v3** design — a light "Daylight" themed site
 (`#F7F5F0` paper, `#0E7C86` teal, Hanken Grotesk + Space Grotesk) built as a **22-waypoint scroll journey**
 down the Manali–Leh–Manali circuit, with a flying phone that docks section to section showing 75 real
 screens from the app.
@@ -10,7 +10,7 @@ screens from the app.
 Qafilaa keeps a whole riding group on one live map — gaps, rally points, last-known positions and one-tap
 SOS. Built for rides where the road runs out of signal before it runs out of mountain.
 
-The page is a 1:1 transcription of `Qafilaa Site v2.dc.html`, a complete working prototype produced in
+The page is a 1:1 transcription of `Qafilaa Site v3.dc.html`, a complete working prototype produced in
 Claude Design. Every colour, dimension, animation curve and interaction is carried across from the source,
 and the build is verified against it by an automated structural diff (see [Fidelity](#fidelity)).
 

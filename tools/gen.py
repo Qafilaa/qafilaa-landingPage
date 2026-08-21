@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Generate the React component files for Qafilaa Site v2 from the .dc.html."""
+"""Generate the React component files for Qafilaa Site v3 from the .dc.html."""
 import os as _os
 # Resolve everything from the repo root so this works on a fresh clone and in CI.
 REPO = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
@@ -10,9 +10,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from h2jsx import convert  # noqa: E402
-from divergences import strip_hud  # noqa: E402
 
-SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v2.dc.html')
+SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
 
 LINES = open(SRC, encoding='utf-8').read().split('\n')
@@ -21,20 +20,20 @@ ROUTES = ['privacy-policy', 'terms-and-conditions', 'delete-account',
           'delete-data', 'support', 'security']
 
 SECTIONS = [
-    (391, 412, 'Trailhead'), (415, 431, 'TheSplit'), (434, 449, 'SetUpOnce'),
-    (452, 456, 'Permissions'), (459, 474, 'TheSendOff'), (477, 491, 'PlanTheTrip'),
-    (494, 512, 'BringTheCrew'), (515, 535, 'DayWisePlan'), (538, 548, 'WhereYouSleep'),
-    (551, 578, 'TheMoney'), (581, 618, 'PapersAndLists'), (621, 634, 'Notes'),
-    (637, 650, 'AlongTheWay'), (653, 670, 'TheLobby'), (673, 690, 'RollOut'),
-    (693, 724, 'LiveConvoy'), (727, 740, 'Navigation'), (743, 784, 'Safety'),
-    (787, 813, 'NoSignal'), (816, 848, 'SettingsAndSupport'), (851, 878, 'EndOfTheRide'),
-    (881, 906, 'TheEnd'),
+    (395, 416, 'Trailhead'), (419, 435, 'TheSplit'), (438, 453, 'SetUpOnce'),
+    (456, 460, 'Permissions'), (463, 478, 'TheSendOff'), (481, 495, 'PlanTheTrip'),
+    (498, 516, 'BringTheCrew'), (519, 539, 'DayWisePlan'), (542, 552, 'WhereYouSleep'),
+    (555, 582, 'TheMoney'), (585, 622, 'PapersAndLists'), (625, 638, 'Notes'),
+    (641, 654, 'AlongTheWay'), (657, 674, 'TheLobby'), (677, 694, 'RollOut'),
+    (697, 728, 'LiveConvoy'), (731, 744, 'Navigation'), (747, 788, 'Safety'),
+    (791, 817, 'NoSignal'), (820, 852, 'SettingsAndSupport'), (855, 882, 'EndOfTheRide'),
+    (885, 907, 'TheEnd'),
 ]
 
 LEGAL = [
-    (933, 1078, 'PrivacyPolicyBody'), (1081, 1171, 'TermsBody'),
-    (1174, 1243, 'DeleteAccountBody'), (1246, 1318, 'DeleteDataBody'),
-    (1321, 1359, 'SupportBody'), (1362, 1401, 'SecurityBody'),
+    (934, 1079, 'PrivacyPolicyBody'), (1082, 1172, 'TermsBody'),
+    (1175, 1244, 'DeleteAccountBody'), (1247, 1319, 'DeleteDataBody'),
+    (1322, 1360, 'SupportBody'), (1363, 1402, 'SecurityBody'),
 ]
 
 
@@ -65,7 +64,7 @@ def write(path, body):
     print('wrote', path, len(body))
 
 
-HEAD = ('// Generated from `Qafilaa Site v2.dc.html` (handoff 13), lines %s.\n'
+HEAD = ('// Generated from `Qafilaa Site v3.dc.html` (handoff 14), lines %s.\n'
         '// Transcribed 1:1 — every data-* hook is read by src/site/engine.ts,\n'
         '// which has no compile-time link to this markup. Do not rename them.\n')
 
@@ -82,9 +81,16 @@ HONEYPOT = '''            {/* honeypot: real people leave it empty, bots fill it
 
 
 def add_honeypot(jsx):
-    """CLAUDE.md 5 requires the bot trap the design's bare form does not carry."""
+    """CLAUDE.md 6 requires the bot trap the design's bare form does not carry.
+
+    Handoff 14 replaced the email form with store badges, so right now there is
+    nothing to protect. Kept, and made conditional rather than deleted, because
+    a signup form is exactly the kind of thing that comes back -- and if it does,
+    it must not come back naked.
+    """
     anchor = '<form data-waitlist="1"'
-    assert anchor in jsx, 'waitlist form not found'
+    if anchor not in jsx:
+        return jsx
     j = jsx.index('>', jsx.index(anchor)) + 1
     return jsx[:j] + '\n' + HONEYPOT + jsx[j:]
 
@@ -219,8 +225,7 @@ index += '\n' + '\n'.join(
 write('sections/index.ts', index)
 
 # ── chrome ──────────────────────────────────────────────────────────────────
-# strip_hud drops the flying phone's caption rail -- see tools/divergences.py
-chrome = convert(strip_hud(seg(305, 388))).strip()
+chrome = convert(seg(331, 392)).strip()
 body = HEAD % '305-388'
 body += """
 export function Chrome() {
@@ -234,7 +239,7 @@ export function Chrome() {
 write('chrome/Chrome.tsx', body)
 
 # the shortcuts dialog is the LAST element in the design, after every section
-shortcuts = convert(seg(1410, 1410)).strip()
+shortcuts = convert(seg(1411, 1411)).strip()
 body = HEAD % '1410'
 body += """
 export function Shortcuts() {
@@ -267,7 +272,7 @@ for a, b, name in LEGAL:
 # so a re-export module would only be dead code the next handoff regenerates.
 
 # ── legal footer strip (shared by every legal route) ────────────────────────
-foot = convert(relink(seg(1403, 1406))).strip()
+foot = convert(relink(seg(1404, 1407))).strip()
 body = HEAD % "1403-1406"
 body += '\nexport function LegalFoot() {\n  return (\n%s\n  );\n}\n' % reindent(foot, 4)
 write('legal/LegalFoot.tsx', body)

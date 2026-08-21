@@ -16,12 +16,10 @@ import subprocess
 import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
-sys.path.insert(0, TOOLS)
-from divergences import strip_hud  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = _os.path.join(REPO, 'dist')
-SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v2.dc.html')
+SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 LINES = io.open(SRC, encoding='utf-8').read().split('\n')
 
 ROUTES = ['privacy-policy', 'terms-and-conditions', 'delete-account',
@@ -74,14 +72,15 @@ def diff(name, ref, cand):
 
 
 # ── home ────────────────────────────────────────────────────────────────────
-ref = '\n'.join(LINES[304:388]) + '\n' + '\n'.join(LINES[390:906]) + '\n' + LINES[1409]
+ref = '\n'.join(LINES[330:392]) + '\n' + '\n'.join(LINES[394:907]) + '\n' + LINES[1410]
 ref = relink(ref)
-# The shipped chrome drops the flying phone's HUD (divergence #10), so the
-# reference has to drop it too or every run reports the same 21 phantom lines.
-ref = strip_hud(ref)
+# Handoff 14 replaced the email form with store badges, so there is no form to
+# fold the honeypot into. Kept conditional rather than deleted: the form is the
+# kind of thing that comes back, and this check has to stay a true zero either way.
 form = '<form data-waitlist="1"'
-i = ref.index('>', ref.index(form)) + 1
-ref = ref[:i] + '\n' + HONEYPOT + ref[i:]
+if form in ref:
+    i = ref.index('>', ref.index(form)) + 1
+    ref = ref[:i] + '\n' + HONEYPOT + ref[i:]
 
 cand = unwrap(root_of(os.path.join(DIST, 'index.html')),
               r'^\s*<div id="qf-site" data-app="1" style="position:relative">')
@@ -111,9 +110,9 @@ if missing:
 results.append(not missing)
 
 # ── legal routes ────────────────────────────────────────────────────────────
-LEGAL = [('privacy-policy', 933, 1078), ('terms-and-conditions', 1081, 1171),
-         ('delete-account', 1174, 1243), ('delete-data', 1246, 1318),
-         ('support', 1321, 1359), ('security', 1362, 1401)]
+LEGAL = [('privacy-policy', 934, 1079), ('terms-and-conditions', 1082, 1172),
+         ('delete-account', 1175, 1244), ('delete-data', 1247, 1319),
+         ('support', 1322, 1360), ('security', 1363, 1402)]
 
 # Apple Guideline 5.1.1 requires the privacy policy itself to name the third
 # parties with access to user data and confirm they give the same or greater

@@ -10,6 +10,7 @@ const href = (id: string) => socials.find((s) => s.id === id && s.live)?.href ??
  * `content.ts` so there is one place to change them.
  */
 const PROPS: SiteProps = {
+  snapSections: true,
   motion: 'full',
   autoDemo: true,
   instagramUrl: href('instagram'),

@@ -27,18 +27,21 @@ test.describe('landing', () => {
     expect(await page.evaluate(() => Object.keys(window.QAF_SCREENS ?? {}).length)).toBeGreaterThanOrEqual(84);
   });
 
-  test('the flow HUD is not shipped', async ({ page }) => {
+  test('the flying phone has no floating HUD, but keeps its inline caption', async ({ page }) => {
     await bootedLanding(page);
-    // Handoff 13 hung a caption rail under the flying phone, and a matching
-    // strip under each inline phone on mobile. Both were rejected on review —
-    // divergence #10. buildHud() still runs: its early return had to go, since
-    // the roll-out button and the arrow keys are wired after it. So this also
-    // proves dropping that guard did not put the panel back.
+    const narrow = (page.viewportSize()?.width ?? 0) < 900;
+
+    // Handoff 13 hung a caption panel beside the flying phone; handoff 14 took
+    // it out again. It is upstream now, not a divergence of ours.
     await expect(page.locator('[data-phonehud]')).toHaveCount(0);
-    await expect(page.locator('[data-icap]')).toHaveCount(0);
+
+    // The narrow-width caption strip survived that cut. It is built by
+    // inlineDock(), so it exists only below NARROW where the docks go inline.
+    if (narrow) expect(await page.locator('[data-icap]').count()).toBeGreaterThan(0);
+    else await expect(page.locator('[data-icap]')).toHaveCount(0);
   });
 
-  test('the arrow keys still walk the flow with the HUD gone', async ({ page }) => {
+  test('the arrow keys walk the flow', async ({ page }) => {
     await bootedLanding(page);
     test.skip((page.viewportSize()?.width ?? 0) < 900, 'the flying rig only exists above NARROW');
     await page.waitForTimeout(1200);
@@ -115,6 +118,71 @@ test.describe('landing', () => {
   test('all 22 waypoints render', async ({ page }) => {
     await bootedLanding(page);
     await expect(page.locator('section[data-sec]')).toHaveCount(22);
+  });
+
+  test('the waypoint paging is armed', async ({ page }) => {
+    await bootedLanding(page);
+    // New in handoff 14. applySnap() writes the flag onto <html> and the
+    // stylesheet reads it, so the two have to agree or paging silently dies.
+    await expect(page.locator('html')).toHaveAttribute('data-snap', 'on');
+
+    const snapType = () =>
+      page.evaluate(() => getComputedStyle(document.documentElement).scrollSnapType);
+    // Browsers serialise `y proximity` back as plain `y` — proximity is the
+    // initial strictness — so match the axis, not the authored shorthand.
+    expect(await snapType(), 'the y axis must be armed').toMatch(/^y\b/);
+
+    // Both directions, because the flag is the only thing joining applySnap()
+    // to the stylesheet: if the off state stopped working, snapSections:false
+    // would be silently ignored and there would be no way to turn paging off.
+    await page.evaluate(() => { document.documentElement.dataset.snap = 'off'; });
+    expect(await snapType(), 'data-snap="off" must disarm it').toBe('none');
+  });
+
+  test('every waypoint fills the viewport, and only the over-long ones are flagged', async ({ page }) => {
+    await bootedLanding(page);
+    await page.waitForTimeout(900);
+
+    const rows = await page.evaluate(() => {
+      const vh = window.innerHeight;
+      return Array.from(document.querySelectorAll('section[data-sec]')).map((s) => ({
+        id: s.id,
+        h: Math.round(s.getBoundingClientRect().height),
+        tall: s.hasAttribute('data-tall'),
+        vh,
+      }));
+    });
+
+    // min-height:100svh — a panel that comes up short of the fold breaks paging,
+    // because the reader lands mid-way between two waypoints.
+    expect(rows.filter((r) => r.h < r.vh - 2), 'panels shorter than the viewport').toEqual([]);
+
+    // markTall() is what lets a fling pass through an over-long panel rather than
+    // being pinned to its top edge, so the flag has to track the measured height.
+    expect(
+      rows.filter((r) => r.tall !== r.h > r.vh + 4),
+      'data-tall disagrees with the measured height',
+    ).toEqual([]);
+  });
+
+  test('one wheel gesture moves exactly one waypoint', async ({ page }) => {
+    await bootedLanding(page);
+    test.skip((page.viewportSize()?.width ?? 0) < 900, 'touch, not wheel, below NARROW');
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(900);
+    const tops = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('section[data-sec]')).map((s) => (s as HTMLElement).offsetTop));
+
+    await page.mouse.move(240, 400);
+    await page.mouse.wheel(0, 240);
+    await page.waitForTimeout(1500);
+
+    const y = await page.evaluate(() => window.scrollY);
+    expect(
+      Math.abs(y - tops[1]),
+      `one notch should land on waypoint 2 (${tops[1]}), landed at ${y}`,
+    ).toBeLessThan(14);
   });
 
   test('the tone system writes onto :root', async ({ page }) => {
