@@ -16,7 +16,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          # from .nvmrc, so CI and a laptop can never disagree again
+          node-version-file: .nvmrc
           cache: npm
 
       # tools/ is Python: the fidelity and dist checks below.

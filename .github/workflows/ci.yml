@@ -16,7 +16,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          # from .nvmrc, so CI and a laptop can never disagree again
+          node-version-file: .nvmrc
           cache: npm
 
       # tools/ is Python: the design pipeline and the fidelity checks.
@@ -50,9 +51,12 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      # The engine drives ~130 data-* hooks with no compile-time link to the
-      # markup, so a rename breaks a demo silently. This is what catches it.
-      - name: Smoke test
+      # Two suites. Smoke: the engine drives ~130 data-* hooks with no
+      # compile-time link to the markup, so a rename breaks a demo silently.
+      # Responsive: the page never scrolls sideways, so mobile breakage is
+      # invisible — content is cut off rather than overflowing. Both are the
+      # only thing standing between "it builds" and "it works".
+      - name: Smoke and responsive tests
         run: npm run test
 
       - uses: actions/upload-artifact@v4
