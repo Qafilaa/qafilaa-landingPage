@@ -116,7 +116,7 @@ export function NotFound() {
         </div>
 
         <p style={{ margin: '32px 0 0', fontSize: '16px', lineHeight: '1.7', color: '#4A4842' }}>
-          Followed a link from somewhere and it landed here? Tell us where it was — <a href="mailto:admin@qafilaa.in?subject=Broken%20link">admin@qafilaa.in</a> — and we will
+          Followed a link from somewhere and it landed here? Tell us where it was: <a href="mailto:admin@qafilaa.in?subject=Broken%20link">admin@qafilaa.in</a>, and we will
           fix the marker.
         </p>
 

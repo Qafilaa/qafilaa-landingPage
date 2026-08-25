@@ -15,7 +15,7 @@ export function DeleteAccountBody() {
               <ul style={{ margin: '14px 0 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '16.5px', lineHeight: '1.6', color: '#4A4842' }}>
                 <li>Settings → Account → Danger zone, then press and hold. That is the whole flow.</li>
                 <li>Lost your phone? Email us from your account address. <b style={{ color: '#23241F' }}>You do not need the app.</b></li>
-                <li>Everything goes in one transaction — including the stored image and document files, not just database rows.</li>
+                <li>Everything goes in one transaction, including the stored image and document files, not just database rows.</li>
                 <li>What stays is only what belongs to other riders too, and it no longer identifies you.</li>
                 <li>Want a copy first? Export before you delete. Afterwards is too late.</li>
               </ul>

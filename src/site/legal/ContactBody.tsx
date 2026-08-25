@@ -20,14 +20,14 @@ export function ContactBody() {
       <Callout label="Fastest route">
         <UL>
           <li>
-            <b>Help with the app</b> — <a href="/support">Help centre</a>, or in-app, where a query gets a
+            <b>Help with the app</b>: <a href="/support">Help centre</a>, or in-app, where a query gets a
             ticket and a timeline you can follow.
           </li>
           <li>
-            <b>Something unsafe or abusive</b> — <a href="/report">Report content</a>.
+            <b>Something unsafe or abusive</b>: <a href="/report">Report content</a>.
           </li>
           <li>
-            <b>Anything else</b> — <Mail />, answered by a person.
+            <b>Anything else</b>: <Mail />, answered by a person.
           </li>
         </UL>
       </Callout>
@@ -42,7 +42,7 @@ export function ContactBody() {
           [
             'Phone',
             <span key="p">
-              <a href="tel:+918830997757">+91 88309 97757</a> — also on{' '}
+              <a href="tel:+918830997757">+91 88309 97757</a>, also on{' '}
               <a href="https://wa.me/918830997757" target="_blank" rel="noopener">
                 WhatsApp
               </a>
@@ -54,7 +54,7 @@ export function ContactBody() {
       <P>
         These are the details we file with Apple and Google as our trader information under the EU Digital
         Services Act, and they are the details shown on our store listings. If what you see on a store page
-        differs from what is here, tell us — one of the two is out of date and we want to know which.
+        differs from what is here, tell us. One of the two is out of date and we want to know which.
       </P>
 
       <H2>Named contacts</H2>
@@ -62,18 +62,18 @@ export function ContactBody() {
         rows={[
           [
             'Grievance Officer',
-            'Yash Turmbekar — for any complaint about how your personal data is handled, under the Digital Personal Data Protection Act, 2023.',
+            'Yash Turmbekar, for any complaint about how your personal data is handled, under the Digital Personal Data Protection Act, 2023.',
           ],
           [
             'Child safety',
             <span key="c">
-              Yash Turmbekar — see <a href="/child-safety">Child safety</a> for our standards and what we do.
+              Yash Turmbekar. See <a href="/child-safety">Child safety</a> for our standards and what we do.
             </span>,
           ],
           [
             'Security reports',
             <span key="s">
-              <a href="/security">Security</a> — we will not come after you for reporting a hole in good faith.
+              <a href="/security">Security</a>. We will not come after you for reporting a hole in good faith.
             </span>,
           ],
           ['Accessibility', <a key="a" href="/accessibility">Accessibility</a>],
@@ -100,7 +100,7 @@ export function ContactBody() {
       <P>
         <b>We are not an emergency service.</b> Qafilaa alerts the riders around you; it does not call an
         ambulance and it does not monitor alerts around the clock. In an emergency call the local emergency
-        number first — <b>112</b> in India, or <b>108</b> for an ambulance. The full position is in the safety
+        number first: <b>112</b> in India, or <b>108</b> for an ambulance. The full position is in the safety
         notice in our <a href="/terms-and-conditions">Terms</a>.
       </P>
 

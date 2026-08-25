@@ -43,7 +43,7 @@ export function CookiesBody() {
           ],
           [
             'Strictly necessary',
-            'Nothing else. This is a static site — there is no login, no basket, and no session to keep.',
+            'Nothing else. This is a static site. There is no login, no basket, and no session to keep.',
           ],
         ]}
       />
@@ -73,13 +73,13 @@ export function CookiesBody() {
           <b>Browse privately.</b> A private window discards these cookies when you close it.
         </li>
         <li>
-          <b>Block the domain</b> — any content blocker that stops googletagmanager.com will stop analytics on
+          <b>Block the domain</b>: any content blocker that stops googletagmanager.com will stop analytics on
           this site.
         </li>
       </UL>
       <P>
         Or use the control below, which is the same choice the notice offers the first time you arrive. If you
-        would also like your earlier visits removed from the analytics record, ask us —{' '}
+        would also like your earlier visits removed from the analytics record, ask us:{' '}
         <Mail subject="Cookies" />.
       </P>
       <CookieChoice />
@@ -92,7 +92,7 @@ export function CookiesBody() {
         repeat yourself.
       </P>
       <P>
-        Only GPC carries legal weight, and only in some places. We honour Do Not Track anyway — it costs nothing
+        Only GPC carries legal weight, and only in some places. We honour Do Not Track anyway. It costs nothing
         and ignoring a request that explicit would be rude.
       </P>
 

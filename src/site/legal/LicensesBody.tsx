@@ -148,7 +148,7 @@ export function LicensesBody() {
 
       <H2>This website</H2>
       <P>
-        Much smaller — the site is React and little else.
+        Much smaller. The site is React and little else.
       </P>
       <Rows
         rows={[

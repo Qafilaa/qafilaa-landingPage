@@ -40,7 +40,7 @@ export function DataSafetyBody() {
       </P>
       <UL>
         <li>
-          <b>Location — precise.</b> Your position, altitude, speed and heading, continuously while a ride is
+          <b>Location: precise.</b> Your position, altitude, speed and heading, continuously while a ride is
           active, including in the background. Shown to the riders in that ride. Required for the live map,
           gaps, rally points and crash alerts. Raw traces auto-delete after 90 days, or 7 if you shorten the
           window in Settings.
@@ -50,7 +50,7 @@ export function DataSafetyBody() {
           of birth and address. Required to have an account; the optional fields are optional.
         </li>
         <li>
-          <b>Health and fitness.</b> The medical card you choose to fill in — blood group, allergies,
+          <b>Health and fitness.</b> The medical card you choose to fill in: blood group, allergies,
           medications, notes. Entirely optional. Shown to other riders only during an active alert.
         </li>
         <li>
@@ -59,7 +59,7 @@ export function DataSafetyBody() {
           book.
         </li>
         <li>
-          <b>Photos and videos.</b> Images you add — profile, bikes, day notes, and document scans. Only the
+          <b>Photos and videos.</b> Images you add: profile, bikes, day notes, and document scans. Only the
           ones you pick or capture.
         </li>
         <li>
@@ -67,15 +67,15 @@ export function DataSafetyBody() {
           encrypted.
         </li>
         <li>
-          <b>App activity.</b> The content you create — trips, itineraries, rally points, stays, notes,
-          checklists, reminders, expenses and settlements — and your ride history.
+          <b>App activity.</b> The content you create (trips, itineraries, rally points, stays, notes,
+          checklists, reminders, expenses and settlements) and your ride history.
         </li>
         <li>
           <b>App info and performance.</b> App version, platform, and crash reports through Firebase
           Crashlytics. Crash reports carry no identifier for you and no request contents.
         </li>
         <li>
-          <b>App activity — product analytics.</b> Which screens get opened and which actions get used, through
+          <b>App activity: product analytics.</b> Which screens get opened and which actions get used, through
           Firebase Analytics, so we can tell what is working. Events and screen names, not the contents of your
           notes, trips or messages. On by default in released builds and{' '}
           <b>switchable off in Settings</b>, where the same control also stops crash reporting.
@@ -97,7 +97,7 @@ export function DataSafetyBody() {
       <H2>Where it goes</H2>
       <Rows
         rows={[
-          ['Riders in your active ride', 'Your live position, and — during an active alert only — your medical card.'],
+          ['Riders in your active ride', 'Your live position, and (during an active alert only) your medical card.'],
           ['Service providers', 'Hosting, push delivery, crash reporting and maps. Named on the Subprocessors page.'],
           ['Authorities', 'Only where required by law, or to protect someone’s safety.'],
           ['Advertisers, data brokers', 'Never. There is no such relationship.'],
@@ -113,7 +113,7 @@ export function DataSafetyBody() {
           <b>Encrypted at rest:</b> yes, including the stored document and image files.
         </li>
         <li>
-          <b>You can request deletion:</b> yes — from inside the app, or from{' '}
+          <b>You can request deletion:</b> yes, from inside the app, or from{' '}
           <a href="/delete-account">Delete your account</a> and <a href="/delete-data">Delete my data</a>{' '}
           without installing anything.
         </li>
@@ -136,7 +136,7 @@ export function DataSafetyBody() {
       />
       <P>
         "Linked to you" is Apple's term for data tied to your account. It is not a synonym for shared, sold, or
-        used to profile you — none of which happens here.
+        used to profile you, none of which happens here.
       </P>
 
       <H2>If this page and the store disagree</H2>

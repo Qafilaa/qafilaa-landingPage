@@ -8,7 +8,7 @@ export function TheEnd() {
         <div data-plot="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: '24px' }}>Waypoint 21 · The end</div>
         <div style={{ maxWidth: '1040px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '28px', flexWrap: 'wrap' }}>
-            <img src="brand/logo-lockup-sm.png" alt="Qafilaa — built by rider, for riders" width="480" height="324" loading="lazy" decoding="async" style={{ display: 'block', width: '132px', height: 'auto' }} />
+            <img src="brand/logo-lockup-sm.png" alt="Qafilaa · built by rider, for riders" width="480" height="324" loading="lazy" decoding="async" style={{ display: 'block', width: '132px', height: 'auto' }} />
             <div data-stores="1" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}></div>
           </div>
           <h2 data-lines="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: 'clamp(34px,4.4vw,60px)', lineHeight: '1.05', letterSpacing: '-.025em', margin: '24px 0 0' }}>Ride together.<br />No one left behind.</h2>

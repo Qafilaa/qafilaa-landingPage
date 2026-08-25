@@ -44,14 +44,14 @@ export function PermissionsBody() {
           ],
           [
             'When it runs',
-            'Only while a ride is active. It starts when the ride starts and stops when the ride ends — not when you close the app, and not on a schedule of ours.',
+            'Only while a ride is active. It starts when the ride starts and stops when the ride ends, not when you close the app, and not on a schedule of ours.',
           ],
           ['If you refuse', 'You can still ride, but your crew sees your last position from when the screen was last on.'],
         ]}
       />
       <P>
         Android shows a persistent notification for the whole time this is running. That notification is not
-        decoration — it is how you can tell, at a glance, that Qafilaa is still publishing your position, and it
+        decoration. It is how you can tell, at a glance, that Qafilaa is still publishing your position, and it
         stops when the ride does.
       </P>
       <P>
@@ -72,7 +72,7 @@ export function PermissionsBody() {
             'Where it is processed',
             'On your device. The samples never leave your phone. Only the resulting alert is sent, and only if the countdown completes.',
           ],
-          ['If you refuse', 'Automatic crash detection is off. Manual SOS — tap, hold, or flip the phone — still works.'],
+          ['If you refuse', 'Automatic crash detection is off. Manual SOS (tap, hold, or flip the phone) still works.'],
         ]}
       />
 
@@ -123,26 +123,26 @@ export function PermissionsBody() {
         ]}
       />
       <P>
-        An emergency contact is someone else's personal data. Please ask them first — the app makes you confirm
+        An emergency contact is someone else's personal data. Please ask them first. The app makes you confirm
         that you have. See <a href="/privacy-policy">Privacy Policy</a>, section 4a.
       </P>
 
       <H2>The rest</H2>
       <UL>
         <li>
-          <b>Network and connectivity state</b> — to know whether to send now or queue for later. No prompt;
+          <b>Network and connectivity state</b>: to know whether to send now or queue for later. No prompt;
           it carries no personal data.
         </li>
         <li>
-          <b>Storage</b> — to hold offline maps and your cached trip on the device, so every screen reads from
+          <b>Storage</b>: to hold offline maps and your cached trip on the device, so every screen reads from
           disk first.
         </li>
         <li>
-          <b>Wake lock and battery optimisation</b> — so the operating system does not put the ride to sleep
+          <b>Wake lock and battery optimisation</b>: so the operating system does not put the ride to sleep
           under you mid-leg.
         </li>
         <li>
-          <b>Boot completed</b> — so an interrupted ride can resume after a phone restart rather than
+          <b>Boot completed</b>: so an interrupted ride can resume after a phone restart rather than
           silently ending.
         </li>
       </UL>
@@ -162,7 +162,7 @@ export function PermissionsBody() {
       <P>
         No microphone, no call log, no SMS, no advertising identifier, no accessibility service, no "all files"
         access, no cross-app tracking, and no advertising software of any kind. The app does carry product
-        analytics — see <a href="/data-safety">Data safety</a> — which you can switch off in Settings. If you
+        analytics (see <a href="/data-safety">Data safety</a>), which you can switch off in Settings. If you
         find a permission in the app that is not on this page, tell us at{' '}
         <Mail subject="Permissions" /> and we will either explain it or remove it.
       </P>

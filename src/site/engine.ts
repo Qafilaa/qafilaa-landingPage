@@ -836,7 +836,7 @@ export class SiteEngine {
     const i = this.flowIdx < 0 ? -1 : clamp(this.flowIdx, 0, n - 1);
     const two = (v: any) => (v < 10 ? '0' : '') + v;
     this.q('[data-hudflow]').textContent = 'Flow · ' + (d.name || d.sec);
-    this.q('[data-hudstep]').textContent = i < 0 ? '— / ' + two(n) : two(i+1) + ' / ' + two(n);
+    this.q('[data-hudstep]').textContent = i < 0 ? '- / ' + two(n) : two(i+1) + ' / ' + two(n);
     this.q('[data-hudlabel]').textContent = this.LB[d.key] || d.key;
     this.q('[data-hudcap]').textContent = CAPS[d.key] || '';
     if (this.hudSeg.length !== n) {
@@ -844,7 +844,7 @@ export class SiteEngine {
       for (let k = 0; k < n; k++) {
         const s = document.createElement('button');
         s.type = 'button';
-        s.setAttribute('aria-label', 'Screen ' + (k+1) + ' — ' + (this.LB[f[k]] || f[k]));
+        s.setAttribute('aria-label', 'Screen ' + (k+1) + ' · ' + (this.LB[f[k]] || f[k]));
         s.style.cssText = 'pointer-events:auto; flex:1; min-width:0; height:18px; padding:0; border:none; background:transparent; cursor:pointer; display:flex; align-items:center;';
         const bar = document.createElement('span');
         bar.style.cssText = 'display:block; width:100%; height:3px; border-radius:2px; background:var(--line); transition:background .25s, height .2s;';
@@ -859,7 +859,7 @@ export class SiteEngine {
     });
     const nx = this.q('[data-hudnext]');
     if (nx) {
-      nx.title = 'Next — ' + (this.LB[f[(i+1) % n]] || '');
+      nx.title = 'Next · ' + (this.LB[f[(i+1) % n]] || '');
       const anim = this.tapped ? '' : 'qf-hudnudge 2.6s ease-out infinite';
       if (nx.style.animation !== anim) nx.style.animation = anim;
     }
@@ -1020,7 +1020,7 @@ export class SiteEngine {
       const msg = this.q('[data-wlmsg]');
       if (!v) return;
       if (!isValidEmail(v)) { msg.textContent = 'That email does not look right. Check it and try again.'; return; }
-      msg.textContent = 'Sending…';
+      msg.textContent = 'Sending...';
       const trap = this.q('[data-wlcompany]') as HTMLInputElement | null;
       joinWaitlist({ email: v, source: 'cta', company: trap ? trap.value : '' })
         .then(() => { msg.textContent = 'You are on the list. We will write when the beta opens.'; field.value = ''; })
@@ -1074,7 +1074,7 @@ export class SiteEngine {
     const el = this.q('[data-shortcuts]');
     if (el.style.display === 'flex') { el.style.display = 'none'; return; }
     el.innerHTML = '<div style="background:var(--bg); border-radius:20px; padding:30px 34px; max-width:420px;"><div style="'+SUR+'">Keyboard</div>' +
-      ['J / K — next and previous waypoint','← / → — walk the flow on the phone','Esc — close','? — this list']
+      ['J / K · next and previous waypoint','← / → · walk the flow on the phone','Esc · close','? · this list']
         .map(t => '<div style="font-size:16px; color:var(--ink); margin-top:13px;">'+t+'</div>').join('') + '</div>';
     el.style.display = 'flex';
     el.onclick = () => { el.style.display = 'none'; };
@@ -1570,7 +1570,7 @@ export class SiteEngine {
     });
     nights.map((n,i) => {
       const s = STAY[n.place] || ['Camp', 2400], multi = n.to > n.from;
-      return [multi ? 'N'+n.from+'–N'+n.to : 'N'+n.from, n.place, s[0],
+      return [multi ? 'N'+n.from+'-N'+n.to : 'N'+n.from, n.place, s[0],
         '₹'+inr(s[1]) + (multi ? ' / night' : ''), CREW[i % CREW.length].name];
     }).forEach((n,i) => {
       const d = document.createElement('div');
@@ -2177,7 +2177,7 @@ export class SiteEngine {
     if (this.sosStage === 1) {
       this.sosStage = 0;
       this.q('[data-sosdial]').style.animation = '';
-      this.q('[data-sosnum]').textContent = '—';
+      this.q('[data-sosnum]').textContent = '-';
       this.q('[data-sosring]').setAttribute('stroke-dashoffset','214');
       this.q('[data-sosstatus]').textContent = 'Cancelled · glad you are OK';
       this.sosScreen('crashCancelled','tab');
@@ -2190,7 +2190,7 @@ export class SiteEngine {
     clearTimeout(this.sosT2);
     this.sosStage = 0;
     this.q('[data-sosdial]').style.animation = '';
-    this.q('[data-sosnum]').textContent = '—';
+    this.q('[data-sosnum]').textContent = '-';
     this.q('[data-sosring]').setAttribute('stroke-dashoffset','214');
     this.sosScreen('crash','tab');
     this.flankSos(1,'sendSos'); this.flankSos(2,'convoy');
@@ -2296,7 +2296,7 @@ export class SiteEngine {
         const pt = this.roadPath.getPointAtLength(pos*this.roadLen);
         d.style.transform = 'translate('+(pt.x*sx-6).toFixed(1)+'px,'+(pt.y*sy-6).toFixed(1)+'px)';
       });
-      this.q('[data-gaplabel]').textContent = spread > 0.86 ? 'Gap — —' : 'Gap ' + (2.1 + 7.2*spread).toFixed(1) + ' km';
+      this.q('[data-gaplabel]').textContent = spread > 0.86 ? 'Gap -' : 'Gap ' + (2.1 + 7.2*spread).toFixed(1) + ' km';
     };
   }
 

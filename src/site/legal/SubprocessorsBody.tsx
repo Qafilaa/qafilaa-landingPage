@@ -10,7 +10,7 @@ export function SubprocessorsBody() {
       slug="qafilaa.in/subprocessors"
       deck="Everyone who can touch your data, by name"
       title="Subprocessors"
-      lede="A privacy policy that says “we share data with service providers” tells you nothing. This is the list. Each one is here because Qafilaa cannot run without it, and each is bound to protect your data to the same standard we promise you."
+      lede="A privacy policy that says 'we share data with service providers' tells you nothing. This is the list. Each one is here because Qafilaa cannot run without it, and each is bound to protect your data to the same standard we promise you."
       updated="20/08/2026"
     >
       <Callout label="The commitment">
@@ -34,7 +34,7 @@ export function SubprocessorsBody() {
           ],
           [
             'Google Firebase Cloud Messaging',
-            'Delivers push notifications — crash alerts, SOS, rally-point calls — to your device. Carries the alert, not your ride data.',
+            'Delivers push notifications (crash alerts, SOS, rally-point calls) to your device. Carries the alert, not your ride data.',
           ],
           [
             'Google Firebase Crashlytics',
@@ -42,7 +42,7 @@ export function SubprocessorsBody() {
           ],
           [
             'Google Firebase Analytics',
-            'Product analytics — which screens get opened, which actions get used — reporting into GA4. Events and screen names, not the contents of what you write. On by default in released builds; the diagnostics switch in Settings turns it and Crashlytics off together.',
+            'Product analytics (which screens get opened, which actions get used) reporting into GA4. Events and screen names, not the contents of what you write. On by default in released builds; the diagnostics switch in Settings turns it and Crashlytics off together.',
           ],
           [
             'Google Maps Platform',
@@ -97,7 +97,7 @@ export function SubprocessorsBody() {
         appropriate, tell you directly.
       </P>
       <P>
-        Think something is missing here? That is worth knowing about — write to <Mail subject="Subprocessors" />{' '}
+        Think something is missing here? That is worth knowing about. Write to <Mail subject="Subprocessors" />{' '}
         and we will either add it or explain why it does not belong.
       </P>
     </Doc>

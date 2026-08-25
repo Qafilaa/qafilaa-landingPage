@@ -16,7 +16,7 @@ export function PrivacyPolicyBody() {
                 <li>Your live location goes to the riders in your active ride, and only while that ride is active. There is no public map.</li>
                 <li>Raw location traces are deleted after <b style={{ color: '#23241F' }}>90 days</b>. You can shorten that to <b style={{ color: '#23241F' }}>7 days</b> in Settings.</li>
                 <li>Your medical card is optional, stored on our servers on purpose, and shown to other riders only during an active alert.</li>
-                <li>Crash detection reads your phone's motion sensors on the device. Those samples never leave it — only the resulting alert does.</li>
+                <li>Crash detection reads your phone's motion sensors on the device. Those samples never leave it. Only the resulting alert does.</li>
                 <li>We do not sell your data. There is no advertising or cross-app tracking in the app.</li>
               </ul>
               <div style={{ marginTop: '16px', fontSize: '14px', color: '#6E6B63' }}>This summary is here to be read. The policy below is the one that governs.</div>

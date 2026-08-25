@@ -21,7 +21,7 @@ export function Safety() {
                 <circle cx="39" cy="39" r="34" fill="none" stroke="rgba(35,36,31,.13)" strokeWidth="5"></circle>
                 <circle data-sosring="1" cx="39" cy="39" r="34" fill="none" stroke="#E5392E" strokeWidth="5" strokeLinecap="round" strokeDasharray="214" strokeDashoffset="214"></circle>
               </svg>
-              <span data-sosnum="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-24)', fontWeight: '600', fontVariantNumeric: 'tabular-nums', color: 'var(--ink)' }}>—</span>
+              <span data-sosnum="1" style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-24)', fontWeight: '600', fontVariantNumeric: 'tabular-nums', color: 'var(--ink)' }}>-</span>
             </div>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <button data-sosrun="1" data-magnet="1" data-tap="1" style={{ padding: '14px 24px', border: '1px solid #E5392E', borderRadius: '12px', background: 'rgba(229,57,46,.09)', color: '#B3261B', font: '600 15px \'Hanken Grotesk\'', cursor: 'pointer' }}>Run the crash sequence</button>

@@ -11,7 +11,7 @@ export function ReportBody() {
       slug="qafilaa.in/report"
       deck="Something crossed a line. Tell us."
       title="Report content or a rider"
-      lede="Every note, photo, message and profile in Qafilaa has a report action beside it. This page is the way in when the app is not — you left the trip, you deleted the app, or you are not a Qafilaa rider at all and something of yours ended up in it."
+      lede="Every note, photo, message and profile in Qafilaa has a report action beside it. This page is the way in when the app is not: you left the trip, you deleted the app, or you are not a Qafilaa rider at all and something of yours ended up in it."
       updated="20/08/2026"
     >
       <Callout label="If someone is in danger right now">
@@ -44,7 +44,7 @@ export function ReportBody() {
       </P>
       <UL>
         <li>What you saw, in your own words.</li>
-        <li>Where it was — the trip name, the day, and whether it was a note, a photo, a name, or a broadcast.</li>
+        <li>Where it was: the trip name, the day, and whether it was a note, a photo, a name, or a broadcast.</li>
         <li>The display name of the rider who posted it, if you know it.</li>
         <li>A screenshot, if you can take one safely.</li>
         <li>Roughly when it happened.</li>

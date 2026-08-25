@@ -40,7 +40,7 @@ export function ChildSafetyBody() {
 
       <H2>What is prohibited</H2>
       <P>
-        The following are prohibited on Qafilaa in every surface — profile names and photos, bike photos, trip
+        The following are prohibited on Qafilaa in every surface: profile names and photos, bike photos, trip
         and crew names, day notes and their attachments, broadcasts, documents, and anything sent to our help
         centre:
       </P>
@@ -50,11 +50,11 @@ export function ChildSafetyBody() {
           renders and anything produced by a model.
         </li>
         <li>
-          <b>Child sexual abuse and exploitation (CSAE)</b> more broadly — sexualising a minor, sexual
+          <b>Child sexual abuse and exploitation (CSAE)</b> more broadly: sexualising a minor, sexual
           commentary about a minor, or presenting a minor in a sexualised way.
         </li>
-        <li><b>Grooming</b> — building a relationship with a minor to sexually exploit them.</li>
-        <li><b>Sextortion</b> — threatening to release intimate imagery to coerce a minor.</li>
+        <li><b>Grooming</b>: building a relationship with a minor to sexually exploit them.</li>
+        <li><b>Sextortion</b>: threatening to release intimate imagery to coerce a minor.</li>
         <li><b>Trafficking a minor</b>, or advertising, soliciting or arranging their sexual exploitation.</li>
         <li><b>Seeking or offering CSAM</b>, including links, codes, or directions to it elsewhere.</li>
         <li><b>Normalising or promoting</b> sexual interest in minors.</li>
@@ -86,7 +86,7 @@ export function ChildSafetyBody() {
         </li>
         <li><b>Close the account</b> responsible, and block the device and sign-in identifiers where we can.</li>
         <li>
-          <b>Preserve the evidence</b> — the content, the account, and the associated records — rather than
+          <b>Preserve the evidence</b> (the content, the account, and the associated records) rather than
           deleting it, so an investigation is still possible.
         </li>
         <li>

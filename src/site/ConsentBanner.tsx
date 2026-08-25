@@ -88,7 +88,7 @@ export function ConsentBanner() {
           </div>
           <p style={{ margin: '8px 0 0', fontSize: '15.5px', lineHeight: '1.6', color: '#4A4842', textWrap: 'pretty' }}>
             We would like to count page views, so we know which pages are working. That is the only thing we use
-            cookies for — no advertising, and no tracking you across other sites. Nothing is loaded until you say
+            cookies for: no advertising, and no tracking you across other sites. Nothing is loaded until you say
             yes, and the site works exactly the same either way.{' '}
             <a href="/cookies" style={{ color: '#0A6068', whiteSpace: 'nowrap' }}>
               What this stores

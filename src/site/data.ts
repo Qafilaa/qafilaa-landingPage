@@ -14,7 +14,7 @@ export interface CrewMember { id: string; name: string; role: string; c: string;
 export const TRIP = {
   name:  'Ladakh Circuit',
   route: 'Manali → Leh → Manali',
-  dates: 'Tue 1 – Thu 10 Sep 2026',
+  dates: 'Tue 1 - Thu 10 Sep 2026',
   days:  10
 };
 

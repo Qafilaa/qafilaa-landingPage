@@ -31,7 +31,7 @@ export function CommunityGuidelinesBody() {
         anything you send us through the help centre.
       </P>
       <P>
-        Documents you upload — licence, registration, insurance, permits — are handled separately and are not a
+        Documents you upload (licence, registration, insurance, permits) are handled separately and are not a
         posting surface. See the <a href="/privacy-policy">Privacy Policy</a> for how those are stored.
       </P>
 
@@ -42,15 +42,15 @@ export function CommunityGuidelinesBody() {
           the authorities. Our full position is on the <a href="/child-safety">Child safety</a> page.
         </li>
         <li><b>Harassment, bullying or threats</b> against another rider, in a note, a name or a broadcast.</li>
-        <li><b>Hate speech</b> — attacking someone for their religion, caste, ethnicity, nationality, gender, sexuality, disability or age.</li>
+        <li><b>Hate speech</b>: attacking someone for their religion, caste, ethnicity, nationality, gender, sexuality, disability or age.</li>
         <li><b>Sexual or pornographic content</b>, including in a profile photo or a bike name.</li>
         <li><b>Graphic violence or gore</b> posted for shock rather than to report a genuine incident on the road.</li>
         <li><b>Impersonating</b> another rider, a coordinator, a police or medical authority, or Qafilaa itself.</li>
-        <li><b>Someone else's private information</b> — a phone number, an address, a document, a photo of a person who has not agreed to it.</li>
+        <li><b>Someone else's private information</b>: a phone number, an address, a document, a photo of a person who has not agreed to it.</li>
         <li><b>Illegal activity</b>, including organising the sale of drugs, weapons, or a route designed to evade a lawful checkpoint.</li>
         <li><b>Deliberately false safety signals.</b> Triggering an SOS, a crash alert or a rally-point call you know to be untrue. People change how they ride because of those.</li>
         <li><b>Spam, scams and advertising</b> aimed at a crew that did not ask for it.</li>
-        <li><b>Interfering with the service</b> — scraping, reverse-engineering the location channel, or trying to read a position you were not shared.</li>
+        <li><b>Interfering with the service</b>: scraping, reverse-engineering the location channel, or trying to read a position you were not shared.</li>
       </UL>
       <P>
         These are the lines, not the whole of good behaviour. A coordinator can set stricter expectations for
@@ -60,7 +60,7 @@ export function CommunityGuidelinesBody() {
       <H2>Reporting something</H2>
       <P>
         Every note, photo, message and rider profile has a report action next to it in the app. If you cannot
-        reach the app — you left the trip, or you deleted it — use the <a href="/report">report page</a> or
+        reach the app (you left the trip, or you deleted it), use the <a href="/report">report page</a> or
         email <Mail subject="Report content" />. Tell us what you saw and where; a screenshot helps.
       </P>
       <P>

@@ -54,7 +54,7 @@ export function AccessibilityBody() {
           scrolling down to 320 px wide.
         </li>
         <li>
-          <b>Live regions.</b> Status that changes without a page load — an alert countdown, a form result — is
+          <b>Live regions.</b> Status that changes without a page load (an alert countdown, a form result) is
           announced.
         </li>
       </UL>
@@ -76,7 +76,7 @@ export function AccessibilityBody() {
         </li>
         <li>
           <b>Some contrast is at the boundary.</b> The small uppercase labels meet AA at their size but are
-          deliberately quiet. If any of them are hard for you to read, tell us — that is exactly the report we
+          deliberately quiet. If any of them are hard for you to read, tell us. That is exactly the report we
           want.
         </li>
         <li>
@@ -100,7 +100,7 @@ export function AccessibilityBody() {
         ]}
       />
       <P>
-        If you need something from this site in another format — a policy read out, or sent as plain text — ask
+        If you need something from this site in another format (a policy read out, or sent as plain text), ask
         and we will send it.
       </P>
 
@@ -108,7 +108,7 @@ export function AccessibilityBody() {
       <UL>
         <li>Battery mode reduces how often your position updates on long legs and restores it near passes.</li>
         <li>Alerts can be reduced to essentials only for the rest of a trip with a single switch.</li>
-        <li>Manual SOS has three routes in — tap, hold the overlay, or flip the phone — because gloves and adrenaline are real.</li>
+        <li>Manual SOS has three routes in (tap, hold the overlay, or flip the phone) because gloves and adrenaline are real.</li>
         <li>Recap and share cards have a dark variant for low light.</li>
       </UL>
 

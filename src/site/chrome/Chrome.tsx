@@ -14,7 +14,7 @@ export function Chrome() {
           <div data-phonepos="1" style={{ position: 'absolute', left: '0', top: '0', transformOrigin: 'top left', willChange: 'transform' }}>
             <div data-phonetilt="1" style={{ position: 'relative', willChange: 'transform' }}>
               <div style={{ position: 'relative', width: '413px', height: '872px', padding: '10px', boxSizing: 'border-box', background: '#0B0E0D', borderRadius: '54px', boxShadow: '0 40px 90px -24px rgba(35,36,31,.42), 0 0 0 1px rgba(35,36,31,.08)' }}>
-                <div data-phonehost="1" role="button" tabIndex={0} aria-label="App screen — tap for the next screen in this flow" title="Tap for the next screen" style={{ position: 'relative', width: '393px', height: '852px', borderRadius: '44px', overflow: 'hidden', background: '#F1EFE9', pointerEvents: 'auto', cursor: 'pointer' }}></div>
+                <div data-phonehost="1" role="button" tabIndex={0} aria-label="App screen · tap for the next screen in this flow" title="Tap for the next screen" style={{ position: 'relative', width: '393px', height: '852px', borderRadius: '44px', overflow: 'hidden', background: '#F1EFE9', pointerEvents: 'auto', cursor: 'pointer' }}></div>
                 <div data-sheen="1" style={{ position: 'absolute', inset: '10px', borderRadius: '44px', pointerEvents: 'none', background: 'linear-gradient(120deg, rgba(255,255,255,0) 36%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 64%)', opacity: '.07' }}></div>
               </div>
             </div>

@@ -38,7 +38,7 @@ export function CookieChoice() {
 
   const status =
     choice === undefined
-      ? 'Checking…'
+      ? 'Checking...'
       : choice === 'granted'
         ? 'Analytics is on. You allowed it, and we remembered.'
         : choice === 'denied'
@@ -79,7 +79,7 @@ export function CookieChoice() {
       </div>
       <p style={{ margin: '14px 0 0', fontSize: '15px', lineHeight: '1.6', color: '#6E6B63' }}>
         Turning it off also expires the cookies already set. The choice is kept in this browser's local storage, so
-        it does not follow you to another device — and if storage is blocked, we treat that as no.
+        it does not follow you to another device, and if storage is blocked, we treat that as no.
       </p>
     </div>
   );

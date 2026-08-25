@@ -15,7 +15,7 @@ export function DeleteDataBody() {
               <ul style={{ margin: '14px 0 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '16.5px', lineHeight: '1.6', color: '#4A4842' }}>
                 <li>Location traces already delete themselves after <b style={{ color: '#23241F' }}>90 days</b>. You can set that to <b style={{ color: '#23241F' }}>7</b>.</li>
                 <li>Medical card, emergency contacts, documents and photos delete individually, in the app, at any time.</li>
-                <li>No app and no sign-in? Email us and we will do it — <b style={{ color: '#23241F' }}>within 30 days, usually a few working days.</b></li>
+                <li>No app and no sign-in? Email us and we will do it: <b style={{ color: '#23241F' }}>within 30 days, usually a few working days.</b></li>
                 <li>If you want everything gone, that is <a href="/delete-account">Delete your account</a>.</li>
               </ul>
             </div>
@@ -57,7 +57,7 @@ export function DeleteDataBody() {
             <div style={{ marginTop: '44px', maxWidth: '70ch', background: '#FFFFFF', border: '1px solid #DCD6C9', borderRadius: '18px', padding: '28px' }}>
               <div style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.16em', textTransform: 'uppercase', color: '#B26B00' }}>No app · no sign-in · no account needed</div>
               <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '23px', letterSpacing: '-.01em', margin: '12px 0 0' }}>Ask us to delete it for you</h2>
-              <p style={{ margin: '14px 0 0', fontSize: 'var(--qf-fs-17)', lineHeight: '1.7', color: '#4A4842', textWrap: 'pretty' }}>Email <a href="mailto:admin@qafilaa.in?subject=Delete%20my%20data">admin@qafilaa.in</a> with the subject "Delete my data" and tell us what to remove. Send it from the email address on the account where you can — if you cannot, tell us the phone number the account was registered with and we will verify another way before we act. We do not require you to install anything or sign in.</p>
+              <p style={{ margin: '14px 0 0', fontSize: 'var(--qf-fs-17)', lineHeight: '1.7', color: '#4A4842', textWrap: 'pretty' }}>Email <a href="mailto:admin@qafilaa.in?subject=Delete%20my%20data">admin@qafilaa.in</a> with the subject "Delete my data" and tell us what to remove. Send it from the email address on the account where you can. If you cannot, tell us the phone number the account was registered with and we will verify another way before we act. We do not require you to install anything or sign in.</p>
               <p style={{ margin: '12px 0 0', fontSize: 'var(--qf-fs-17)', lineHeight: '1.7', color: '#4A4842' }}>Verified requests are actioned within 30 days, normally within a few working days. You will get written confirmation when it is done.</p>
               <a href="mailto:admin@qafilaa.in?subject=Delete%20my%20data" data-tap="1" style={{ display: 'inline-flex', alignItems: 'center', gap: '9px', marginTop: '22px', minHeight: '48px', padding: '0 22px', borderRadius: '13px', background: '#0E7C86', color: '#F7F5F0', fontSize: '15px', fontWeight: '600', textDecoration: 'none' }}>
                 Email a deletion request
@@ -68,7 +68,7 @@ export function DeleteDataBody() {
             <div data-legalbody="1" style={{ maxWidth: '70ch' }}>
               <h2 style={{ fontFamily: '\'Space Grotesk\',sans-serif', fontWeight: '600', fontSize: '23px', lineHeight: '1.25', letterSpacing: '-.01em', margin: '56px 0 0' }}>What we cannot delete for you</h2>
               <ul style={{ margin: '14px 0 0', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '9px', fontSize: 'var(--qf-fs-17)', lineHeight: '1.65', color: '#4A4842' }}>
-                <li>Content other riders wrote — their notes, their expenses, their photos — even where it mentions you. It is theirs.</li>
+                <li>Content other riders wrote (their notes, their expenses, their photos), even where it mentions you. It is theirs.</li>
                 <li>Trips still shared with other riders. We remove your membership and your personal rows; the trip itself stays for them.</li>
                 <li>Safety alerts that form part of another rider's safety record. The reference back to your account is cleared, so the entry no longer identifies you.</li>
                 <li>Routine backups and server logs, which age out on their own schedule within 30 days.</li>
