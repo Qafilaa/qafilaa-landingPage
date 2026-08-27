@@ -10,7 +10,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from h2jsx import convert  # noqa: E402
-from divergences import add_nav_tagline, fluid_type  # noqa: E402
+from divergences import (add_download_faq, add_nav_tagline, fluid_type,  # noqa: E402
+                         set_launch_status)
 
 SRC = os.path.join(TOOLS, 'design', 'Qafilaa Site v3.dc.html')
 OUT = _os.path.join(REPO, 'src', 'site')
@@ -214,7 +215,14 @@ def add_analytics_disclosure(html):
 # ── sections ────────────────────────────────────────────────────────────────
 names = []
 for i, (a, b, name) in enumerate(SECTIONS):
-    jsx = convert(relink(seg(a, b))).strip()
+    raw = relink(seg(a, b))
+    if name == 'SettingsAndSupport':
+        # the app has shipped; the handoff's FAQ never says where to get it
+        raw = add_download_faq(raw)
+    if name == 'Trailhead':
+        # the hero's status line: the handoff still says "in review" -- see divergences.py
+        raw = set_launch_status(raw)
+    jsx = convert(raw).strip()
     if name == 'TheEnd':
         jsx = add_honeypot(rebuild_footer(jsx))
     body = HEAD % ('%d-%d' % (a, b))

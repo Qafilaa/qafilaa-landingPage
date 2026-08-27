@@ -19,9 +19,9 @@ export function Trailhead() {
             </div>
             <div data-rv="1" style={{ display: 'flex', alignItems: 'center', gap: '11px', marginTop: '28px', color: 'var(--mut)', fontSize: '15px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--acc2)', animation: 'qf-blink 2s ease-in-out infinite' }}></span>
-              <span data-waitline="1">Join the riders already on the list</span>
+              <span data-waitline="1">Free on the App Store and Google Play</span>
             </div>
-            <div data-plot="1" style={{ marginTop: '13px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--warn)' }}>In review · launching this month</div>
+            <div data-plot="1" style={{ marginTop: '13px', fontFamily: '\'Space Grotesk\',sans-serif', fontSize: 'var(--qf-fs-11)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--acc2)' }}>Out now on the App Store and Google Play</div>
           </div>
           <div data-dock="1" data-screen="convoy" data-scale="0.62" data-kind="replace" data-flowname="The live convoy" data-flow="convoy,convoyList,muster"></div>
         </div>

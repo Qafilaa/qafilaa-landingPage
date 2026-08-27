@@ -17,7 +17,8 @@ import sys
 
 sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, TOOLS)
-from divergences import add_nav_tagline, fluid_type  # noqa: E402
+from divergences import (add_download_faq, add_nav_tagline, fluid_type,  # noqa: E402
+                         set_launch_status)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIST = _os.path.join(REPO, 'dist')
@@ -76,6 +77,8 @@ def diff(name, ref, cand):
 # ── home ────────────────────────────────────────────────────────────────────
 ref = '\n'.join(LINES[330:392]) + '\n' + '\n'.join(LINES[394:907]) + '\n' + LINES[1410]
 ref = add_nav_tagline(fluid_type(ref))   # the nav tagline is ours — fold it into the reference
+ref = set_launch_status(ref)             # ...and so is the launch-status line
+ref = add_download_faq(ref)              # ...and the download question in the FAQ
 ref = relink(ref)
 # Handoff 14 replaced the email form with store badges, so there is no form to
 # fold the honeypot into. Kept conditional rather than deleted: the form is the

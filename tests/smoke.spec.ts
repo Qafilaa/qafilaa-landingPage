@@ -185,6 +185,53 @@ test.describe('landing', () => {
     ).toBeLessThan(14);
   });
 
+  test('every live store chip is a real link to its listing', async ({ page }) => {
+    await bootedLanding(page);
+
+    // buildStores() draws these at runtime from `stores` in src/content.ts, so
+    // design:verify never sees them - it only diffs prerendered markup. This is
+    // the only thing standing between a shipped app and a dead "Coming soon"
+    // chip, which is exactly what the handoff hard-codes.
+    const chips = page.locator('[data-stores] > *');
+    await expect(chips).toHaveCount(2);
+
+    const apple = page.locator('[data-storelink="appstore"]');
+    const play = page.locator('[data-storelink="play"]');
+    await expect(apple, 'the App Store chip must link to the listing').toHaveAttribute(
+      'href',
+      'https://apps.apple.com/app/qafilaa/id6798303654',
+    );
+    await expect(play, 'the Play chip must link to the listing').toHaveAttribute(
+      'href',
+      'https://play.google.com/store/apps/details?id=app.qafilaa',
+    );
+
+    // A store chip opening a new tab without this is a tabnabbing hole.
+    for (const chip of [apple, play]) {
+      await expect(chip).toHaveAttribute('rel', 'noopener');
+      const box = await chip.boundingBox();
+      expect(box?.height ?? 0, 'store chips are the primary call to action').toBeGreaterThanOrEqual(44);
+    }
+
+    // The design's icon is fetched and inlined; an empty slot means the SVG moved.
+    expect(await page.locator('[data-stores] svg').count()).toBe(2);
+    await expect(page.locator('[data-stores]')).not.toContainText('Coming soon');
+  });
+
+  test('the hero says the app has shipped', async ({ page }) => {
+    await bootedLanding(page);
+    // The handoff still reads "In review - launching this month"; divergences.py
+    // rewrites it. If a new handoff moves the anchor, set_launch_status() asserts
+    // and generation fails - this catches the other direction, a silent revert.
+    const hero = page.locator('#top');
+    await expect(hero).toContainText('Out now on the App Store and Google Play');
+    await expect(hero).not.toContainText('In review');
+
+    // The social-proof line is overwritten by the live signup count, so assert
+    // on the dead end it must never fall back to: a waitlist with no form.
+    await expect(page.locator('[data-waitline]')).not.toContainText('on the list');
+  });
+
   test('the tone system writes onto :root', async ({ page }) => {
     await bootedLanding(page);
     const bg = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim());

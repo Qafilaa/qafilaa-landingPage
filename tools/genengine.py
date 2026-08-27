@@ -153,6 +153,48 @@ eng = sub1(eng,
            "    box.setAttribute('data-widebox', '1');   // hook for the responsive layer",
            'widebox hook')
 
+# The store chips are the whole point of the end panel now that the app has
+# shipped. The handoff hard-codes both as an inert "Coming soon" span, which was
+# right when it was written and is wrong the day a listing goes live. Read the
+# state from src/content.ts instead: a live store becomes a real anchor with the
+# accent border, a pending one keeps the design's chip exactly. Google Play went
+# live 27/08/2026; the App Store id exists but the listing is not approved yet,
+# and linking it early lands a rider on Apple's "App Not Available".
+#
+# This markup is built at runtime, so verify.py never sees it. The guard is
+# tests/smoke.spec.ts, which asserts the live chip is an anchor to the listing.
+STORES_OLD = """  buildStores() {
+    const w = this.q('[data-stores]'); w.innerHTML = '';
+    [['App Store','Coming soon','brand/icon-appstore.svg'],['Google Play','Coming soon','brand/icon-googleplay.svg']].forEach(s => {
+      const d = document.createElement('span');
+      d.style.cssText = 'display:flex; align-items:center; gap:10px; min-height:44px; padding:0 18px; border:1px solid var(--line); border-radius:12px; background:var(--card); font-size:14px; color:var(--mut);';
+      d.innerHTML = '<span data-ic="1" style="display:flex; width:17px; height:17px; color:var(--ink);"></span><span style="font-weight:600; color:var(--ink);">'+s[0]+'</span><span style="'+SUR+'">'+s[1]+'</span>';
+      w.appendChild(d);
+      this.inlineIcon(d.querySelector('[data-ic]'), s[2], 17);
+    });
+  }"""
+
+STORES_NEW = """  buildStores() {
+    const w = this.q('[data-stores]'); w.innerHTML = '';
+    STORES.forEach((s) => {
+      /* an anchor only where the listing actually resolves - see src/content.ts */
+      const d: any = document.createElement(s.live ? 'a' : 'span');
+      if (s.live) {
+        d.href = s.url;
+        d.target = '_blank';
+        d.rel = 'noopener';
+        d.setAttribute('data-storelink', s.id);
+        d.setAttribute('aria-label', 'Get Qafilaa on ' + s.label);
+      }
+      d.style.cssText = 'display:flex; align-items:center; gap:10px; min-height:44px; padding:0 18px; border:1px solid ' + (s.live ? 'var(--acc2)' : 'var(--line)') + '; border-radius:12px; background:var(--card); font-size:14px; color:var(--mut); text-decoration:none;' + (s.live ? ' cursor:pointer;' : '');
+      d.innerHTML = '<span data-ic="1" style="display:flex; width:17px; height:17px; color:var(--ink);"></span><span style="font-weight:600; color:var(--ink);">'+s.label+'</span><span style="'+SUR+(s.live ? ' color:var(--acc2);' : '')+'">'+(s.live ? 'Download' : 'Coming soon')+'</span>';
+      w.appendChild(d);
+      this.inlineIcon(d.querySelector('[data-ic]'), s.icon, 17);
+    });
+  }"""
+
+eng = sub1(eng, STORES_OLD, STORES_NEW, 'buildStores')
+
 eng = sub1(eng, 'class Component extends DCLogic {', 'export class SiteEngine {\n'
            '  /* A 1:1 port of a hand-written DOM runtime: it assigns ~120 fields on\n'
            '     `this` across 90 methods. The index signature keeps that legal under\n'
@@ -232,10 +274,11 @@ new_wl = """    const wl = this.q('[data-waitlist]');
         .catch(() => { msg.textContent = 'That did not go through. Try again, or email admin@qafilaa.in.'; });
     });
 
-    /* the design ships static copy here; the live count replaces it when it lands */
+    /* the design ships static copy here; the live count replaces it when it lands.
+       It counts signups, not installs - keep the wording honest about that. */
     const line = this.q('[data-waitline]');
     if (line) getWaitlistCount()
-      .then((n) => { line.textContent = inr(BASE_WAITLIST + n) + ' riders already on the list'; })
+      .then((n) => { line.textContent = inr(BASE_WAITLIST + n) + ' riders signed up'; })
       .catch(() => {});
 
 """
@@ -369,7 +412,7 @@ eng = sub1(eng, '    if (this.ro) { try { this.ro.disconnect(); } catch { /* alr
 
 
 IMPORTS = """import { getWaitlistCount, isValidEmail, joinWaitlist } from '../api';
-import { site } from '../content';
+import { site, stores as STORES } from '../content';
 import { CREW, DAYS, MAXD, PASSES, RESTD, TOTAL_KM, TRIP, roleOf } from './data';
 import { CAPS, KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
 

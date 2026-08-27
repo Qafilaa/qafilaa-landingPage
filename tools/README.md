@@ -24,7 +24,7 @@ npm run dist:audit         # routes, heads, links, footer coverage
 | Script | Writes | What it does |
 | --- | --- | --- |
 | `gen.py` | `src/site/{sections,chrome,legal}/` | Slices the handoff by line range and converts HTML to JSX through `h2jsx.py`. Also applies the declared divergences: the footer's store-required columns, the waitlist honeypot, the Apple 5.1.1 equal-protection clause, the analytics disclosure, and the date lines four documents ship without. |
-| `divergences.py` | — | Transforms shared by `gen.py`, `genengine.py` and `verify.py`, so the shipped files and the reference they are diffed against cannot drift apart. Currently `fluid_type()`, which points the handoff's hard-coded 9-11.5px inline font sizes at custom properties so the responsive layer can lift them on small screens. |
+| `divergences.py` | — | Transforms shared by `gen.py`, `genengine.py` and `verify.py`, so the shipped files and the reference they are diffed against cannot drift apart. `fluid_type()` points the handoff's hard-coded 9-11.5px inline font sizes at custom properties so the responsive layer can lift them on small screens; `add_nav_tagline()` puts the brand line in the top bar; `set_launch_status()` and `add_download_faq()` say the app has shipped (the handoff was authored while it was in review — CLAUDE.md divergence #13). |
 | `genengine.py` | `src/site/{tokens,data,engine}.ts` | Extracts the runtime class. Every rewrite is asserted, so a drift in the handoff fails loudly instead of emitting a half-ported engine. |
 | `anyfix.py` | `src/site/engine.ts` | Annotates the ported JS for `strict`, driven by tsc's own diagnostics. **Run it after `genengine.py`** or the build fails on implicit anys. |
 | `gencss.py` | `src/index.css` | The handoff's `<style>` block **plus an appendix** for the legal shell (media queries cannot be inline styles). |
@@ -48,3 +48,8 @@ npm run dist:audit         # routes, heads, links, footer coverage
 `src/site/legal/*Body.tsx` are all output. A change made there survives until the next handoff and then
 vanishes — which has already happened twice, to the footer and to the privacy clause. Fold it into the
 generator instead, and add it to the divergence list in `CLAUDE.md` §3.
+
+**`design:verify` only sees prerendered markup.** Anything the engine draws at runtime — the store chips,
+the social links, every demo — is invisible to it, so a divergence there needs a Playwright assertion
+instead. The store links are guarded by `tests/smoke.spec.ts`; nothing else would catch them reverting to
+the handoff's inert "Coming soon" chip on the next handoff.

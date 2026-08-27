@@ -76,7 +76,7 @@ phone HUD — a caption panel beside the flying device — plus a `CAPS` table a
 The screen library, `tokens.ts`, `data.ts`, all six legal documents and the entire `<head>` are **byte-identical
 to handoff 13** — this handoff is CSS, engine and a few markup attributes.
 
-**Nine live departures from the handoff**, each required by a rule below. Three more (#7, #10, #11) are struck through: the designer adopted them upstream. **Numbering is stable across handoffs** — a retired entry keeps its number rather than closing the gap, so older commit messages still resolve.
+**Ten live departures from the handoff**, each required by a rule below. Three more (#7, #10, #11) are struck through: the designer adopted them upstream. **Numbering is stable across handoffs** — a retired entry keeps its number rather than closing the gap, so older commit messages still resolve.
 1. **Partly retired.** ~~The waitlist submits through `src/api.ts`~~ — handoff 14 removed the form entirely (§6), so the honeypot injection and the `joinWaitlist()` path are dormant rather than gone: both are kept and made conditional, because a signup form is the kind of thing that comes back and it must not come back naked. Still live: the hero's social-proof line takes the live backend count.
 2. Legal pages are **real prerendered routes**, not the handoff's hash overlay — so `buildLegal`/`openLegal`/`closeLegal` are not ported, `buildLegal` is absent from the `boot()` order array, and cross-links are real `/route` hrefs.
 3. `fetchpriority` is emitted via a spread (`{...{ fetchpriority: 'high' }}`) — React 18 renders the camelCase spelling verbatim and warns, and its types reject the lowercase one.
@@ -91,6 +91,28 @@ to handoff 13** — this handoff is CSS, engine and a few markup attributes.
 11. ~~The flying phone is sized like the static phone beside it.~~ **No longer a divergence** — handoff 14 rewrites `fitDocks()` to keep each dock at its declared scale ("*it only gives ground when the frame cannot fit at all*"). The upstream version goes further than the patch did: it caps by **width** as well as height, so the phone can never crowd the copy out of its column.
 
 12. **A responsive layer of our own.** The handoff carries a mobile pass, but it stops once the phone rig goes inline. Measured across 320-899px it left 56 labels under 12px, 14 touch targets under 40px, the inline caption strip laid out **off-screen to the right**, and the policy header hanging 66px past the edge below 480. `gencss.py` emits a RESPONSIVE block after the appendix, and `divergences.py` rewrites the handoff's hard-coded 9-11.5px **inline** font sizes to custom properties -- the only way a media query can reach an inline style. The same rewrite is applied to `verify.py`'s reference, so fidelity stays a true 8/8. Guarded by `tests/responsive.spec.ts`; see §4.
+
+13. **The app has shipped, and the handoff has not.** Qafilaa 1.0 went live on **Google Play and the
+    App Store on 27/08/2026**, and the design was authored while it was still in review. Four things say
+    otherwise and all four are patched by the generators, from one table — `stores` in `src/content.ts`:
+    - `buildStores()` hard-codes both chips as an inert `<span>` reading "Coming soon". It now reads the
+      table: a store with `live: true` renders as a real `<a>` with the accent border, `rel="noopener"` and
+      a `data-storelink` hook; a pending one keeps the handoff's chip exactly. **Keep the flag** rather
+      than hard-coding two anchors — a listing can be pulled, and the chip needs an honest fallback.
+    - The hero status line read *"In review · launching this month"* in `var(--warn)`. Now
+      *"Out now on the App Store and Google Play"* in `var(--acc2)`.
+    - The hero social-proof line read *"Join the riders already on the list"* — an invitation to a
+      waitlist whose form handoff 14 deleted. Now *"Free on the App Store and Google Play"*, and the live
+      count that replaces it says "riders signed up", because that endpoint counts signups, not installs.
+    - The FAQ never answered *"where do I download it"*. Added at the top of the landing FAQ **and** to the
+      `FAQPage` JSON-LD — Google requires the answer to be visible on the page carrying the markup, so
+      §7's "edit both together" rule applies to this pair too.
+
+    `buildStores()` draws at runtime, so **`design:verify` cannot see it** — the guard is
+    `tests/smoke.spec.ts` (*"every live store chip is a real link to its listing"*). The store URLs also
+    appear in four hand-maintained places that do **not** follow `src/content.ts`: the JSON-LD `installUrl`
+    in `index.html`, `related_applications` in `public/site.webmanifest`, the facts in `public/llms.txt`,
+    and `public/join/index.html`, which hard-codes both for the deep-link fallback.
 
 Everything else must match the handoff exactly. `tools/verify.py` (see §9) folds these in and then demands a byte-level zero, so **when changing a section, change it to match the handoff** — and if you must diverge, add it to this list first.
 
@@ -120,14 +142,17 @@ Everything else must match the handoff exactly. `tools/verify.py` (see §9) fold
 
 ## 6. Backend API / the waitlist that was
 
-**Handoff 14 removed the email form.** The end panel carries App Store / Google Play "Coming soon" badges
-instead, so **the site currently has no email capture at all**. That was the designer's call, not a porting
-loss — but it is worth knowing before anyone asks where the signups went.
+**Handoff 14 removed the email form.** The end panel carries App Store / Google Play badges instead —
+live download links since 27/08/2026 (divergence #13) — so **the site currently has no email capture at
+all**. That was the designer's call, not a porting loss — but it is worth knowing before anyone asks where
+the signups went.
 
 What is still live:
 
 - `getWaitlistCount()` → `GET /api/v1/waitlist/count` feeds the hero's social-proof line
-  (`[data-waitline]`, still in the Trailhead panel), with the handoff's static copy as a silent fallback.
+  (`[data-waitline]`, still in the Trailhead panel), with our own static copy as a silent fallback.
+  **It counts waitlist signups, not installs** — the line says "riders signed up" for that reason. If you
+  ever want an install figure there it has to come from somewhere else; do not relabel this one.
 - API base is `VITE_API_BASE_URL` (defaults to `https://api.qafilaa.in`, trailing slash normalized).
 
 What is dormant, deliberately:
@@ -170,6 +195,10 @@ were kept rather than deleted.
 - Legal pages pin the Daylight palette locally in `LegalShell.tsx`. Note `--mut` is **`#4A4842`** there, darker than the light tone's `#6E6B63` — a deliberate long-prose readability choice from the handoff.
 - Pages written by hand use the typographic primitives in `src/site/legal/prose.tsx`, whose values are lifted from the transcribed pages. Do not hand-roll a new heading style.
 - FAQ copy is duplicated as JSON-LD in `index.html` **and** in `src/site/sections/SettingsAndSupport.tsx` — **edit both together**.
+  Google drops the rich result if an answer in the markup is not visible on the page. `SettingsAndSupport.tsx`
+  is generated, so an addition goes through `add_download_faq()` in `tools/divergences.py`, which `gen.py` and
+  `verify.py` both apply. `/support` carries its own near-identical FAQ from a different line range — it is
+  **not** kept in sync automatically.
 - `src/content.ts` holds the real localized launch values and intentionally differs from prototype placeholders — **do not overwrite on a design sync.**
 
 ### The crawler and install surface
@@ -179,9 +208,9 @@ Hand-maintained files in `public/`. None is generated, so each drifts silently i
 | File | Purpose | Watch out for |
 |---|---|---|
 | `robots.txt` | Allows everything, and names the answer-engine crawlers explicitly (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended…) | Nothing is disallowed on purpose — the policy pages are the ones people most need to find |
-| `llms.txt` | The curated map answer engines read: what Qafilaa is, the hard facts, and every policy URL with a one-line summary | Update when a route or a headline fact changes |
+| `llms.txt` | The curated map answer engines read: what Qafilaa is, the hard facts, and every policy URL with a one-line summary | Update when a route or a headline fact changes. Carries both store URLs and the release date — divergence #13 |
 | `sitemap.xml` | All 16 indexable routes | Hand-maintained. `/404` is **not** in it |
-| `site.webmanifest` | PWA install metadata, store `related_applications`, shortcuts | Icons must be **square**; Android rejects non-square |
+| `site.webmanifest` | PWA install metadata, store `related_applications`, shortcuts | Icons must be **square**; Android rejects non-square. `related_applications` must only list a listing that actually resolves |
 | `.well-known/security.txt` | RFC 9116 disclosure contact | `Expires` is a hard date — renew it before it lapses or the file is invalid |
 | `.well-known/{assetlinks.json,apple-app-site-association}` | App Links / Universal Links | Must serve as `application/json`; the deploy re-tags them |
 | `favicon.ico`, `brand/icon-*.png` | Favicon + PWA icon set | **Generated**, not hand-cut — see below |

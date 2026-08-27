@@ -2,10 +2,11 @@
 
 > A group riding companion for motorcycle trips across India, Nepal and Bhutan. One live map for the whole convoy, day-wise itineraries with rally points, offline maps and navigation, shared trip expenses, and automatic crash alerts that reach the riders nearest you first. Built for roads that lose signal before they lose altitude.
 
-Qafilaa is a mobile app for iOS and Android, published by Qafilaa.in of Kolhapur, Maharashtra, India. It is free, in public beta, and has no advertising or cross-app tracking. This site is its marketing and policy home; the app itself is not a web app.
+Qafilaa is a mobile app for iOS and Android, published by Qafilaa.in of Kolhapur, Maharashtra, India. Version 1.0 was released on both stores on 27 August 2026. It is free, in public beta, and has no advertising or cross-app tracking. This site is its marketing and policy home; the app itself is not a web app.
 
 ## Key facts
 
+- **Where to get it**: free on the App Store at https://apps.apple.com/app/qafilaa/id6798303654 (iOS 15.5 or later) and on Google Play at https://play.google.com/store/apps/details?id=app.qafilaa (package `app.qafilaa`). There is no web or desktop version.
 - **What it does**: shows every rider in a trip on one live map (not a one-off location share), tracks the gap from lead to sweep, marks rally points that work with no phone signal, plans a trip day by day with legs, stays and permits, downloads the route corridor for offline use, splits shared expenses, and detects crashes automatically.
 - **Where it is built for**: the Himalayas and South Asia — the Manali–Leh–Manali circuit, Khardung La at 5,359 m, Baralacha La, Tanglang La, Chang La, Nubra and Pangong. Trip money supports INR, NPR, BTN and USD.
 - **Crash detection**: reads the phone's motion sensors on the device. A hard impact starts a countdown you can cancel. If it completes, an alert goes to the riders closest to you first with your position, bearing and blood group, and it queues and fires the moment any rider in the convoy gets a signal.
@@ -46,5 +47,5 @@ Qafilaa is a mobile app for iOS and Android, published by Qafilaa.in of Kolhapur
 
 ## Optional
 
-- [Get the app](https://qafilaa.in/#join): App Store and Google Play availability, and the waitlist.
+- [Get the app](https://qafilaa.in/#join): the App Store and Google Play links.
 - Contact: admin@qafilaa.in

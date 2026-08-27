@@ -89,6 +89,64 @@ def add_nav_tagline(html):
     return html[:i] + NL_INDENT + NAVTAG + html[i:]
 
 
+# ── the launch status line ─────────────────────────────────────────────
+# The hero carries a one-line status under the social-proof line. The handoff
+# was written while the app was still in review, so it reads "In review ·
+# launching this month" in the warning colour. Both stores went live on
+# 27/08/2026, which makes that line false and makes the warning colour wrong.
+#
+# Anchored on the colour + text, never the whole element: the div carries
+# `font-size:11px`, which `fluid_type` rewrites, so matching the literal would
+# silently stop finding it. Same trap `add_nav_tagline` documents.
+LAUNCH_OLD = 'color:var(--warn);">In review · launching this month</div>'
+LAUNCH_NEW = 'color:var(--acc2);">Out now on the App Store and Google Play</div>'
+
+
+# The line above it is the social-proof strip. `wire()` overwrites it with the
+# live signup count the moment the API answers, but the authored fallback is
+# what a visitor sees first -- and on a static build, forever, if the API is
+# down. "Join the riders already on the list" invites you onto a waitlist whose
+# form handoff 14 deleted, which reads as a dead end now the app is downloadable.
+# Replaced with something true whether or not the count ever lands.
+WAITLINE_OLD = '<span data-waitline="1">Join the riders already on the list</span>'
+WAITLINE_NEW = '<span data-waitline="1">Free on the App Store and Google Play</span>'
+
+
+def set_launch_status(html):
+    """Say what is actually shippable today, in the accent rather than the warning tone."""
+    assert LAUNCH_OLD in html, 'the hero launch-status line moved'
+    assert WAITLINE_OLD in html, 'the hero social-proof line moved'
+    html = html.replace(LAUNCH_OLD, LAUNCH_NEW, 1)
+    return html.replace(WAITLINE_OLD, WAITLINE_NEW, 1)
+
+
+# ── the download FAQ ────────────────────────────────────────────────────────────
+# The handoff was written before the app shipped, so the FAQ never answers the
+# first question anyone asks once it has: where do I get it. The same question
+# and answer go into the FAQPage JSON-LD in index.html -- Google requires the
+# answer to be visible on the page carrying the markup, so these two must be
+# added and edited together (CLAUDE.md section 7).
+#
+# Anchored on the first question's summary text, not on the whole element: the
+# details carries font sizes `fluid_type` may start rewriting later.
+FAQ_FIRST = 'Is there an app to track a group of bikers on a ride?</summary>'
+
+DOWNLOAD_FAQ = (
+    '<details class="qf-rcpt" style="border-bottom:1px solid var(--line); padding:11px 0;">'
+    '<summary style="cursor:pointer; font-size:15px; font-weight:500; min-height:24px;">'
+    'Where can I download Qafilaa?</summary>'
+    '<p style="margin:8px 0 0; font-size:14px; line-height:1.55; color:var(--mut);">'
+    'Qafilaa is free on the App Store and on Google Play, for iOS 15.5 and Android. The store links are at the end of this page.</p></details>'
+)
+
+
+def add_download_faq(html):
+    """Put the download question at the top of the landing page FAQ."""
+    assert FAQ_FIRST in html, 'the FAQ list moved'
+    i = html.rindex('<details', 0, html.index(FAQ_FIRST))
+    return html[:i] + DOWNLOAD_FAQ + html[i:]
+
+
 def audit_font_sizes(text):
     """Sizes under 12px the map does not cover — these would stay unreadable."""
     found = set(re.findall(r'font-size:(\d+(?:\.\d+)?)px', text))

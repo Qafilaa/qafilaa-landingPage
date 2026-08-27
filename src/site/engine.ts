@@ -16,7 +16,7 @@
  * `closeLegal` are intentionally not ported.
  */
 import { getWaitlistCount, isValidEmail, joinWaitlist } from '../api';
-import { site } from '../content';
+import { site, stores as STORES } from '../content';
 import { CREW, DAYS, MAXD, PASSES, RESTD, TOTAL_KM, TRIP, roleOf } from './data';
 import { CAPS, KEYS, NARROW, PH, PW, SG, SUR, TONES, alphaOf, clamp, inr, mix } from './tokens';
 
@@ -1020,17 +1020,18 @@ export class SiteEngine {
       const msg = this.q('[data-wlmsg]');
       if (!v) return;
       if (!isValidEmail(v)) { msg.textContent = 'That email does not look right. Check it and try again.'; return; }
-      msg.textContent = 'Sending...';
+      msg.textContent = 'Sending…';
       const trap = this.q('[data-wlcompany]') as HTMLInputElement | null;
       joinWaitlist({ email: v, source: 'cta', company: trap ? trap.value : '' })
         .then(() => { msg.textContent = 'You are on the list. We will write when the beta opens.'; field.value = ''; })
         .catch(() => { msg.textContent = 'That did not go through. Try again, or email admin@qafilaa.in.'; });
     });
 
-    /* the design ships static copy here; the live count replaces it when it lands */
+    /* the design ships static copy here; the live count replaces it when it lands.
+       It counts signups, not installs - keep the wording honest about that. */
     const line = this.q('[data-waitline]');
     if (line) getWaitlistCount()
-      .then((n) => { line.textContent = inr(BASE_WAITLIST + n) + ' riders already on the list'; })
+      .then((n) => { line.textContent = inr(BASE_WAITLIST + n) + ' riders signed up'; })
       .catch(() => {});
 
     const jc = this.q('[data-joincode]');
@@ -2218,12 +2219,20 @@ export class SiteEngine {
 
   buildStores() {
     const w = this.q('[data-stores]'); w.innerHTML = '';
-    [['App Store','Coming soon','brand/icon-appstore.svg'],['Google Play','Coming soon','brand/icon-googleplay.svg']].forEach(s => {
-      const d = document.createElement('span');
-      d.style.cssText = 'display:flex; align-items:center; gap:10px; min-height:44px; padding:0 18px; border:1px solid var(--line); border-radius:12px; background:var(--card); font-size:14px; color:var(--mut);';
-      d.innerHTML = '<span data-ic="1" style="display:flex; width:17px; height:17px; color:var(--ink);"></span><span style="font-weight:600; color:var(--ink);">'+s[0]+'</span><span style="'+SUR+'">'+s[1]+'</span>';
+    STORES.forEach((s) => {
+      /* an anchor only where the listing actually resolves - see src/content.ts */
+      const d: any = document.createElement(s.live ? 'a' : 'span');
+      if (s.live) {
+        d.href = s.url;
+        d.target = '_blank';
+        d.rel = 'noopener';
+        d.setAttribute('data-storelink', s.id);
+        d.setAttribute('aria-label', 'Get Qafilaa on ' + s.label);
+      }
+      d.style.cssText = 'display:flex; align-items:center; gap:10px; min-height:44px; padding:0 18px; border:1px solid ' + (s.live ? 'var(--acc2)' : 'var(--line)') + '; border-radius:12px; background:var(--card); font-size:14px; color:var(--mut); text-decoration:none;' + (s.live ? ' cursor:pointer;' : '');
+      d.innerHTML = '<span data-ic="1" style="display:flex; width:17px; height:17px; color:var(--ink);"></span><span style="font-weight:600; color:var(--ink);">'+s.label+'</span><span style="'+SUR+(s.live ? ' color:var(--acc2);' : '')+'">'+(s.live ? 'Download' : 'Coming soon')+'</span>';
       w.appendChild(d);
-      this.inlineIcon(d.querySelector('[data-ic]'), s[2], 17);
+      this.inlineIcon(d.querySelector('[data-ic]'), s.icon, 17);
     });
   }
 
