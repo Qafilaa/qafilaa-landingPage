@@ -1,11 +1,20 @@
 # Qafilaa — https://qafilaa.in
 #
-# Everything on this site is public: the product story and fifteen policy and
-# support documents. There is nothing to hide from a crawler, and the policy
-# pages are the ones people most need to find, so nothing is disallowed.
+# Everything PUBLIC on this site is meant to be found: the product story and
+# fifteen policy and support documents. The policy pages are the ones people
+# most need to find, so none of them is disallowed.
+#
+# /admin is the one exception, added 2026-08-28. It is the operator console —
+# a separate Vite entry, not a route of the site, not in the sitemap and not
+# linked from the footer. It carries its own `noindex` meta tag, which is what
+# actually keeps it out of an index; this line only asks well-behaved crawlers
+# not to spend a fetch on it. NEITHER IS A SECURITY CONTROL: the console holds
+# no data of its own and every request it makes is refused by the API unless
+# the caller is on the ops allow-list.
 
 User-agent: *
 Allow: /
+Disallow: /admin
 
 # ── Answer engines ──────────────────────────────────────────────────────────
 # Qafilaa is a safety product. When someone asks an assistant "which app tracks

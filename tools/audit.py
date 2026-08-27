@@ -17,9 +17,14 @@ for root, _, files in os.walk(DIST):
     for f in files:
         if f.endswith('.html'):
             pages.append(os.path.join(root, f))
-# /join is a standalone, noindex deep-link bounce page and 404.html is the
+# /join is a standalone, noindex deep-link bounce page, /admin is the ops
+# console (a separate Vite entry, noindex, deliberately not in the footer or
+# the sitemap), and 404.html is the
 # CDN error document -- neither is a routable URL.
-pages = [p for p in pages if 'join' not in p.replace(DIST, '') and not p.endswith('404.html')]
+pages = [p for p in pages
+         if 'join' not in p.replace(DIST, '')
+         and 'admin' not in p.replace(DIST, '')
+         and not p.endswith('404.html')]
 
 
 def route_of(path):

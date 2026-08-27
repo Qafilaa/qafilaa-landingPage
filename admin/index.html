@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <!--
+      The admin console is a SECOND Vite entry, not a route of the marketing site.
+
+      That is deliberate and it is not a shortcut. CLAUDE.md section 7 requires every route added to
+      the React router to also appear in src/routes.ts, prerender.mjs PAGES, public/sitemap.xml, the
+      site footer and src/site/legal/groups.ts — and tools/audit.py fails the build if a built route
+      is not linked from the footer. All of that is correct for a policy document and wrong for an
+      operator console: it must not be in the sitemap, must not be in the footer, and must not be
+      prerendered (its first paint is a signed-out state, so hydrating it would mismatch).
+
+      So it follows public/join/index.html: standalone infrastructure, served at its own path, kept
+      out of the marketing pipeline. It is excluded from audit.py by path, exactly like /join.
+    -->
+    <title>Qafilaa Ops</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#F7F5F0" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+
+    <style>
+      /* A minimal reset only. The marketing stylesheet is generated from the design handoff by
+         tools/gencss.py and carries the whole scroll engine's rules — importing it here would drag
+         22 waypoints of layout into a console that has none of them. */
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        background: #F7F5F0;
+        color: #23241F;
+        font-family: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      code { font-family: 'Space Grotesk', ui-monospace, monospace; font-size: .92em; }
+    </style>
+  </head>
+  <body>
+    <div id="admin-root"></div>
+    <noscript>
+      <p style="padding: 24px; font-family: system-ui">
+        The Qafilaa ops console needs JavaScript.
+      </p>
+    </noscript>
+    <script type="module" src="/src/admin-entry.tsx"></script>
+  </body>
+</html>

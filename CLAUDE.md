@@ -263,6 +263,60 @@ Two of these carry named-person commitments — the Grievance Officer and the ch
 If the person changes, change `/contact`, `/child-safety`, the privacy policy, and the Play Console
 declaration together.
 
+## 8b. The ops console at `/admin` — a second entry, not a route
+
+**`/admin` is deliberately NOT a route of the React site.** It is a separate Vite entry
+(`admin/index.html` -> `src/admin-entry.tsx` -> `src/admin/`), built to `dist/admin/index.html` and
+served at `/admin/` with no rewrite rule.
+
+That is not a shortcut around section 7 — it is because every rule in section 7 is wrong for this
+surface. A router route must appear in `src/routes.ts`, `prerender.mjs` PAGES, `public/sitemap.xml`,
+the site footer and `src/site/legal/groups.ts`, and `tools/audit.py` **fails the build** if a built
+route is not linked from the footer. An operator console must be in none of those. It also must not
+be prerendered: its first paint is the signed-out state, so hydrating it would be a guaranteed
+mismatch. It therefore follows `public/join/index.html` — standalone infrastructure — and is excluded
+from `audit.py` by path, exactly as `/join` is.
+
+- **Panels live in the hash** (`/admin#users`). No router library is introduced, and a hash needs no
+  CloudFront rewrite, which a deep path would.
+- **Styling pins Daylight locally**, the way `LegalShell.tsx` does, because the tone engine does not
+  run here. Density is tighter than the marketing site on purpose and every figure is set in tabular
+  numerals. Rules that cannot be inline live in a `<Styles/>` block in `src/admin/ui.tsx` — **never in
+  `src/index.css`**, which `gencss.py` regenerates.
+- **Two dependencies, still.** The signup chart is hand-drawn SVG rather than a charting library.
+- `robots.txt` disallows `/admin` and the page carries `noindex`. **Neither is a security control** —
+  the console holds nothing, and every request it makes is refused by the API unless the caller is on
+  `Ops:AdminEmails`.
+
+### Auth, and what is actually guarding it
+
+Two doors, one account (`admin@qafilaa.in`), and **the browser is not the boundary**:
+
+- **Google SSO** — GIS mints an ID token, `POST /auth/sso/google` exchanges it for a Qafilaa session.
+  Needs `VITE_GOOGLE_CLIENT_ID` at build time; without it the button explains itself and the code path
+  still works.
+- **A fixed code** — the backend's existing `Auth:Demo` path (one configured six-digit code for one
+  configured address, same OTP store, same lifetime, same rate limiter). Add `admin@qafilaa.in` to
+  `Auth:Demo:Accounts` on the API host to arm it; with nothing configured the same form is an ordinary
+  emailed OTP.
+
+The email check in the client is UX — it explains a refusal instead of handing over a session that
+403s on everything. **The real gate is `Policies.Ops` on the API.** The token lives in
+`sessionStorage` and dies with the tab: an operator console that keeps itself signed in forever is one
+left open on an unattended laptop.
+
+### It needs a backend that allows it
+
+`CorsPolicies.PublicSite` was widened in the same change to permit the `Authorization` header and the
+`PUT` method (it was `GET, POST, OPTIONS` + `Content-Type` only, for the waitlist). Without both,
+every ops call dies in preflight and **the failure looks exactly like a 401**. If the console ever
+moves to its own hostname, that origin must be added to `Cors:AllowedOrigins` on the API host —
+nothing in this repo can work around it.
+
+The rider directory and the dashboard figures are new endpoints added with this console:
+`GET /api/v1/ops/users`, `/ops/users/{id}`, `/ops/metrics/overview`, `/ops/metrics/signups`. All are
+Ops-gated and **read-only** — there is no admin edit or delete, deliberately.
+
 ## 9. Verifying fidelity
 
 **The whole pipeline lives in `tools/`** — see `tools/README.md`. It used to sit in a session scratchpad,
