@@ -88,7 +88,7 @@ export function Button({
 
 export function Field({
   label, hint, children,
-}: { label: string; hint?: ReactNode; children: ReactNode }) {
+}: { label: ReactNode; hint?: ReactNode; children: ReactNode }) {
   return (
     <label style={{ display: 'block', marginBottom: 14 }}>
       <span style={{ ...EYEBROW, display: 'block', marginBottom: 6 }}>{label}</span>
@@ -358,15 +358,29 @@ export function ConfirmDialog({
 
         {confirmWord ? (
           <div style={{ marginTop: 16 }}>
-            <Field label={`Type ${confirmWord} to confirm`}>
+            <Field
+              label={
+                <>
+                  Type{' '}
+                  <em style={{ fontStyle: 'italic', letterSpacing: '.06em' }}>&ldquo;{confirmWord}&rdquo;</em>{' '}
+                  to confirm
+                </>
+              }
+            >
               <input
                 ref={firstRef as React.RefObject<HTMLInputElement>}
                 className="qf-a"
                 style={inputStyle}
                 value={typed}
                 onChange={(e) => setTyped(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter') return;
+                  e.preventDefault();
+                  if (ready && !busy) onConfirm();
+                }}
                 autoComplete="off"
                 spellCheck={false}
+                autoFocus
               />
             </Field>
           </div>
