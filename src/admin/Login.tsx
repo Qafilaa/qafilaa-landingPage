@@ -23,8 +23,22 @@ import { ADMIN_EMAIL, ApiError, requestCode, signInWithCode, signInWithGoogle, t
 import { DAYLIGHT, HG, SG, inputStyle } from './theme';
 import { Badge, Banner, Button, Field, Styles } from './ui';
 
-/** Set at build time. Absent is a supported state: the SSO button explains itself instead of failing. */
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+/**
+ * The Google **web** OAuth client (`client_type: 3` in the app's `google-services.json`).
+ *
+ * Baked in rather than left to a build-time variable because it is not a secret — a browser client id
+ * is published in every page that uses it — and because the alternative was a console that silently
+ * shipped without its SSO button whenever someone forgot the env var. `VITE_GOOGLE_CLIENT_ID` still
+ * overrides it.
+ *
+ * **This exact id is already in the backend's `Google:Audiences` allow-list**, so a token it mints is
+ * accepted by `POST /auth/sso/google` with no server change. The one thing that is NOT automatic:
+ * `https://qafilaa.in` must be listed as an **Authorised JavaScript origin** on this OAuth client in
+ * the Google Cloud console, or Google refuses to render the button at all (`origin_mismatch`).
+ */
+const GOOGLE_CLIENT_ID =
+  (import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined) ??
+  '410180123105-t83q80dul2h1hfr6f0k840jtv91oefqv.apps.googleusercontent.com';
 
 declare global {
   interface Window {
@@ -147,10 +161,10 @@ export function Login({ onSignedIn }: { onSignedIn: (identity: AdminIdentity) =>
             <div id="qf-gsi" />
           </div>
 
-          {!GOOGLE_CLIENT_ID ? (
-            <Banner tone="warn" title="SSO is not configured">
-              Set <code>VITE_GOOGLE_CLIENT_ID</code> at build time to enable the Google button. The code
-              sign-in below works either way.
+          {GOOGLE_CLIENT_ID && !ssoReady ? (
+            <Banner tone="warn" title="The Google button did not load">
+              Usually this origin is not on the OAuth client&rsquo;s authorised list, or a blocker stopped
+              Google&rsquo;s script. The code sign-in below works either way.
             </Banner>
           ) : null}
 

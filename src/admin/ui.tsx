@@ -519,7 +519,32 @@ export function Styles() {
       .qf-shimmer{background:linear-gradient(90deg,var(--ctr) 25%,rgba(255,255,255,.6) 37%,var(--ctr) 63%);
                   background-size:400% 100%;animation:qfshimmer 1.3s ease-in-out infinite}
       @keyframes qfshimmer{0%{background-position:100% 0}100%{background-position:0 0}}
-      @media (prefers-reduced-motion:reduce){.qf-shimmer{animation:none}}
+
+      /* A live fix breathes. Only the LIVE band animates — if everything moved, movement would stop
+         meaning anything, which is the whole point of the three bands. */
+      .qf-pulse{animation:qfpulse 2s ease-in-out infinite}
+      @keyframes qfpulse{0%,100%{opacity:1}50%{opacity:.35}}
+      .qf-ping{transform-origin:center;animation:qfping 2.4s ease-out infinite}
+      @keyframes qfping{0%{transform:scale(.5);opacity:.5}80%,100%{transform:scale(1.5);opacity:0}}
+
+      @media (prefers-reduced-motion:reduce){
+        .qf-shimmer,.qf-pulse,.qf-ping{animation:none}
+        .qf-ping{opacity:.18}
+      }
+
+      /* --- narrow screens -------------------------------------------------
+         The rail becomes a horizontal scroller (above), and everything else
+         gives up its side padding before it gives up its content. Tables keep
+         their own overflow container rather than being restyled into cards:
+         an operator comparing a column of ages needs the column. */
+      @media (max-width:640px){
+        .qf-main{padding:16px 12px 44px}
+        .qf-statgrid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+        .qf-two{grid-template-columns:1fr}
+      }
+      @media (max-width:420px){
+        .qf-statgrid{grid-template-columns:1fr 1fr}
+      }
     `}</style>
   );
 }

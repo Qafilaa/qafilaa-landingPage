@@ -21,12 +21,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { clearSession, readIdentity, type AdminIdentity, type UserQuery } from './api';
 import { ForceUpdate } from './ForceUpdate';
 import { Login } from './Login';
+import { Live } from './Live';
 import { Audit, Flags, Overview, Runtime, Safety, Support, Trips, Users } from './panels';
 import { DAYLIGHT, HG, SG } from './theme';
 import { Button, Styles } from './ui';
 
 type PanelKey =
-  | 'overview' | 'users' | 'trips' | 'safety' | 'release' | 'flags' | 'support' | 'audit' | 'runtime';
+  | 'overview' | 'live' | 'users' | 'trips' | 'safety' | 'release' | 'flags' | 'support' | 'audit'
+  | 'runtime';
 
 /**
  * The rail, in the order an operator actually needs things.
@@ -38,6 +40,7 @@ type PanelKey =
  */
 const PANELS: { key: PanelKey; label: string; icon: string; hint: string; group: number }[] = [
   { key: 'overview', label: 'Overview', icon: '◱', hint: 'Counts, the signup trend and recent changes', group: 0 },
+  { key: 'live', label: 'Live map', icon: '◎', hint: 'Where riders are right now', group: 0 },
   { key: 'safety', label: 'Safety', icon: '△', hint: 'Every alert the cascade has raised', group: 0 },
 
   { key: 'users', label: 'Riders', icon: '◉', hint: 'Everyone who has signed up', group: 1 },
@@ -149,6 +152,7 @@ export function AdminApp() {
 
         <main className="qf-main">
           {panel === 'overview' ? <Overview onGo={go2} /> : null}
+          {panel === 'live' ? <Live /> : null}
           {panel === 'users' ? <Users initial={userQuery} /> : null}
           {panel === 'trips' ? <Trips /> : null}
           {panel === 'safety' ? <Safety /> : null}

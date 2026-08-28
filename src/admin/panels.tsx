@@ -10,7 +10,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 
 import {
   ApiError, getFeatureFlags, getOverview, getRuntimeConfig, getSignups, getUser, listAlerts, listAudit,
-  listTickets, listTrips, listUsers, putFeatureFlag, type FeatureFlag, type OpsAlert, type OpsAuditEntry,
+  getFunnel, listTickets, listTrips, listUsers, putFeatureFlag, type FeatureFlag, type OpsAlert,
+  type OpsAuditEntry, type OpsFunnel,
   type OpsOverview, type OpsSignupSeries, type OpsTrip, type OpsUserDetail, type OpsUserList,
   type SupportTicket, type UserQuery,
 } from './api';
@@ -19,6 +20,7 @@ import {
   Badge, Banner, Button, Card, Chips, ConfirmDialog, Drawer, Empty, Field, KeyValue, Loading, Pager,
   SectionTitle, SignupChart, Stat, StatGrid, Table, Td, Toolbar,
 } from './ui';
+import { Funnel } from './Live';
 import { useAsync } from './useAsync';
 
 function errorText(e: unknown, fallback: string): string {
@@ -34,6 +36,7 @@ export function Overview({ onGo }: { onGo: (panel: string, q?: UserQuery) => voi
   const overview = useAsync<OpsOverview>(getOverview, []);
   const series = useAsync<OpsSignupSeries>(useCallback(() => getSignups(days), [days]), [days]);
   const audit = useAsync<OpsAuditEntry[]>(useCallback(() => listAudit(8), []), []);
+  const funnel = useAsync<OpsFunnel>(getFunnel, []);
 
   if (overview.error) return <Banner tone="danger" title="Could not load">{overview.error}</Banner>;
   if (!overview.data) return <Loading rows={5} />;
@@ -48,7 +51,7 @@ export function Overview({ onGo }: { onGo: (panel: string, q?: UserQuery) => voi
         eyebrow="Dashboard"
         title="Overview"
         note={<>Read {when(d.generatedAt)}. Every figure is computed server-side.</>}
-        action={<Button onClick={() => { overview.reload(); series.reload(); audit.reload(); }}>Refresh</Button>}
+        action={<Button onClick={() => { overview.reload(); series.reload(); audit.reload(); funnel.reload(); }}>Refresh</Button>}
       />
 
       {/* Safety first, literally. If a rider is out there or an alert is open, that is what an
@@ -67,6 +70,14 @@ export function Overview({ onGo }: { onGo: (panel: string, q?: UserQuery) => voi
           sub={d.openAlerts > 0 ? <Link onClick={() => onGo('safety')}>Open safety →</Link> : 'nothing in the cascade'}
         />
         <Stat
+          label="Sent a position"
+          value={num(d.liveFixesLastHour)}
+          tone={d.liveFixesLastHour > 0 ? 'accent' : 'neutral'}
+          sub={d.liveFixesLastHour > 0
+            ? <Link onClick={() => onGo('live')}>Open live map →</Link>
+            : 'in the last hour'}
+        />
+        <Stat
           label="Open tickets"
           value={num(d.openSupportTickets)}
           tone={d.openSupportTickets > 0 ? 'warn' : 'ok'}
@@ -83,6 +94,23 @@ export function Overview({ onGo }: { onGo: (panel: string, q?: UserQuery) => voi
         <Stat label="New this month" value={num(d.newLast30Days)} sub="last 30 days" />
         <Stat label="Trips" value={num(d.totalTrips)} sub={`${num(d.tripsCreatedLast7Days)} created this week`} />
         <Stat label="Waitlist" value={num(d.waitlistSignups)} sub="signups the site captured" />
+        <Stat
+          label="Never joined a trip"
+          value={num(d.ridersWithNoTrip)}
+          tone={d.ridersWithNoTrip > 0 ? 'warn' : 'ok'}
+          sub={`${num(d.ridersInATrip)} are in at least one`}
+        />
+        <Stat
+          label="Have actually ridden"
+          value={num(d.ridersWhoHaveRidden)}
+          sub={`of ${num(d.totalUsers)} riders`}
+        />
+        <Stat
+          label="SOS raised, all time"
+          value={num(d.totalAlerts)}
+          tone={d.totalAlerts > 0 ? 'warn' : 'neutral'}
+          sub={`${num(d.alertsLast30Days)} in the last 30 days`}
+        />
       </StatGrid>
 
       <Rule />
@@ -106,6 +134,25 @@ export function Overview({ onGo }: { onGo: (panel: string, q?: UserQuery) => voi
       <Rule />
 
       <div className="qf-two">
+        <Card>
+          <h3 style={{ font: `600 16px ${SG}`, color: 'var(--ink)', margin: '0 0 4px' }}>Activation</h3>
+          <p style={{ font: `400 12.5px ${HG}`, color: 'var(--sur)', margin: '0 0 16px' }}>
+            Each stage is counted on its own, never derived by subtraction — a rider can join a trip
+            without finishing setup, and deriving would invent people who do not exist.
+          </p>
+          {funnel.error ? <Banner tone="warn" title="Unavailable">{funnel.error}</Banner>
+            : !funnel.data ? <Loading rows={4} />
+            : (
+              <Funnel stages={[
+                { label: 'Signed up', value: funnel.data.signedUp },
+                { label: 'Finished setup', value: funnel.data.finishedSetup, note: 'bike, medical card, contact' },
+                { label: 'Joined a trip', value: funnel.data.joinedATrip },
+                { label: 'Actually rode', value: funnel.data.rode, note: 'started at least one leg ride' },
+                { label: 'Riding now', value: funnel.data.ridingNow },
+              ]} />
+            )}
+        </Card>
+
         <Card>
           <h3 style={{ font: `600 16px ${SG}`, color: 'var(--ink)', margin: '0 0 4px' }}>Trips by status</h3>
           <p style={{ font: `400 12.5px ${HG}`, color: 'var(--sur)', margin: '0 0 14px' }}>

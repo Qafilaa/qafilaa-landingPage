@@ -235,10 +235,41 @@ export interface OpsOverview {
   tripsCreatedLast7Days: number;
   activeRidesNow: number;
   openAlerts: number;
+  totalAlerts: number;
+  alertsLast30Days: number;
   openSupportTickets: number;
   waitlistSignups: number;
+  ridersInATrip: number;
+  ridersWithNoTrip: number;
+  ridersWhoHaveRidden: number;
+  liveFixesLastHour: number;
   tripsByStatus: CountByLabel[];
   generatedAt: string;
+}
+
+/** Signed up → finished setup → joined a trip → rode → riding now. */
+export interface OpsFunnel {
+  signedUp: number;
+  finishedSetup: number;
+  joinedATrip: number;
+  rode: number;
+  ridingNow: number;
+}
+
+/** One rider's LAST fix. Never a track — see the server-side contract for why. */
+export interface OpsLiveRider {
+  riderId: number;
+  riderName: string | null;
+  tripId: number;
+  tripName: string | null;
+  latitude: number;
+  longitude: number;
+  deviceTs: string;
+  ageSeconds: number;
+  speedKmh: number | null;
+  heading: number | null;
+  batteryPct: number | null;
+  riding: boolean;
 }
 
 /** One rider plus the counts that say whether the account is actually in use. */
@@ -396,6 +427,11 @@ export function listAlerts(openOnly = false, page = 1, pageSize = 25): Promise<O
 }
 
 export const listAudit = (limit = 100) => request<OpsAuditEntry[]>(`/api/v1/ops/audit?limit=${limit}`);
+
+export const getFunnel = () => request<OpsFunnel>('/api/v1/ops/metrics/funnel');
+
+export const listLive = (withinMinutes = 60) =>
+  request<OpsLiveRider[]>(`/api/v1/ops/live?withinMinutes=${withinMinutes}`);
 
 export const getReleasePolicies = () => request<ReleasePolicy[]>('/api/v1/ops/app-release');
 
