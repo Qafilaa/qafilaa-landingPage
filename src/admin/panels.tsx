@@ -10,7 +10,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 
 import {
   ApiError, getFeatureFlags, getOverview, getRuntimeConfig, getSignups, getUser, listAlerts, listAudit,
-  getFunnel, listTickets, listTrips, listUsers, putFeatureFlag, type FeatureFlag, type OpsAlert,
+  deleteUser, getFunnel, listTickets, listTrips, listUsers, putFeatureFlag, type FeatureFlag,
+  type OpsAlert,
   type OpsAuditEntry, type OpsFunnel,
   type OpsOverview, type OpsSignupSeries, type OpsTrip, type OpsUserDetail, type OpsUserList,
   type SupportTicket, type UserQuery,
@@ -319,6 +320,17 @@ export function Users({ initial }: { initial?: UserQuery }) {
           onPick={(v) => setQuery((q) => ({ ...q, onboarded: v === 2 ? undefined : v === 1, page: 1 }))}
         />
         <Chips
+          label="Test accounts"
+          value={query.q === 'yopmail' ? 1 : 0}
+          options={[{ v: 0, l: 'Off' }, { v: 1, l: 'yopmail.com' }]}
+          onPick={(v) => {
+            const next = v === 1 ? 'yopmail' : undefined;
+            setText(next ?? '');
+            setQuery((q) => ({ ...q, q: next, page: 1 }));
+          }}
+        />
+
+        <Chips
           label="Sort"
           value={query.sort === 'oldest' ? 1 : query.sort === 'name' ? 2 : 0}
           options={[{ v: 0, l: 'Newest' }, { v: 1, l: 'Oldest' }, { v: 2, l: 'Name' }]}
@@ -364,7 +376,11 @@ export function Users({ initial }: { initial?: UserQuery }) {
           </>
         ) : null}
 
-      <RiderDrawer userId={selected} onClose={() => setSelected(null)} />
+      <RiderDrawer
+        userId={selected}
+        onClose={() => setSelected(null)}
+        onDeleted={() => { setSelected(null); reload(); }}
+      />
     </>
   );
 }
@@ -393,11 +409,32 @@ function Avatar({ name, size = 32 }: { name: string; size?: number }) {
   );
 }
 
-function RiderDrawer({ userId, onClose }: { userId: number | null; onClose: () => void }) {
+function RiderDrawer({
+  userId, onClose, onDeleted,
+}: { userId: number | null; onClose: () => void; onDeleted: () => void }) {
   const { data, error } = useAsync<OpsUserDetail | null>(
     useCallback(() => (userId === null ? Promise.resolve(null) : getUser(userId)), [userId]),
     [userId],
   );
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  async function remove() {
+    if (userId === null) return;
+    setBusy(true);
+    setDeleteError(null);
+    try {
+      await deleteUser(userId);
+      setConfirming(false);
+      onDeleted();
+    } catch (e) {
+      setDeleteError(errorText(e, 'Delete failed.'));
+      setConfirming(false);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   if (userId === null) return null;
   const u = data?.rider;
@@ -439,8 +476,43 @@ function RiderDrawer({ userId, onClose }: { userId: number | null; onClose: () =
             directory has no reason to see a rider&rsquo;s blood group, and a field that is fetched is a
             field that eventually gets displayed.
           </p>
+
+          <div style={{ marginTop: 22, paddingTop: 18, borderTop: '1px solid var(--line)' }}>
+            <div style={{ font: `600 12px ${SG}`, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--danger)', marginBottom: 8 }}>
+              Danger zone
+            </div>
+            {deleteError ? <Banner tone="danger" title="Delete failed">{deleteError}</Banner> : null}
+            <p style={{ font: `400 12.5px/1.6 ${HG}`, color: 'var(--mut)', margin: '0 0 12px' }}>
+              Deleting runs the same cascade a rider&rsquo;s own account deletion runs: profile, bikes,
+              documents, medical card, their solo trips, positions, alerts and their uploaded files.
+              Trips they shared with other riders survive without them. <strong>There is no undo.</strong>
+            </p>
+            <Button variant="danger" onClick={() => setConfirming(true)} disabled={busy}>
+              Delete this rider
+            </Button>
+          </div>
         </>
       ) : null}
+
+      <ConfirmDialog
+        open={confirming}
+        title={`Delete ${u?.displayName || `rider #${userId}`} and all their data?`}
+        confirmLabel="Delete permanently"
+        confirmWord="DELETE"
+        busy={busy}
+        onCancel={() => setConfirming(false)}
+        onConfirm={() => void remove()}
+      >
+        <p style={{ margin: '0 0 10px' }}>
+          This removes <strong>{u?.email ?? `rider #${userId}`}</strong> and everything of theirs —
+          {data ? ` ${data.tripCount} trip memberships, ${data.bikeCount} bikes, ${data.rideCount} rides` : ' their trips, bikes and rides'}
+          {' '}— in one transaction.
+        </p>
+        <p style={{ margin: 0 }}>
+          Trips shared with other riders are kept; only trips nobody else was on are removed with them.
+          Nothing here can be recovered afterwards.
+        </p>
+      </ConfirmDialog>
     </Drawer>
   );
 }

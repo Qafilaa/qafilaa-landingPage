@@ -402,6 +402,16 @@ export function listUsers(query: UserQuery = {}): Promise<OpsUserList> {
 }
 
 export const getUser = (id: number) => request<OpsUserDetail>(`/api/v1/ops/users/${id}`);
+/**
+ * Irreversibly delete a rider and everything of theirs.
+ *
+ * Runs the same T11 cascade a rider's own "delete my account" runs — the server reuses that path
+ * rather than deleting rows for operators, so the two can never drift. There is no bulk equivalent
+ * and there should not be: a filter that selects one rider too many is unrecoverable.
+ */
+export const deleteUser = (id: number) =>
+  request<void>(`/api/v1/ops/users/${id}`, { method: 'DELETE' });
+
 export const getOverview = () => request<OpsOverview>('/api/v1/ops/metrics/overview');
 export const getSignups = (days = 30) => request<OpsSignupSeries>(`/api/v1/ops/metrics/signups?days=${days}`);
 
