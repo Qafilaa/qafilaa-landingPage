@@ -838,39 +838,174 @@ export function Flags() {
 
 /* ===================================================================== audit */
 
+/**
+ * Everything an operator has changed, merged and newest first.
+ *
+ * Three sources, deliberately in one list: the question is chronological — "what changed, and who
+ * changed it?" — and answering it from three lists means eyeballing three sets of timestamps. The
+ * kind badge keeps them distinguishable.
+ */
+const AUDIT_KINDS = ['Rider deleted', 'Force update', 'Feature flag'] as const;
+
+const AUDIT_TONE: Record<string, 'danger' | 'warn' | 'accent'> = {
+  'Rider deleted': 'danger',
+  'Force update': 'warn',
+  'Feature flag': 'accent',
+};
+
 export function Audit() {
-  const { data, error, reload } = useAsync<OpsAuditEntry[]>(useCallback(() => listAudit(200), []), []);
+  const [limit, setLimit] = useState(200);
+  const [kind, setKind] = useState<string | null>(null);
+  const [text, setText] = useState('');
+
+  const { data, error, reload } = useAsync<OpsAuditEntry[]>(
+    useCallback(() => listAudit(limit), [limit]), [limit],
+  );
+
+  const filtered = useMemo(() => {
+    const q = text.trim().toLowerCase();
+    return (data ?? []).filter((a) => {
+      if (kind && a.kind !== kind) return false;
+      if (!q) return true;
+      return [a.kind, a.subject, a.change, a.reason ?? '', a.changedByName ?? '']
+        .join(' ').toLowerCase().includes(q);
+    });
+  }, [data, kind, text]);
+
+  /* Grouped by calendar day. A flat list of eighty rows all stamped to the minute is technically
+     complete and practically unreadable; the day headings are what make "what happened on Tuesday"
+     answerable at a glance. */
+  const days = useMemo(() => {
+    const out = new Map<string, OpsAuditEntry[]>();
+    for (const entry of filtered) {
+      const key = new Date(entry.changedAt).toLocaleDateString('en-IN', {
+        weekday: 'short', day: '2-digit', month: 'short', year: 'numeric',
+      });
+      const list = out.get(key);
+      if (list) list.push(entry); else out.set(key, [entry]);
+    }
+    return [...out.entries()];
+  }, [filtered]);
+
+  const counts = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const a of data ?? []) out[a.kind] = (out[a.kind] ?? 0) + 1;
+    return out;
+  }, [data]);
 
   return (
     <>
       <SectionTitle
         eyebrow="Ops"
         title="Audit trail"
-        note="Every feature-flag toggle and every force-update change, merged and newest first. Nothing here can be edited."
-        action={<Button onClick={reload}>Refresh</Button>}
+        note="Every rider deletion, force-update change and feature-flag toggle. Nothing here can be edited or removed — that is the point of it."
+        action={
+          <>
+            <Chips
+              value={limit}
+              options={[{ v: 50, l: '50' }, { v: 200, l: '200' }, { v: 500, l: '500' }]}
+              onPick={setLimit}
+            />
+            <Button onClick={reload}>Refresh</Button>
+          </>
+        }
       />
+
+      <StatGrid>
+        <Stat
+          label="Riders deleted"
+          value={num(counts['Rider deleted'] ?? 0)}
+          tone={(counts['Rider deleted'] ?? 0) > 0 ? 'danger' : 'neutral'}
+          sub="irreversible, in this window"
+        />
+        <Stat label="Force-update changes" value={num(counts['Force update'] ?? 0)} sub="gate raised, lowered or disarmed" />
+        <Stat label="Flag toggles" value={num(counts['Feature flag'] ?? 0)} sub="kill switches flipped" />
+      </StatGrid>
+
+      <div style={{ height: 18 }} />
+
+      <Toolbar>
+        <div style={{ flex: '1 1 260px', minWidth: 220 }}>
+          <Field label="Search">
+            <input
+              className="qf-a"
+              style={inputStyle}
+              placeholder="Subject, change, reason or who did it"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              spellCheck={false}
+            />
+          </Field>
+        </div>
+        <Chips
+          label="Kind"
+          value={kind === null ? 0 : AUDIT_KINDS.indexOf(kind as typeof AUDIT_KINDS[number]) + 1}
+          options={[{ v: 0, l: 'All' }, ...AUDIT_KINDS.map((k, i) => ({ v: i + 1, l: k }))]}
+          onPick={(v) => setKind(v === 0 ? null : AUDIT_KINDS[v - 1])}
+        />
+      </Toolbar>
 
       {error ? <Banner tone="danger" title="Could not load">{error}</Banner> : null}
 
       {!data ? <Loading rows={6} />
-        : data.length === 0 ? <Empty>Nothing has been changed yet.</Empty>
-        : <Card style={{ padding: 4 }}>{data.map((a, i) => <AuditRow key={i} entry={a} />)}</Card>}
+        : filtered.length === 0 ? (
+          <Empty>
+            {(data.length === 0)
+              ? 'Nothing has been changed yet. An empty audit trail on a quiet console is the correct answer.'
+              : 'Nothing matches that filter.'}
+          </Empty>
+        ) : (
+          <>
+            <div style={{ font: `400 13px ${HG}`, color: 'var(--mut)', marginBottom: 12 }}>
+              <strong style={{ ...NUM, color: 'var(--ink)' }}>{num(filtered.length)}</strong>{' '}
+              {filtered.length === 1 ? 'entry' : 'entries'}
+              {filtered.length !== data.length ? ` of ${num(data.length)}` : ''}
+            </div>
+
+            {days.map(([day, entries]) => (
+              <div key={day} style={{ marginBottom: 22 }}>
+                <div
+                  style={{
+                    position: 'sticky', top: 0, zIndex: 1, background: 'var(--bg)',
+                    padding: '6px 0 8px', font: `600 11px ${SG}`, letterSpacing: '.14em',
+                    textTransform: 'uppercase', color: 'var(--sur)',
+                    borderBottom: '1px solid var(--line)', marginBottom: 4,
+                  }}
+                >
+                  {day} · {entries.length}
+                </div>
+                <Card style={{ padding: 4 }}>
+                  {entries.map((a, i) => <AuditRow key={`${day}-${i}`} entry={a} />)}
+                </Card>
+              </div>
+            ))}
+          </>
+        )}
     </>
   );
 }
 
 function AuditRow({ entry, compact }: { entry: OpsAuditEntry; compact?: boolean }) {
+  const tone = AUDIT_TONE[entry.kind] ?? 'accent';
+  const actor = entry.changedByName
+    ?? (entry.changedByUserId === 0 ? 'automation' : `#${entry.changedByUserId}`);
+
   return (
     <div style={{ padding: compact ? '8px 0' : '12px 14px', borderBottom: '1px solid var(--line)' }}>
       <div style={{ display: 'flex', gap: 8, alignItems: 'baseline', flexWrap: 'wrap' }}>
-        <Badge tone={entry.kind === 'Force update' ? 'danger' : 'accent'}>{entry.kind}</Badge>
+        <Badge tone={tone}>{entry.kind}</Badge>
         <span style={{ font: `600 13.5px ${SG}`, color: 'var(--ink)' }}>{entry.subject}</span>
         <span style={{ font: `400 13px ${HG}`, color: 'var(--mut)' }}>{entry.change}</span>
       </div>
       <div style={{ font: `400 12px ${HG}`, color: 'var(--sur)', marginTop: 4 }}>
-        {when(entry.changedAt)} · {entry.changedByName ?? (entry.changedByUserId === 0 ? 'automation' : `#${entry.changedByUserId}`)}
-        {entry.reason ? <> · &ldquo;{entry.reason}&rdquo;</> : null}
+        {when(entry.changedAt)} · by {actor}
+        {entry.changedByUserId === 0 ? ' (the release-policy job, not a person)' : ''}
       </div>
+      {entry.reason ? (
+        <div style={{ font: `400 12.5px/1.55 ${HG}`, color: 'var(--mut)', marginTop: 6, paddingLeft: 10, borderLeft: '2px solid var(--line)' }}>
+          {entry.reason}
+        </div>
+      ) : null}
     </div>
   );
 }
