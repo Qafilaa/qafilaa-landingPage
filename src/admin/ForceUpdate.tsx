@@ -135,6 +135,18 @@ function PlatformCard({
   const overshoot = min > latest;
   const noStoreUrl = policy.storeUrl.trim() === '';
 
+  /* A store URL that is PRESENT but not real is worse than a blank one, because blank is the
+     interlock: the validator and the evaluator both refuse to arm on it. A placeholder passes both
+     and sends blocked riders to a 404. This is not hypothetical — the iOS row carried
+     `.../idREPLACE_WITH_REAL_ID` in production, straight out of the runbook's example SQL. */
+  const url = policy.storeUrl.trim();
+  const placeholderUrl =
+    url !== '' && (
+      /replace|example|placeholder|xxx|todo|your[-_]?app/i.test(url)
+      || (url.includes('apps.apple.com') && !/\/id\d{6,}/.test(url))
+      || (url.includes('play.google.com') && !/[?&]id=[\w.]+/.test(url))
+    );
+
   /* Does the copy still name the build it is about? A message mentioning a different number is the
      exact drift that shipped to riders on 2026-08-27. */
   const buildsInMessage = Array.from(message.matchAll(/\((\d+)\)/g)).map((m) => Number(m[1]));
@@ -210,12 +222,37 @@ function PlatformCard({
           />
         </div>
 
+        <div style={{ font: `400 12.5px ${HG}`, color: 'var(--sur)', margin: '-6px 0 16px', wordBreak: 'break-all' }}>
+          Sends blocked riders to{' '}
+          {url === '' ? <em>nowhere — the gate cannot arm</em> : (
+            <a
+              className="qf-a"
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: placeholderUrl ? 'var(--danger)' : 'var(--acc2)' }}
+            >
+              {url}
+            </a>
+          )}
+        </div>
+
         {liveDisagrees ? (
           <Banner tone="danger" title="The live answer does not match this row">
             <code>/app/update-check</code> reports minimum {liveOk ? liveOk.minimumBuild : '?'} / latest{' '}
             {liveOk ? liveOk.latestBuild : '?'}. The policy is memoised for 60 seconds per
             host, so wait a minute and reload before concluding anything — if it still disagrees, this row is not
             what riders are getting.
+          </Banner>
+        ) : null}
+
+        {placeholderUrl ? (
+          <Banner tone="danger" title="The store URL is not a real listing">
+            <code style={{ wordBreak: 'break-all' }}>{url}</code>
+            <br />
+            A blank URL is the interlock — the validator and the evaluator both refuse to arm on one. A
+            placeholder passes both checks and sends every blocked rider to a dead link, which is the one
+            failure here a rider cannot get out of. Fix this before raising the minimum.
           </Banner>
         ) : null}
 
@@ -281,9 +318,13 @@ function PlatformCard({
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 4 }}>
           <Button
             variant="danger"
-            disabled={busy || overshoot || noStoreUrl || !min}
+            disabled={busy || overshoot || noStoreUrl || placeholderUrl || !min}
             onClick={() => setConfirm(true)}
-            title={overshoot ? 'Minimum is above latest' : undefined}
+            title={
+              overshoot ? 'Minimum is above latest'
+                : placeholderUrl ? 'The store URL is not a real listing'
+                : undefined
+            }
           >
             {raising ? `Arm at build ${min}` : 'Save and keep armed'}
           </Button>
