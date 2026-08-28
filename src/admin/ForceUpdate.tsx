@@ -121,6 +121,7 @@ function PlatformCard({
   const [minimumVersion, setMinimumVersion] = useState(policy.minimumVersion);
   const [latestBuild, setLatestBuild] = useState(String(policy.latestBuild));
   const [latestVersion, setLatestVersion] = useState(policy.latestVersion);
+  const [storeUrl, setStoreUrl] = useState(policy.storeUrl);
   const [message, setMessage] = useState(policy.updateMessage ?? '');
   const [title, setTitle] = useState(policy.updateTitle ?? 'Update required');
   const [confirm, setConfirm] = useState(false);
@@ -131,15 +132,16 @@ function PlatformCard({
   const latest = Number(latestBuild);
 
   const armed = policy.forceUpdateEnabled && policy.minimumBuild > 0 && policy.storeUrl.trim() !== '';
+  const urlChanged = storeUrl.trim() !== policy.storeUrl.trim();
   const raising = min > policy.minimumBuild;
   const overshoot = min > latest;
-  const noStoreUrl = policy.storeUrl.trim() === '';
+  const noStoreUrl = storeUrl.trim() === '';
 
   /* A store URL that is PRESENT but not real is worse than a blank one, because blank is the
      interlock: the validator and the evaluator both refuse to arm on it. A placeholder passes both
      and sends blocked riders to a 404. This is not hypothetical — the iOS row carried
      `.../idREPLACE_WITH_REAL_ID` in production, straight out of the runbook's example SQL. */
-  const url = policy.storeUrl.trim();
+  const url = storeUrl.trim();
   const placeholderUrl =
     url !== '' && (
       /replace|example|placeholder|xxx|todo|your[-_]?app/i.test(url)
@@ -167,7 +169,7 @@ function PlatformCard({
         minimumVersion: minimumVersion.trim(),
         latestBuild: latest,
         latestVersion: latestVersion.trim(),
-        storeUrl: policy.storeUrl,
+        storeUrl: storeUrl.trim(),
         updateTitle: title.trim() || null,
         updateMessage: message.trim() || null,
         forceUpdateEnabled: force,
@@ -222,21 +224,6 @@ function PlatformCard({
           />
         </div>
 
-        <div style={{ font: `400 12.5px ${HG}`, color: 'var(--sur)', margin: '-6px 0 16px', wordBreak: 'break-all' }}>
-          Sends blocked riders to{' '}
-          {url === '' ? <em>nowhere — the gate cannot arm</em> : (
-            <a
-              className="qf-a"
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: placeholderUrl ? 'var(--danger)' : 'var(--acc2)' }}
-            >
-              {url}
-            </a>
-          )}
-        </div>
-
         {liveDisagrees ? (
           <Banner tone="danger" title="The live answer does not match this row">
             <code>/app/update-check</code> reports minimum {liveOk ? liveOk.minimumBuild : '?'} / latest{' '}
@@ -280,6 +267,30 @@ function PlatformCard({
             <input className="qf-a" style={inputStyle} value={latestVersion} onChange={(e) => setLatestVersion(e.target.value)} />
           </Field>
         </div>
+
+        <Field
+          label="Store URL"
+          hint={
+            urlChanged
+              ? 'Changed — this is where every blocked rider is sent. It is saved with the rest.'
+              : 'Where the blocking screen sends a rider. A blank one keeps the gate disarmed, deliberately.'
+          }
+        >
+          <input
+            className="qf-a"
+            style={{
+              ...inputStyle,
+              font: `400 13px ${SG}`,
+              borderColor: placeholderUrl ? 'var(--danger)' : undefined,
+            }}
+            value={storeUrl}
+            onChange={(e) => setStoreUrl(e.target.value)}
+            spellCheck={false}
+            placeholder={platform === 'ios'
+              ? 'https://apps.apple.com/app/id0000000000'
+              : 'https://play.google.com/store/apps/details?id=app.qafilaa'}
+          />
+        </Field>
 
         <Field label="Title">
           <input className="qf-a" style={inputStyle} value={title} onChange={(e) => setTitle(e.target.value)} maxLength={120} />
