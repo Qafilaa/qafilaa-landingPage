@@ -218,6 +218,11 @@ export interface OpsUserList {
   pageSize: number;
 }
 
+export interface CountByLabel {
+  label: string;
+  count: number;
+}
+
 export interface OpsOverview {
   totalUsers: number;
   newToday: number;
@@ -227,8 +232,74 @@ export interface OpsOverview {
   usersWithEmail: number;
   usersWithPhone: number;
   totalTrips: number;
+  tripsCreatedLast7Days: number;
+  activeRidesNow: number;
+  openAlerts: number;
   openSupportTickets: number;
+  waitlistSignups: number;
+  tripsByStatus: CountByLabel[];
   generatedAt: string;
+}
+
+/** One rider plus the counts that say whether the account is actually in use. */
+export interface OpsUserDetail {
+  rider: OpsUser;
+  tripCount: number;
+  bikeCount: number;
+  rideCount: number;
+  lastRideStartedAt: string | null;
+  alertsRaised: number;
+}
+
+export interface OpsTrip {
+  id: number;
+  name: string;
+  status: string;
+  startDate: string;
+  endDate: string;
+  hostUserId: number;
+  hostName: string | null;
+  memberCount: number;
+  hasDeparted: boolean;
+  createdAt: string;
+}
+
+export interface OpsTripList {
+  trips: OpsTrip[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface OpsAlert {
+  id: number;
+  tripId: number;
+  tripName: string | null;
+  riderId: number;
+  riderName: string | null;
+  type: string;
+  triggerKind: string;
+  state: string;
+  escalationStage: string;
+  createdAt: string;
+  resolvedAt: string | null;
+}
+
+export interface OpsAlertList {
+  alerts: OpsAlert[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface OpsAuditEntry {
+  kind: string;
+  subject: string;
+  change: string;
+  reason: string | null;
+  changedByUserId: number;
+  changedByName: string | null;
+  changedAt: string;
 }
 
 export interface OpsSignupSeries {
@@ -299,9 +370,32 @@ export function listUsers(query: UserQuery = {}): Promise<OpsUserList> {
   return request<OpsUserList>(`/api/v1/ops/users?${params}`);
 }
 
-export const getUser = (id: number) => request<OpsUser>(`/api/v1/ops/users/${id}`);
+export const getUser = (id: number) => request<OpsUserDetail>(`/api/v1/ops/users/${id}`);
 export const getOverview = () => request<OpsOverview>('/api/v1/ops/metrics/overview');
 export const getSignups = (days = 30) => request<OpsSignupSeries>(`/api/v1/ops/metrics/signups?days=${days}`);
+
+export interface TripQuery {
+  q?: string;
+  status?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export function listTrips(query: TripQuery = {}): Promise<OpsTripList> {
+  const params = new URLSearchParams();
+  if (query.q) params.set('q', query.q);
+  if (query.status) params.set('status', query.status);
+  params.set('page', String(query.page ?? 1));
+  params.set('pageSize', String(query.pageSize ?? 25));
+  return request<OpsTripList>(`/api/v1/ops/trips?${params}`);
+}
+
+export function listAlerts(openOnly = false, page = 1, pageSize = 25): Promise<OpsAlertList> {
+  const params = new URLSearchParams({ openOnly: String(openOnly), page: String(page), pageSize: String(pageSize) });
+  return request<OpsAlertList>(`/api/v1/ops/alerts?${params}`);
+}
+
+export const listAudit = (limit = 100) => request<OpsAuditEntry[]>(`/api/v1/ops/audit?limit=${limit}`);
 
 export const getReleasePolicies = () => request<ReleasePolicy[]>('/api/v1/ops/app-release');
 

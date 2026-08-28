@@ -18,12 +18,17 @@ export function Card({ children, style }: { children: ReactNode; style?: CSSProp
   return <div style={{ ...CARD, padding: 18, ...style }}>{children}</div>;
 }
 
-export function SectionTitle({ eyebrow, title, note }: { eyebrow?: string; title: string; note?: ReactNode }) {
+export function SectionTitle({
+  eyebrow, title, note, action,
+}: { eyebrow?: string; title: string; note?: ReactNode; action?: ReactNode }) {
   return (
-    <div style={{ marginBottom: 14 }}>
-      {eyebrow ? <div style={{ ...EYEBROW, marginBottom: 6 }}>{eyebrow}</div> : null}
-      <h2 style={{ font: `600 20px ${SG}`, color: 'var(--ink)', margin: 0, letterSpacing: '-.01em' }}>{title}</h2>
-      {note ? <p style={{ font: `400 13.5px/1.55 ${HG}`, color: 'var(--mut)', margin: '6px 0 0' }}>{note}</p> : null}
+    <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', marginBottom: 18 }}>
+      <div style={{ maxWidth: 720 }}>
+        {eyebrow ? <div style={{ ...EYEBROW, marginBottom: 6 }}>{eyebrow}</div> : null}
+        <h2 style={{ font: `600 24px ${SG}`, color: 'var(--ink)', margin: 0, letterSpacing: '-.02em' }}>{title}</h2>
+        {note ? <p style={{ font: `400 13.5px/1.6 ${HG}`, color: 'var(--mut)', margin: '8px 0 0' }}>{note}</p> : null}
+      </div>
+      {action ? <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{action}</div> : null}
     </div>
   );
 }
@@ -378,6 +383,105 @@ export function ConfirmDialog({
   );
 }
 
+/* --------------------------------------------------------------- controls */
+
+/** A row of filter controls. Wraps on narrow screens instead of overflowing. */
+export function Toolbar({ children }: { children: ReactNode }) {
+  return (
+    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end', marginBottom: 18 }}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * A segmented filter. Values are numbers rather than strings so a caller can encode a tri-state
+ * (all / yes / no) without inventing sentinel strings that then have to be parsed back out.
+ */
+export function Chips({
+  label, value, options, onPick,
+}: { label?: string; value: number; options: { v: number; l: string }[]; onPick: (v: number) => void }) {
+  return (
+    <div>
+      {label ? <div style={{ ...EYEBROW, marginBottom: 6 }}>{label}</div> : null}
+      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+        {options.map((o) => {
+          const on = value === o.v;
+          return (
+            <button
+              key={o.v}
+              className="qf-a"
+              onClick={() => onPick(o.v)}
+              aria-pressed={on}
+              style={{
+                minHeight: 34, padding: '0 12px', borderRadius: 999, cursor: 'pointer',
+                border: `1px solid ${on ? 'var(--acc)' : 'var(--line)'}`,
+                background: on ? 'var(--acc)' : 'var(--card)',
+                color: on ? 'var(--ctaInk)' : 'var(--mut)',
+                font: `600 13px ${HG}`, whiteSpace: 'nowrap',
+              }}
+            >
+              {o.l}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** Previous / next with the position spelled out, so the buttons are never the only cue. */
+export function Pager({ page, pages, onPage }: { page: number; pages: number; onPage: (p: number) => void }) {
+  if (pages <= 1) return null;
+  return (
+    <div style={{ display: 'flex', gap: 10, alignItems: 'center', justifyContent: 'flex-end', marginTop: 16 }}>
+      <span style={{ font: `400 13px ${HG}`, color: 'var(--sur)' }}>Page {page} of {pages}</span>
+      <Button disabled={page <= 1} onClick={() => onPage(page - 1)}>← Previous</Button>
+      <Button disabled={page >= pages} onClick={() => onPage(page + 1)}>Next →</Button>
+    </div>
+  );
+}
+
+/** A right-hand detail panel. Escape closes it; so does clicking the scrim. */
+export function Drawer({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(35,36,31,.45)', zIndex: 60, display: 'flex', justifyContent: 'flex-end' }}
+    >
+      <div style={{ background: 'var(--card)', width: 'min(430px,100%)', height: '100%', overflow: 'auto', padding: 24, borderLeft: '1px solid var(--line)' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 4 }}>
+          <Button variant="ghost" onClick={onClose}>Close</Button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/** A definition list. Long values wrap rather than pushing the drawer sideways. */
+export function KeyValue({ rows }: { rows: [string, ReactNode][] }) {
+  return (
+    <dl style={{ margin: 0 }}>
+      {rows.map(([k, v]) => (
+        <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '10px 0', borderBottom: '1px solid var(--line)' }}>
+          <dt style={{ font: `500 12.5px ${HG}`, color: 'var(--sur)', flex: '0 0 auto' }}>{k}</dt>
+          <dd style={{ font: `400 13.5px ${HG}`, color: 'var(--ink)', margin: 0, textAlign: 'right', wordBreak: 'break-word' }}>{v}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 /* ------------------------------------------------------------------ styles */
 
 /**
@@ -394,16 +498,21 @@ export function Styles() {
       .qf-row:hover{background:rgba(14,124,134,.045)}
 
       .qf-statgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+      .qf-two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 
       .qf-shell{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
       .qf-rail{border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto}
-      .qf-main{padding:26px 30px 60px;max-width:1180px}
+      .qf-rail{display:flex;flex-direction:column}
+      .qf-railrule{height:1px;background:var(--line);margin:10px 6px}
+      .qf-main{padding:30px 34px 72px;max-width:1240px}
 
       @media (max-width:900px){
         .qf-shell{grid-template-columns:1fr}
         .qf-rail{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);
                  display:flex;gap:6px;overflow-x:auto;padding:10px 12px}
         .qf-railhead{display:none}
+        .qf-railrule{display:none}
+        .qf-rail{flex-direction:row}
         .qf-main{padding:18px 16px 48px}
       }
 

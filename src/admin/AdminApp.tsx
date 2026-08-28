@@ -21,19 +21,33 @@ import { useCallback, useEffect, useState } from 'react';
 import { clearSession, readIdentity, type AdminIdentity, type UserQuery } from './api';
 import { ForceUpdate } from './ForceUpdate';
 import { Login } from './Login';
-import { Flags, Overview, Runtime, Support, Users } from './panels';
+import { Audit, Flags, Overview, Runtime, Safety, Support, Trips, Users } from './panels';
 import { DAYLIGHT, HG, SG } from './theme';
 import { Button, Styles } from './ui';
 
-type PanelKey = 'overview' | 'users' | 'release' | 'flags' | 'support' | 'runtime';
+type PanelKey =
+  | 'overview' | 'users' | 'trips' | 'safety' | 'release' | 'flags' | 'support' | 'audit' | 'runtime';
 
-const PANELS: { key: PanelKey; label: string; icon: string; hint: string }[] = [
-  { key: 'overview', label: 'Overview', icon: '◱', hint: 'Counts and the signup trend' },
-  { key: 'users', label: 'Riders', icon: '◉', hint: 'Everyone who has signed up' },
-  { key: 'release', label: 'Force update', icon: '▲', hint: 'The version gate' },
-  { key: 'flags', label: 'Feature flags', icon: '⌥', hint: 'Runtime switches' },
-  { key: 'support', label: 'Support', icon: '✉', hint: 'The help-centre queue' },
-  { key: 'runtime', label: 'Runtime config', icon: '⚙', hint: 'What the API is running with' },
+/**
+ * The rail, in the order an operator actually needs things.
+ *
+ * Safety sits high and deliberately above the release and config tooling: this is the console for a
+ * product whose whole promise is getting help to a downed rider, so "is anyone in trouble" outranks
+ * "what is the minimum build". The groups are separated by a rule rather than by headings, which
+ * would cost a third of the rail's height to say very little.
+ */
+const PANELS: { key: PanelKey; label: string; icon: string; hint: string; group: number }[] = [
+  { key: 'overview', label: 'Overview', icon: '◱', hint: 'Counts, the signup trend and recent changes', group: 0 },
+  { key: 'safety', label: 'Safety', icon: '△', hint: 'Every alert the cascade has raised', group: 0 },
+
+  { key: 'users', label: 'Riders', icon: '◉', hint: 'Everyone who has signed up', group: 1 },
+  { key: 'trips', label: 'Trips', icon: '◈', hint: 'Every trip and its crew', group: 1 },
+  { key: 'support', label: 'Support', icon: '✉', hint: 'The help-centre queue', group: 1 },
+
+  { key: 'release', label: 'Force update', icon: '▲', hint: 'The version gate', group: 2 },
+  { key: 'flags', label: 'Feature flags', icon: '⌥', hint: 'Runtime switches', group: 2 },
+  { key: 'audit', label: 'Audit trail', icon: '≡', hint: 'Who changed what, and why', group: 2 },
+  { key: 'runtime', label: 'Runtime config', icon: '⚙', hint: 'What the API is running with', group: 2 },
 ];
 
 function panelFromHash(): PanelKey {
@@ -63,7 +77,11 @@ export function AdminApp() {
     if (typeof window !== 'undefined') window.location.hash = key;
   }, []);
 
-  const goToUsers = useCallback((q: UserQuery) => { setUserQuery(q); go('users'); }, [go]);
+  /** Cross-panel navigation from a dashboard tile: jump, optionally with a pre-applied rider filter. */
+  const go2 = useCallback((key: string, q?: UserQuery) => {
+    setUserQuery(q);
+    go(key as PanelKey);
+  }, [go]);
 
   function signOut() {
     clearSession();
@@ -91,11 +109,13 @@ export function AdminApp() {
             </div>
           </div>
 
-          {PANELS.map((p) => {
+          {PANELS.map((p, i) => {
             const active = panel === p.key;
+            const newGroup = i > 0 && PANELS[i - 1].group !== p.group;
             return (
+              <div key={p.key}>
+                {newGroup ? <div className="qf-railrule" aria-hidden /> : null}
               <button
-                key={p.key}
                 className="qf-a"
                 onClick={() => { if (p.key === 'users') setUserQuery(undefined); go(p.key); }}
                 title={p.hint}
@@ -112,6 +132,7 @@ export function AdminApp() {
                 <span aria-hidden style={{ font: `400 13px ${SG}`, opacity: active ? 1 : 0.7 }}>{p.icon}</span>
                 {p.label}
               </button>
+              </div>
             );
           })}
 
@@ -127,11 +148,14 @@ export function AdminApp() {
         </nav>
 
         <main className="qf-main">
-          {panel === 'overview' ? <Overview onGoToUsers={goToUsers} /> : null}
+          {panel === 'overview' ? <Overview onGo={go2} /> : null}
           {panel === 'users' ? <Users initial={userQuery} /> : null}
+          {panel === 'trips' ? <Trips /> : null}
+          {panel === 'safety' ? <Safety /> : null}
           {panel === 'release' ? <ForceUpdate /> : null}
           {panel === 'flags' ? <Flags /> : null}
           {panel === 'support' ? <Support /> : null}
+          {panel === 'audit' ? <Audit /> : null}
           {panel === 'runtime' ? <Runtime /> : null}
         </main>
       </div>
