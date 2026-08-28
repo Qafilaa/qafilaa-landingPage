@@ -26,10 +26,10 @@
  * **The email check here is UX.** It explains a refusal instead of handing over a session that 403s on
  * everything. The real gate is `Policies.Ops` on the API, which nothing in this file can influence.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { ADMIN_EMAIL, ApiError, requestCode, signInWithCode, signInWithGoogle, type AdminIdentity } from './api';
-import { DAYLIGHT, HG, SG, inputStyle } from './theme';
+import { DAYLIGHT, EYEBROW, HG, SG, inputStyle } from './theme';
 import { Banner, Button, Field, Styles } from './ui';
 
 /**
@@ -205,22 +205,11 @@ export function Login({ onSignedIn }: { onSignedIn: (identity: AdminIdentity) =>
 
             {sent ? (
               <>
-                <Field
-                  label="Six-digit code"
-                  hint="The fixed code if this address is configured in Auth:Demo; otherwise the one just emailed."
-                >
-                  <input
-                    className="qf-a"
-                    style={{ ...inputStyle, font: `500 19px ${SG}`, letterSpacing: '.3em', textAlign: 'center' }}
-                    inputMode="numeric"
-                    maxLength={6}
-                    value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
-                    onKeyDown={(e) => { if (e.key === 'Enter' && code.length === 6) void verify(); }}
-                    autoComplete="one-time-code"
-                    autoFocus
-                  />
-                </Field>
+                <CodeBoxes
+                  value={code}
+                  onChange={setCode}
+                  onComplete={() => { if (!busy) void verify(); }}
+                />
                 <Button variant="primary" full onClick={() => void verify()} disabled={busy || code.length !== 6}>
                   {busy ? 'Checking…' : 'Sign in'}
                 </Button>
@@ -429,6 +418,15 @@ function LoginStyles() {
 
       .qf-login-form{display:grid;place-items:center;padding:clamp(28px,4vw,56px);background:var(--bg)}
 
+      /* One box per digit. Fixed height, flexible width, so six of them fit any column without
+         overflowing and without the last one being clipped. */
+      .qf-otp{flex:1 1 0;min-width:0;height:54px;text-align:center;border-radius:12px;
+              border:1px solid var(--line);background:var(--card);color:var(--ink);
+              font:600 22px 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;outline:none;
+              transition:border-color .12s,box-shadow .12s}
+      .qf-otp:focus{border-color:var(--acc)}
+      @media (max-width:420px){.qf-otp{height:48px;font-size:19px}}
+
       @media (prefers-reduced-motion:reduce){.qf-contours{animation:none}}
 
       @media (max-width:900px){
@@ -439,6 +437,110 @@ function LoginStyles() {
         .qf-login-form{padding:28px 20px 48px}
       }
     `}</style>
+  );
+}
+
+/**
+ * Six boxes, one per digit.
+ *
+ * ## Why boxes rather than one letter-spaced input
+ *
+ * A single input with `letter-spacing` looks segmented until you edit it: the caret sits between
+ * tracked-out glyphs, backspace is ambiguous, and the spacing pushes the last digit against the
+ * border. Boxes make the shape of the thing you are typing match the thing itself — six digits,
+ * separately — and they show progress without a counter.
+ *
+ * ## The details that make them usable rather than annoying
+ *
+ * Boxes are a classic accessibility trap, so: paste fills all six from any box (people paste OTPs far
+ * more often than they type them); backspace on an empty box steps back and clears the one before, so
+ * a mistake takes one keypress rather than two; arrow keys move; a non-digit is simply ignored rather
+ * than rejected with an error; and the whole group is one `aria-label` so a screen reader announces
+ * "verification code" once instead of six anonymous text fields.
+ *
+ * Autofill still works — the first box carries `autocomplete="one-time-code"`, and a browser filling
+ * it with the whole code is handled by the same paste path.
+ */
+function CodeBoxes({
+  value, onChange, onComplete,
+}: { value: string; onChange: (v: string) => void; onComplete: () => void }) {
+  const refs = useRef<(HTMLInputElement | null)[]>([]);
+  const digits = value.padEnd(6, ' ').slice(0, 6).split('');
+
+  function put(index: number, raw: string) {
+    const cleaned = raw.replace(/\D/g, '');
+    if (cleaned.length === 0) return;
+
+    // A paste (or an autofilled OTP) arrives as many characters in one box: take it as the whole code.
+    if (cleaned.length > 1) {
+      const next = cleaned.slice(0, 6);
+      onChange(next);
+      const focus = Math.min(next.length, 5);
+      refs.current[focus]?.focus();
+      if (next.length === 6) onComplete();
+      return;
+    }
+
+    const chars = value.padEnd(6, ' ').split('');
+    chars[index] = cleaned;
+    const next = chars.join('').trimEnd();
+    onChange(next);
+
+    if (index < 5) refs.current[index + 1]?.focus();
+    if (next.replace(/\s/g, '').length === 6) onComplete();
+  }
+
+  function onKeyDown(index: number, e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      const chars = value.padEnd(6, ' ').split('');
+      if (chars[index] !== ' ' && chars[index] !== undefined) {
+        chars[index] = ' ';
+        onChange(chars.join('').trimEnd());
+      } else if (index > 0) {
+        // Empty box: step back AND clear, so one press undoes one digit.
+        chars[index - 1] = ' ';
+        onChange(chars.join('').trimEnd());
+        refs.current[index - 1]?.focus();
+      }
+      return;
+    }
+    if (e.key === 'ArrowLeft' && index > 0) refs.current[index - 1]?.focus();
+    if (e.key === 'ArrowRight' && index < 5) refs.current[index + 1]?.focus();
+    if (e.key === 'Enter' && value.length === 6) onComplete();
+  }
+
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <span style={{ ...EYEBROW, display: 'block', marginBottom: 8 }}>Six-digit code</span>
+
+      <div
+        role="group"
+        aria-label="Six-digit verification code"
+        style={{ display: 'flex', gap: 8 }}
+      >
+        {digits.map((d, i) => (
+          <input
+            key={i}
+            ref={(el) => { refs.current[i] = el; }}
+            className="qf-a qf-otp"
+            inputMode="numeric"
+            autoComplete={i === 0 ? 'one-time-code' : 'off'}
+            aria-label={`Digit ${i + 1}`}
+            value={d.trim()}
+            onChange={(e) => put(i, e.target.value)}
+            onKeyDown={(e) => onKeyDown(i, e)}
+            onFocus={(e) => e.target.select()}
+            autoFocus={i === 0}
+          />
+        ))}
+      </div>
+
+      <span style={{ display: 'block', font: `400 12.5px/1.5 ${HG}`, color: 'var(--sur)', marginTop: 8 }}>
+        The fixed code if this address is configured in <code>Auth:Demo</code>; otherwise the one just
+        emailed.
+      </span>
+    </div>
   );
 }
 

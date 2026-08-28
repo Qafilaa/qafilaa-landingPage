@@ -395,20 +395,111 @@ export interface FeatureFlag {
   updatedAt?: string | null;
 }
 
+/** A row in the ops queue — carries the rider's identity, unlike the rider-facing DTO. */
 export interface SupportTicket {
   id: number;
-  subject?: string | null;
+  reference: string;
+  type: string | number;
   status: string | number;
-  type?: string | number;
+  desk: string;
+  subject: string;
+  userId: number;
+  riderName: string;
+  replyToEmail: string | null;
+  phone: string | null;
+  hasRideLog: boolean;
   createdAt: string;
-  lastMessageAt?: string | null;
-  riderDisplayName?: string | null;
+  lastMessageAt: string;
+  firstResponseAt: string | null;
+  assignedToName: string | null;
+  attachmentCount: number;
+  lastMessagePreview: string | null;
+  lastMessageAuthorKind: string | number | null;
 }
 
 export interface SupportTicketList {
   tickets: SupportTicket[];
   totalCount: number;
   nextCursor: number | null;
+}
+
+export interface SupportAttachment {
+  id: number;
+  objectKey: string;
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+  authorKind: string | number;
+  createdAt: string;
+}
+
+/** One entry in the merged thread — a message, or something that happened to the ticket. */
+export interface SupportTimelineEntry {
+  kind: string;
+  title: string;
+  detail: string | null;
+  body: string | null;
+  authorName: string | null;
+  authorInitials: string | null;
+  authorKind: string | number | null;
+  at: string;
+  attachmentName: string | null;
+  attachmentDetail: string | null;
+  attachments: SupportAttachment[] | null;
+}
+
+export interface SupportTicketDetail {
+  id: number;
+  reference: string;
+  type: string | number;
+  status: string | number;
+  desk: string;
+  subject: string;
+  phone: string | null;
+  replyToEmail: string | null;
+  assignedToName: string | null;
+  attachedLabel: string | null;
+  createdAt: string;
+  lastMessageAt: string;
+  resolvedAt: string | null;
+  version: number;
+  timeline: SupportTimelineEntry[];
+}
+
+export interface SupportAttachmentUrl {
+  id: number;
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+  url: string;
+}
+
+export interface SupportRideLogSegment {
+  index: number;
+  startedAt: string | null;
+  endedAt: string | null;
+  distanceKm: number | null;
+}
+
+/**
+ * The ride the rider attached, rebuilt from what the server recorded.
+ *
+ * Not a file the rider uploaded — it is rendered on demand from the live/history tables, so it cannot
+ * go stale and cannot be doctored. 404 means nothing was attached, or the ride has since been deleted.
+ */
+export interface SupportRideLog {
+  fileName: string;
+  legRideId: number;
+  tripId: number | null;
+  tripName: string | null;
+  dayNumber: number | null;
+  state: string | null;
+  startedAt: string | null;
+  endedAt: string | null;
+  distanceKm: number | null;
+  segmentCount: number | null;
+  trackPointCount: number | null;
+  segments: SupportRideLogSegment[];
 }
 
 /* ------------------------------------------------------------------- routes */
@@ -490,11 +581,47 @@ export const putFeatureFlag = (key: string, enabled: boolean, reason: string) =>
 
 export const getRuntimeConfig = () => request<Record<string, unknown>>('/api/v1/ops/runtime-config');
 
-export const listTickets = (status?: number, limit = 50) => {
+export const listTickets = (status?: number, type?: number, limit = 50) => {
   const params = new URLSearchParams({ limit: String(limit) });
   if (status !== undefined) params.set('status', String(status));
+  if (type !== undefined) params.set('type', String(type));
   return request<SupportTicketList>(`/api/v1/ops/support/tickets?${params}`);
 };
+
+export const getTicket = (id: number) =>
+  request<SupportTicketDetail>(`/api/v1/ops/support/tickets/${id}`);
+
+/**
+ * Answer the rider.
+ *
+ * This is not a note-to-self: it flips the thread to "Needs your reply", stamps the first-response
+ * time the median tile is built from, and pushes AND emails the rider. `clientId` makes a retried
+ * send idempotent, so a flaky connection cannot post the same reply twice.
+ */
+export const replyToTicket = (id: number, body: string) =>
+  request<SupportTicketDetail>(`/api/v1/ops/support/tickets/${id}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ clientId: crypto.randomUUID(), body }),
+  });
+
+/** Triage. Only the fields sent are changed, so this never clobbers a field it did not mean to. */
+export const updateTicket = (
+  id: number,
+  patch: { status?: number; type?: number; desk?: string; subject?: string },
+) =>
+  request<SupportTicketDetail>(`/api/v1/ops/support/tickets/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(patch),
+  });
+
+/** A short-lived signed URL for one screenshot on this thread. */
+export const getAttachmentUrl = (ticketId: number, attachmentId: number) =>
+  request<SupportAttachmentUrl>(
+    `/api/v1/ops/support/tickets/${ticketId}/attachments/${attachmentId}/url`,
+  );
+
+export const getRideLog = (ticketId: number) =>
+  request<SupportRideLog>(`/api/v1/ops/support/tickets/${ticketId}/ride-log`);
 
 /**
  * What the fleet is actually told, read WITHOUT credentials.

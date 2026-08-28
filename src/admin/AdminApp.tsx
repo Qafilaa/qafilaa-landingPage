@@ -22,7 +22,8 @@ import { clearSession, readIdentity, type AdminIdentity, type UserQuery } from '
 import { ForceUpdate } from './ForceUpdate';
 import { Login } from './Login';
 import { Live } from './Live';
-import { Audit, Flags, Overview, Runtime, Safety, Support, Trips, Users } from './panels';
+import { Audit, Flags, Overview, Runtime, Safety, Trips, Users } from './panels';
+import { Support } from './Support';
 import { DAYLIGHT, HG, SG } from './theme';
 import { Button, Styles } from './ui';
 

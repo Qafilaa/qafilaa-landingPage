@@ -10,11 +10,11 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 
 import {
   ApiError, getFeatureFlags, getOverview, getRuntimeConfig, getSignups, getUser, listAlerts, listAudit,
-  deleteUser, getFunnel, listTickets, listTrips, listUsers, putFeatureFlag, type FeatureFlag,
+  deleteUser, getFunnel, listTrips, listUsers, putFeatureFlag, type FeatureFlag,
   type OpsAlert,
   type OpsAuditEntry, type OpsFunnel,
   type OpsOverview, type OpsSignupSeries, type OpsTrip, type OpsUserDetail, type OpsUserList,
-  type SupportTicket, type UserQuery,
+  type UserQuery,
 } from './api';
 import { HG, NUM, SG, inputStyle, num, when } from './theme';
 import {
@@ -675,6 +675,54 @@ export function Safety() {
 
 /* ============================================================= feature flags */
 
+/**
+ * What each flag actually does, transcribed from `FeatureFlagKeys` in the backend.
+ *
+ * A key like `safety.external_escalation_killswitch` tells an operator nothing about the consequence
+ * of flipping it, and the consequence here is that a downed rider's contacts stop being told. So the
+ * console states it in the words that matter rather than showing a key and a switch.
+ *
+ * **Keep this in step with the backend.** A flag with no entry falls back to whatever description the
+ * API sends, which is honest but far less useful.
+ */
+const FLAG_DOCS: Record<string, { title: string; whenOn: string; stillWorks: string; useWhen: string }> = {
+  'safety.external_escalation_killswitch': {
+    title: 'Suppress external escalation',
+    whenOn:
+      'Stops the outward leg of the safety cascade: the push and SMS to a rider\u2019s medical-card '
+      + 'contacts \u2014 the people outside the ride \u2014 are not sent.',
+    stillWorks:
+      'In-group alerting is untouched. The crew still gets the alert, the responder surfaces still '
+      + 'work, and the alert is still recorded. This narrows who is told, it does not mute the alert.',
+    useWhen:
+      'A systemic false-positive event is firing alerts across many rides at once, and you need to stop '
+      + 'phoning families while you fix it. This is a containment switch for an incident, not a setting.',
+  },
+  'live.live_activity_push_killswitch': {
+    title: 'Suppress iOS Live Activity pushes',
+    whenOn:
+      'Stops every remote APNs push that updates the iOS Live Activity \u2014 the glanceable lock-screen '
+      + 'surface during a ride. The activity stops refreshing from the server.',
+    stillWorks:
+      'The app itself, the ride, location sharing and every alert path are unaffected. Riders on Android '
+      + 'are unaffected entirely. This is a display path, not a safety path.',
+    useWhen:
+      'The Live Activity push path is misbehaving \u2014 flooding, crashing, or showing wrong state \u2014 '
+      + 'and you want it off now rather than after a deploy. Independent of the LiveActivity:Provider config.',
+  },
+};
+
+function FlagFact({ label, tone, children }: { label: string; tone?: 'danger'; children: ReactNode }) {
+  return (
+    <div>
+      <div style={{ font: `600 10.5px ${SG}`, letterSpacing: '.12em', textTransform: 'uppercase', color: tone === 'danger' ? 'var(--danger)' : 'var(--sur)', marginBottom: 4 }}>
+        {label}
+      </div>
+      <div style={{ font: `400 13px/1.6 ${HG}`, color: 'var(--mut)' }}>{children}</div>
+    </div>
+  );
+}
+
 export function Flags() {
   const { data, error, reload } = useAsync<FeatureFlag[]>(getFeatureFlags, []);
   const [pending, setPending] = useState<FeatureFlag | null>(null);
@@ -711,26 +759,58 @@ export function Flags() {
       {error ? <Banner tone="danger" title="Could not load">{error}</Banner> : null}
       {saveError ? <Banner tone="danger" title="Problem">{saveError}</Banner> : null}
 
+      <Banner tone="accent" title="These are kill switches, not features">
+        Both default <strong>off</strong>, and off is the normal running state. Each one exists to
+        contain a systemic failure at runtime without a deploy — turning one <em>on</em> suppresses
+        something the product normally does. Read what each suppresses before you touch it.
+      </Banner>
+
       {!data ? <Loading rows={4} />
         : data.length === 0 ? <Empty>No flags are registered.</Empty>
         : (
-          <Table head={['Flag', 'State', 'Changed', '']}>
-            {data.map((f) => (
-              <tr key={f.key} className="qf-row">
-                <Td>
-                  <div style={{ font: `600 14px ${SG}`, color: 'var(--ink)' }}>{f.key}</div>
-                  {f.description ? (
-                    <div style={{ font: `400 12.5px ${HG}`, color: 'var(--sur)', marginTop: 3, maxWidth: 460 }}>{f.description}</div>
-                  ) : null}
-                </Td>
-                <Td>{f.enabled ? <Badge tone="ok">On</Badge> : <Badge>Off</Badge>}</Td>
-                <Td mono style={{ whiteSpace: 'nowrap' }}>{when(f.updatedAt)}</Td>
-                <Td style={{ textAlign: 'right' }}>
-                  <Button onClick={() => { setPending(f); setReason(''); }}>Turn {f.enabled ? 'off' : 'on'}</Button>
-                </Td>
-              </tr>
-            ))}
-          </Table>
+          <div style={{ display: 'grid', gap: 14 }}>
+            {data.map((f) => {
+              const doc = FLAG_DOCS[f.key];
+              return (
+                <Card key={f.key}>
+                  <div style={{ display: 'flex', gap: 12, justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                    <div style={{ maxWidth: 620 }}>
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                        <h3 style={{ font: `600 16px ${SG}`, color: 'var(--ink)', margin: 0 }}>
+                          {doc?.title ?? f.key}
+                        </h3>
+                        {f.enabled
+                          ? <Badge tone="danger">On — suppressing</Badge>
+                          : <Badge tone="ok">Off — normal</Badge>}
+                      </div>
+                      <code style={{ display: 'block', font: `400 12px ${SG}`, color: 'var(--sur)', marginTop: 5 }}>
+                        {f.key}
+                      </code>
+                    </div>
+                    <Button variant={f.enabled ? 'secondary' : 'danger'} onClick={() => { setPending(f); setReason(''); }}>
+                      Turn {f.enabled ? 'off (back to normal)' : 'on (suppress)'}
+                    </Button>
+                  </div>
+
+                  {doc ? (
+                    <div style={{ marginTop: 14, display: 'grid', gap: 12 }}>
+                      <FlagFact label="What it does when ON" tone="danger">{doc.whenOn}</FlagFact>
+                      <FlagFact label="What still works">{doc.stillWorks}</FlagFact>
+                      <FlagFact label="Turn it on when">{doc.useWhen}</FlagFact>
+                    </div>
+                  ) : (
+                    <p style={{ font: `400 13px ${HG}`, color: 'var(--mut)', marginTop: 12 }}>
+                      {f.description ?? 'No description is registered for this flag.'}
+                    </p>
+                  )}
+
+                  <div style={{ font: `400 12px ${HG}`, color: 'var(--sur)', marginTop: 14 }}>
+                    Last changed {when(f.updatedAt)}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
         )}
 
       <ConfirmDialog
@@ -742,71 +822,16 @@ export function Flags() {
         onCancel={() => setPending(null)}
         onConfirm={() => void apply()}
       >
-        <p style={{ margin: '0 0 12px' }}>This takes effect for every rider. Say why, for the audit trail.</p>
+        <p style={{ margin: '0 0 10px' }}>
+          {pending && !pending.enabled
+            ? FLAG_DOCS[pending.key]?.whenOn ?? 'This suppresses part of the product for every rider.'
+            : 'This returns the product to its normal behaviour for every rider.'}
+        </p>
+        <p style={{ margin: '0 0 12px' }}>Takes effect within seconds. Say why, for the audit trail.</p>
         <Field label="Reason">
           <input className="qf-a" style={inputStyle} value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} autoFocus />
         </Field>
       </ConfirmDialog>
-    </>
-  );
-}
-
-/* =================================================================== support */
-
-const TICKET_STATUS: Record<string, { label: string; tone: 'warn' | 'accent' | 'ok' }> = {
-  '0': { label: 'Open', tone: 'warn' },
-  '1': { label: 'Awaiting rider', tone: 'accent' },
-  '2': { label: 'Resolved', tone: 'ok' },
-  Open: { label: 'Open', tone: 'warn' },
-  AwaitingRider: { label: 'Awaiting rider', tone: 'accent' },
-  Resolved: { label: 'Resolved', tone: 'ok' },
-};
-
-export function Support() {
-  const [status, setStatus] = useState<number | undefined>(undefined);
-  const { data, error, loading, reload } = useAsync(useCallback(() => listTickets(status), [status]), [status]);
-
-  return (
-    <>
-      <SectionTitle
-        eyebrow="Help centre"
-        title="Support queue"
-        note="Newest first. Replies go out through the app's own support tooling — this is the read side."
-        action={<Button onClick={reload}>Refresh</Button>}
-      />
-
-      <Toolbar>
-        <Chips
-          label="Status"
-          value={status === undefined ? 9 : status}
-          options={[{ v: 9, l: 'All' }, { v: 0, l: 'Open' }, { v: 1, l: 'Awaiting rider' }, { v: 2, l: 'Resolved' }]}
-          onPick={(v) => setStatus(v === 9 ? undefined : v)}
-        />
-      </Toolbar>
-
-      {error ? <Banner tone="danger" title="Could not load">{error}</Banner> : null}
-
-      {loading && !data ? <Loading rows={5} />
-        : data && data.tickets.length === 0 ? <Empty>Nothing in the queue.</Empty>
-        : data ? (
-          <Table head={['Ticket', 'Rider', 'Status', 'Opened', 'Last message']}>
-            {data.tickets.map((t: SupportTicket) => {
-              const s = TICKET_STATUS[String(t.status)];
-              return (
-                <tr key={t.id} className="qf-row">
-                  <Td>
-                    <div style={{ font: `600 14px ${HG}`, color: 'var(--ink)' }}>{t.subject || '(no subject)'}</div>
-                    <div style={{ ...NUM, fontSize: 11.5, color: 'var(--sur)' }}>#{t.id}</div>
-                  </Td>
-                  <Td>{t.riderDisplayName ?? '—'}</Td>
-                  <Td>{s ? <Badge tone={s.tone}>{s.label}</Badge> : <Badge>{String(t.status)}</Badge>}</Td>
-                  <Td mono style={{ whiteSpace: 'nowrap' }}>{when(t.createdAt)}</Td>
-                  <Td mono style={{ whiteSpace: 'nowrap' }}>{when(t.lastMessageAt)}</Td>
-                </tr>
-              );
-            })}
-          </Table>
-        ) : null}
     </>
   );
 }
