@@ -399,11 +399,41 @@ export function ConfirmDialog({
 
 /* --------------------------------------------------------------- controls */
 
-/** A row of filter controls. Wraps on narrow screens instead of overflowing. */
+/**
+ * A row of filter controls, all sharing one baseline.
+ *
+ * The alignment is the whole job here and it is easy to get wrong. `Field` carries its own bottom
+ * margin (it is normally stacked in a form) and `Chips` does not, so a naive flex row bottom-aligns
+ * the input 14px above the pills and their labels land at different heights. The rule in `<Styles/>`
+ * zeroes that margin for direct children, and the pills are sized to the same height as an input, so
+ * label, control and baseline all line up without anyone having to remember to.
+ */
 export function Toolbar({ children }: { children: ReactNode }) {
+  return <div className="qf-toolbar">{children}</div>;
+}
+
+/**
+ * The search box in a toolbar.
+ *
+ * Capped rather than greedy: `flex: 1 1 auto` let it eat the row and shove every filter against the
+ * right edge on a wide screen, which is how the Riders toolbar ended up with its chips 900px from the
+ * thing they filter.
+ */
+export function SearchField({
+  label = 'Search', placeholder, value, onChange,
+}: { label?: string; placeholder?: string; value: string; onChange: (v: string) => void }) {
   return (
-    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end', marginBottom: 18 }}>
-      {children}
+    <div style={{ flex: '0 1 340px', minWidth: 200 }}>
+      <Field label={label}>
+        <input
+          className="qf-a"
+          style={inputStyle}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          spellCheck={false}
+        />
+      </Field>
     </div>
   );
 }
@@ -428,7 +458,7 @@ export function Chips({
               onClick={() => onPick(o.v)}
               aria-pressed={on}
               style={{
-                minHeight: 34, padding: '0 12px', borderRadius: 999, cursor: 'pointer',
+                minHeight: 42, padding: '0 14px', borderRadius: 999, cursor: 'pointer',
                 border: `1px solid ${on ? 'var(--acc)' : 'var(--line)'}`,
                 background: on ? 'var(--acc)' : 'var(--card)',
                 color: on ? 'var(--ctaInk)' : 'var(--mut)',
@@ -512,6 +542,16 @@ export function Styles() {
       .qf-row:hover{background:rgba(14,124,134,.045)}
 
       .qf-statgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+
+      /* One baseline for every control in a filter row. Children must not bring their own bottom
+         margin — Field does, because it is normally stacked in a form. */
+      .qf-toolbar{display:flex;gap:14px 16px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
+      .qf-toolbar > *{margin-bottom:0}
+      .qf-toolbar label{margin-bottom:0}
+      @media (max-width:640px){
+        .qf-toolbar{gap:12px}
+        .qf-toolbar > *{flex:1 1 100%}
+      }
       .qf-two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
 
       .qf-shell{display:grid;grid-template-columns:236px 1fr;min-height:100vh}

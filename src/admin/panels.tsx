@@ -19,7 +19,7 @@ import {
 import { HG, NUM, SG, inputStyle, num, when } from './theme';
 import {
   Badge, Banner, Button, Card, Chips, ConfirmDialog, Drawer, Empty, Field, KeyValue, Loading, Pager,
-  SectionTitle, SignupChart, Stat, StatGrid, Table, Td, Toolbar,
+  SearchField, SectionTitle, SignupChart, Stat, StatGrid, Table, Td, Toolbar,
 } from './ui';
 import { Funnel } from './Live';
 import { useAsync } from './useAsync';
@@ -294,18 +294,7 @@ export function Users({ initial }: { initial?: UserQuery }) {
       />
 
       <Toolbar>
-        <div style={{ flex: '1 1 260px', minWidth: 220 }}>
-          <Field label="Search">
-            <input
-              className="qf-a"
-              style={inputStyle}
-              placeholder="Name, email, handle or phone"
-              value={text}
-              onChange={(e) => onText(e.target.value)}
-              spellCheck={false}
-            />
-          </Field>
-        </div>
+        <SearchField placeholder="Name, email, handle or phone" value={text} onChange={onText} />
 
         <Chips
           label="Joined"
@@ -559,12 +548,7 @@ export function Trips() {
       />
 
       <Toolbar>
-        <div style={{ flex: '1 1 240px', minWidth: 200 }}>
-          <Field label="Search">
-            <input className="qf-a" style={inputStyle} placeholder="Trip name" value={text}
-              onChange={(e) => onText(e.target.value)} spellCheck={false} />
-          </Field>
-        </div>
+        <SearchField placeholder="Trip name" value={text} onChange={onText} />
         <Chips
           label="Status"
           value={query.status ? TRIP_STATUSES.indexOf(query.status) + 1 : 0}
@@ -925,18 +909,7 @@ export function Audit() {
       <div style={{ height: 18 }} />
 
       <Toolbar>
-        <div style={{ flex: '1 1 260px', minWidth: 220 }}>
-          <Field label="Search">
-            <input
-              className="qf-a"
-              style={inputStyle}
-              placeholder="Subject, change, reason or who did it"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              spellCheck={false}
-            />
-          </Field>
-        </div>
+        <SearchField placeholder="Subject, change, reason or who did it" value={text} onChange={setText} />
         <Chips
           label="Kind"
           value={kind === null ? 0 : AUDIT_KINDS.indexOf(kind as typeof AUDIT_KINDS[number]) + 1}
@@ -1035,12 +1008,7 @@ export function Runtime() {
 
       {data ? (
         <Toolbar>
-          <div style={{ flex: '1 1 260px', minWidth: 220 }}>
-            <Field label="Filter">
-              <input className="qf-a" style={inputStyle} placeholder="Key or value" value={filter}
-                onChange={(e) => setFilter(e.target.value)} spellCheck={false} />
-            </Field>
-          </div>
+          <SearchField label="Filter" placeholder="Key or value" value={filter} onChange={setFilter} />
         </Toolbar>
       ) : null}
 
