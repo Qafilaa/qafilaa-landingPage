@@ -86,9 +86,21 @@ export function AdminApp() {
     go(key as PanelKey);
   }, [go]);
 
+  /**
+   * Sign out, and leave the URL where the next sign-in should start.
+   *
+   * The panel lives in the hash, so signing out of `/admin#users` used to leave that hash in place:
+   * the address bar still claimed a panel nobody was signed in to, and the next session opened on
+   * whatever the last one happened to be looking at rather than the overview.
+   */
   function signOut() {
     clearSession();
     setIdentity(null);
+    setUserQuery(undefined);
+    setPanel('overview');
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
   }
 
   if (!ready) return null;

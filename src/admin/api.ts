@@ -131,19 +131,63 @@ function messageFor(status: number): string {
 
 /* ------------------------------------------------------------------ sign-in */
 
+/**
+ * What `/auth/sso/google` and `/auth/email-otp/verify` actually return.
+ *
+ * **Tokens, and nothing else.** An earlier version of this file assumed a `user` object here and
+ * checked the address out of it — which was always `undefined`, so Google SSO reported every account
+ * as "unknown" and could never succeed. The identity has to be asked for separately.
+ */
 interface AuthTokensResponse {
   accessToken: string;
-  refreshToken?: string;
-  user?: { email?: string; displayName?: string };
+  accessTokenExpiresAt: string;
+  refreshToken: string;
+  tokenType: string;
+}
+
+interface OpsIdentity {
+  id: number;
+  email: string | null;
+  displayName: string;
 }
 
 /**
- * Exchange a Google ID token for a Qafilaa session.
+ * Turn a freshly-minted token into a session, or refuse it.
  *
- * The address check here is UX, not security: it lets the console say "that is not the admin
- * account" instead of handing over a session that 403s on every subsequent call. The real gate is
- * `Policies.Ops` on the server, which this cannot influence.
+ * The token is stored first because the check itself is an authenticated call — and that call is the
+ * check. `GET /ops/me` is `Policies.Ops`-gated, so a 200 *proves* this account is on the allow-list
+ * and a 403 proves it is not. Nothing about the address is decided here; the client only reports what
+ * the server decided. If it refuses, the session is cleared again so a rejected sign-in leaves nothing
+ * behind.
  */
+async function establishSession(accessToken: string, via: AdminIdentity['via']): Promise<AdminIdentity> {
+  storeSession(accessToken, { email: '', displayName: '', via });
+
+  let me: OpsIdentity;
+  try {
+    me = await request<OpsIdentity>('/api/v1/ops/users/me');
+  } catch (e) {
+    clearSession();
+    if (e instanceof ApiError && e.status === 403) {
+      throw new ApiError(
+        403,
+        'That account is not allowed in here.',
+        `The API refused it. Only ${ADMIN_EMAIL} is on the ops allow-list.`,
+      );
+    }
+    throw e;
+  }
+
+  const identity: AdminIdentity = {
+    email: me.email ?? '',
+    displayName: me.displayName || 'Admin',
+    via,
+  };
+  storeSession(accessToken, identity);
+  return identity;
+}
+
+/** Exchange a Google ID token for a Qafilaa session, then prove it is allowed in. */
 export async function signInWithGoogle(idToken: string): Promise<AdminIdentity> {
   const res = await request<AuthTokensResponse>('/api/v1/auth/sso/google', {
     method: 'POST',
@@ -151,14 +195,7 @@ export async function signInWithGoogle(idToken: string): Promise<AdminIdentity> 
     body: JSON.stringify({ idToken }),
   });
 
-  const email = (res.user?.email ?? '').toLowerCase();
-  if (email !== ADMIN_EMAIL) {
-    throw new ApiError(403, `Signed in as ${email || 'an unknown account'}.`, `Only ${ADMIN_EMAIL} may use this console.`);
-  }
-
-  const identity: AdminIdentity = { email, displayName: res.user?.displayName ?? 'Admin', via: 'sso' };
-  storeSession(res.accessToken, identity);
-  return identity;
+  return establishSession(res.accessToken, 'sso');
 }
 
 /**
@@ -185,14 +222,9 @@ export async function signInWithCode(email: string, code: string): Promise<Admin
     body: JSON.stringify({ email, code }),
   });
 
-  const resolved = (res.user?.email ?? email).toLowerCase();
-  if (resolved !== ADMIN_EMAIL) {
-    throw new ApiError(403, `Signed in as ${resolved}.`, `Only ${ADMIN_EMAIL} may use this console.`);
-  }
-
-  const identity: AdminIdentity = { email: resolved, displayName: res.user?.displayName ?? 'Admin', via: 'code' };
-  storeSession(res.accessToken, identity);
-  return identity;
+  // Same check as the SSO path. The old version trusted the address the operator TYPED, which proved
+  // nothing at all — it would have accepted any account that could pass the OTP.
+  return establishSession(res.accessToken, 'code');
 }
 
 /* --------------------------------------------------------------- ops shapes */
