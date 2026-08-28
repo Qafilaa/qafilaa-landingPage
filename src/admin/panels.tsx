@@ -593,18 +593,73 @@ export function Trips() {
 
 /* =================================================================== safety */
 
+/**
+ * The safety cascade's history.
+ *
+ * **Read-only, permanently.** An alert's lifecycle belongs to the guarded transitions on the `Alert`
+ * entity; a console that could resolve one from a desk is a console that can tell a crew a downed
+ * rider is fine. Everything here answers "did it fire, did it get through, and what happened next" —
+ * never "make it stop".
+ */
 const ALERT_TONE: Record<string, 'danger' | 'warn' | 'ok' | 'neutral'> = {
   Detecting: 'warn', Countdown: 'danger', Active: 'danger', Delivering: 'danger',
   Delivered: 'warn', Cancelled: 'neutral', Resolved: 'ok',
 };
 
+/** What each state means to somebody who does not live in the state machine. */
+const ALERT_STATE_NOTE: Record<string, string> = {
+  Detecting: 'A candidate is forming. Nothing has been sent.',
+  Countdown: 'The rider is being given the chance to cancel before it goes out.',
+  Active: 'Live. The crew is being alerted.',
+  Delivering: 'The cascade is fanning out — crew first, then external contacts.',
+  Delivered: 'Everyone reachable has been told. Still open.',
+  Cancelled: 'The rider said they were fine before it escalated.',
+  Resolved: 'Closed. Either handled or stood down.',
+};
+
+/** Escalation stages, in the order the cascade climbs them. */
+const STAGE_ORDER = ['None', 'Crew', 'ExternalContacts', 'Emergency'];
+
+const STAGE_LABEL: Record<string, string> = {
+  None: 'Not escalated',
+  Crew: 'Crew alerted',
+  ExternalContacts: 'External contacts',
+  Emergency: 'Emergency',
+};
+
+const isOpen = (state: string) => state !== 'Resolved' && state !== 'Cancelled';
+
+/** Minutes from raise to resolve — the number that says whether the cascade actually worked. */
+function resolutionMinutes(a: OpsAlert): number | null {
+  if (!a.resolvedAt) return null;
+  return Math.max(0, Math.round(
+    (new Date(a.resolvedAt).getTime() - new Date(a.createdAt).getTime()) / 60_000,
+  ));
+}
+
 export function Safety() {
   const [openOnly, setOpenOnly] = useState(true);
   const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<OpsAlert | null>(null);
 
   const { data, error, loading, reload } = useAsync(
     useCallback(() => listAlerts(openOnly, page, 25), [openOnly, page]), [openOnly, page],
   );
+
+  const alerts = useMemo(() => data?.alerts ?? [], [data]);
+
+  const stats = useMemo(() => {
+    const open = alerts.filter((a) => isOpen(a.state));
+    const resolved = alerts.map(resolutionMinutes).filter((m): m is number => m !== null);
+    const median = resolved.length === 0 ? null
+      : [...resolved].sort((x, y) => x - y)[Math.floor(resolved.length / 2)];
+    return {
+      open: open.length,
+      reachedExternal: alerts.filter((a) => a.escalationStage === 'ExternalContacts' || a.escalationStage === 'Emergency').length,
+      cancelled: alerts.filter((a) => a.state === 'Cancelled').length,
+      median,
+    };
+  }, [alerts]);
 
   const totalPages = data ? Math.max(1, Math.ceil(data.totalCount / data.pageSize)) : 1;
 
@@ -616,6 +671,33 @@ export function Safety() {
         note="Read-only, permanently. An alert's lifecycle belongs to the guarded domain transitions — a console that could resolve one from a desk could tell a crew a downed rider is fine."
         action={<Button onClick={reload}>Refresh</Button>}
       />
+
+      <StatGrid>
+        <Stat
+          label="Open right now"
+          value={num(stats.open)}
+          tone={stats.open > 0 ? 'danger' : 'ok'}
+          sub={stats.open > 0 ? 'still in the cascade' : 'nothing outstanding'}
+        />
+        <Stat
+          label="Reached outside the crew"
+          value={num(stats.reachedExternal)}
+          tone={stats.reachedExternal > 0 ? 'warn' : 'neutral'}
+          sub="contacts or emergency stage"
+        />
+        <Stat
+          label="Cancelled by the rider"
+          value={num(stats.cancelled)}
+          sub="said they were fine in time"
+        />
+        <Stat
+          label="Median time to resolve"
+          value={stats.median === null ? '—' : `${stats.median}m`}
+          sub={stats.median === null ? 'nothing resolved in this page' : 'raise → resolved'}
+        />
+      </StatGrid>
+
+      <div style={{ height: 18 }} />
 
       <Toolbar>
         <Chips
@@ -630,30 +712,141 @@ export function Safety() {
       {data ? <Count total={data.totalCount} noun="alert" page={data.page} pages={totalPages} /> : null}
 
       {loading && !data ? <Loading rows={5} />
-        : data && data.alerts.length === 0 ? (
-          <Empty>{openOnly ? 'Nothing open. Every alert has been resolved or cancelled.' : 'No alerts have ever been raised.'}</Empty>
-        ) : data ? (
+        : alerts.length === 0 ? (
+          <Empty>
+            {openOnly
+              ? 'Nothing open. Every alert has been resolved or cancelled — which is the answer you want.'
+              : 'No alert has ever been raised.'}
+          </Empty>
+        ) : (
           <>
-            <Table head={['Alert', 'Rider', 'Trip', 'State', 'Escalation', 'Raised', 'Resolved']}>
-              {data.alerts.map((a: OpsAlert) => (
-                <tr key={a.id} className="qf-row">
-                  <Td>
-                    <div style={{ font: `600 14px ${HG}`, color: 'var(--ink)' }}>{a.type}</div>
-                    <div style={{ ...NUM, fontSize: 11.5, color: 'var(--sur)' }}>#{a.id} · {a.triggerKind}</div>
-                  </Td>
-                  <Td>{a.riderName ?? <span style={{ ...NUM, color: 'var(--sur)' }}>#{a.riderId}</span>}</Td>
-                  <Td>{a.tripName ?? <span style={{ ...NUM, color: 'var(--sur)' }}>#{a.tripId}</span>}</Td>
-                  <Td><Badge tone={ALERT_TONE[a.state] ?? 'neutral'}>{a.state}</Badge></Td>
-                  <Td mono>{a.escalationStage}</Td>
-                  <Td mono style={{ whiteSpace: 'nowrap' }}>{when(a.createdAt)}</Td>
-                  <Td mono style={{ whiteSpace: 'nowrap' }}>{when(a.resolvedAt)}</Td>
-                </tr>
-              ))}
+            <Table head={['Alert', 'Rider', 'Trip', 'State', 'Escalation', 'Raised', 'Resolved in']}>
+              {alerts.map((a: OpsAlert) => {
+                const mins = resolutionMinutes(a);
+                return (
+                  <tr key={a.id} className="qf-row" style={{ cursor: 'pointer' }} onClick={() => setSelected(a)}>
+                    <Td>
+                      <div style={{ font: `600 14px ${HG}`, color: 'var(--ink)' }}>{a.type}</div>
+                      <div style={{ ...NUM, fontSize: 11.5, color: 'var(--sur)' }}>#{a.id} · {a.triggerKind}</div>
+                    </Td>
+                    <Td>{a.riderName ?? <span style={{ ...NUM, color: 'var(--sur)' }}>#{a.riderId}</span>}</Td>
+                    <Td>{a.tripName ?? <span style={{ ...NUM, color: 'var(--sur)' }}>#{a.tripId}</span>}</Td>
+                    <Td>
+                      <Badge tone={ALERT_TONE[a.state] ?? 'neutral'}>{a.state}</Badge>
+                      {isOpen(a.state) ? (
+                        <span className="qf-pulse" aria-hidden style={{ display: 'inline-block', marginLeft: 6, width: 7, height: 7, borderRadius: 7, background: 'var(--danger)' }} />
+                      ) : null}
+                    </Td>
+                    <Td><StageDots stage={a.escalationStage} /></Td>
+                    <Td mono style={{ whiteSpace: 'nowrap' }}>{when(a.createdAt)}</Td>
+                    <Td mono>{mins === null ? (isOpen(a.state) ? 'open' : '—') : `${mins}m`}</Td>
+                  </tr>
+                );
+              })}
             </Table>
-            <Pager page={data.page} pages={totalPages} onPage={setPage} />
+            <Pager page={data!.page} pages={totalPages} onPage={setPage} />
           </>
-        ) : null}
+        )}
+
+      <AlertDrawer alert={selected} onClose={() => setSelected(null)} />
     </>
+  );
+}
+
+/**
+ * How far up the cascade this alert climbed, as four dots.
+ *
+ * A stage name alone ("ExternalContacts") does not say whether that is far or near. Dots show the
+ * ladder and how much of it was used, which is the shape of the question an operator is asking.
+ */
+function StageDots({ stage }: { stage: string }) {
+  const reached = Math.max(0, STAGE_ORDER.indexOf(stage));
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }} title={STAGE_LABEL[stage] ?? stage}>
+      {STAGE_ORDER.map((s, i) => (
+        <span
+          key={s}
+          aria-hidden
+          style={{
+            width: 7, height: 7, borderRadius: 7,
+            background: i <= reached && reached > 0 ? 'var(--danger)' : 'var(--line)',
+          }}
+        />
+      ))}
+      <span style={{ font: `400 12px ${HG}`, color: 'var(--mut)', marginLeft: 4 }}>
+        {STAGE_LABEL[stage] ?? stage}
+      </span>
+    </span>
+  );
+}
+
+function AlertDrawer({ alert, onClose }: { alert: OpsAlert | null; onClose: () => void }) {
+  if (!alert) return null;
+  const mins = resolutionMinutes(alert);
+
+  return (
+    <Drawer title={`${alert.type} alert`} onClose={onClose}>
+      <div style={{ marginBottom: 18 }}>
+        <div style={{ font: `600 19px ${SG}`, color: 'var(--ink)' }}>{alert.type}</div>
+        <div style={{ ...NUM, fontSize: 12, color: 'var(--sur)', marginTop: 3 }}>
+          #{alert.id} · triggered by {alert.triggerKind}
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 10 }}>
+          <Badge tone={ALERT_TONE[alert.state] ?? 'neutral'}>{alert.state}</Badge>
+          {isOpen(alert.state) ? <Badge tone="danger">Still open</Badge> : null}
+        </div>
+        <p style={{ font: `400 13px/1.6 ${HG}`, color: 'var(--mut)', margin: '10px 0 0' }}>
+          {ALERT_STATE_NOTE[alert.state] ?? 'No description for this state.'}
+        </p>
+      </div>
+
+      <div style={{ padding: '14px', background: 'var(--ctr)', borderRadius: 12, marginBottom: 18 }}>
+        <div style={{ font: `600 10.5px ${SG}`, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--sur)', marginBottom: 10 }}>
+          How far it escalated
+        </div>
+        {STAGE_ORDER.map((s, i) => {
+          const reached = STAGE_ORDER.indexOf(alert.escalationStage);
+          const hit = reached > 0 && i <= reached;
+          return (
+            <div key={s} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '5px 0' }}>
+              <span
+                aria-hidden
+                style={{
+                  width: 9, height: 9, borderRadius: 9, flex: '0 0 9px',
+                  background: hit ? 'var(--danger)' : 'var(--line)',
+                }}
+              />
+              <span style={{ font: `${hit ? 600 : 400} 13px ${HG}`, color: hit ? 'var(--ink)' : 'var(--sur)' }}>
+                {STAGE_LABEL[s]}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      <KeyValue rows={[
+        ['Rider', alert.riderName ?? `#${alert.riderId}`],
+        ['Trip', alert.tripName ?? `#${alert.tripId}`],
+        ['Type', alert.type],
+        ['Trigger', alert.triggerKind],
+        ['State', alert.state],
+        ['Escalation stage', STAGE_LABEL[alert.escalationStage] ?? alert.escalationStage],
+        ['Raised', when(alert.createdAt)],
+        ['Resolved', when(alert.resolvedAt)],
+        ['Time to resolve', mins === null ? (isOpen(alert.state) ? 'still open' : '—') : `${mins} minutes`],
+      ]} />
+
+      <p style={{ font: `400 12.5px/1.6 ${HG}`, color: 'var(--sur)', marginTop: 18 }}>
+        Position, impact force and the what3words are deliberately absent. An operator checking whether
+        the cascade worked does not need to know where a rider crashed, and this console has no action
+        that would use it.
+      </p>
+
+      <Banner tone="accent" title="Nothing here is editable">
+        There is no resolve, no cancel and no reassign. An alert moves only through the guarded
+        transitions on the server, driven by riders and the cascade — never from a desk.
+      </Banner>
+    </Drawer>
   );
 }
 
