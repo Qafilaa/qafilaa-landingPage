@@ -24,7 +24,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { listLive, type OpsLiveRider } from './api';
 import { HG, NUM, SG, num } from './theme';
-import { Badge, Banner, Button, Card, Chips, Empty, Loading, SectionTitle, Table, Td, Toolbar } from './ui';
+import {
+  Badge, Banner, Button, Card, Chips, Empty, Loading, SectionTitle, Stat, StatGrid, Table, Td, Toolbar,
+} from './ui';
 import { useAsync } from './useAsync';
 
 /** Age bands. Deliberately coarse — three states an operator can hold in their head, not a gradient. */
@@ -83,7 +85,36 @@ export function Live() {
     stale: riders.filter((r) => freshness(r.ageSeconds) === 'stale').length,
     old: riders.filter((r) => freshness(r.ageSeconds) === 'old').length,
     riding: riders.filter((r) => r.riding).length,
+    lowBattery: riders.filter((r) => r.batteryPct !== null && r.batteryPct <= 20).length,
+    moving: riders.filter((r) => (r.speedKmh ?? 0) > 5).length,
   }), [riders]);
+
+  /* Riders grouped by the trip they are on. A crew is the unit an operator thinks in — "is everyone
+     on trip 45 together?" — and a flat list sorted by fix age scatters them. */
+  const byTrip = useMemo(() => {
+    const out = new Map<number, { name: string; riders: OpsLiveRider[] }>();
+    for (const r of riders) {
+      const entry = out.get(r.tripId);
+      if (entry) entry.riders.push(r);
+      else out.set(r.tripId, { name: r.tripName ?? `Trip #${r.tripId}`, riders: [r] });
+    }
+    return [...out.entries()].sort((a, b) => b[1].riders.length - a[1].riders.length);
+  }, [riders]);
+
+  /** Widest gap between any two riders on the same trip — the "are they together?" number. */
+  const spreadKm = useMemo(() => {
+    const out = new Map<number, number>();
+    for (const [tripId, { riders: crew }] of byTrip) {
+      let max = 0;
+      for (let i = 0; i < crew.length; i++) {
+        for (let j = i + 1; j < crew.length; j++) {
+          max = Math.max(max, haversineKm(crew[i], crew[j]));
+        }
+      }
+      out.set(tripId, max);
+    }
+    return out;
+  }, [byTrip]);
 
   return (
     <>
@@ -126,16 +157,77 @@ export function Live() {
 
       {data && riders.length > 0 ? (
         <>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
-            <Badge tone="ok">{counts.live} live</Badge>
-            {counts.stale > 0 ? <Badge tone="warn">{counts.stale} stale</Badge> : null}
-            {counts.old > 0 ? <Badge>{counts.old} old</Badge> : null}
-            {counts.riding > 0 ? <Badge tone="accent">{counts.riding} on an open ride</Badge> : null}
-          </div>
+          <StatGrid>
+            <Stat
+              label="Fixes this fresh"
+              value={num(counts.live)}
+              tone={counts.live > 0 ? 'ok' : 'neutral'}
+              sub={`${counts.stale} stale · ${counts.old} old`}
+            />
+            <Stat
+              label="On an open ride"
+              value={num(counts.riding)}
+              tone={counts.riding > 0 ? 'accent' : 'neutral'}
+              sub="told us they are out there"
+            />
+            <Stat
+              label="Actually moving"
+              value={num(counts.moving)}
+              sub="over 5 km/h at last fix"
+            />
+            <Stat
+              label="Battery under 20%"
+              value={num(counts.lowBattery)}
+              tone={counts.lowBattery > 0 ? 'danger' : 'ok'}
+              sub={counts.lowBattery > 0 ? 'a dead phone stops sharing' : 'nobody low'}
+            />
+          </StatGrid>
+
+          <div style={{ height: 16 }} />
+
+          {counts.old > 0 ? (
+            <Banner tone="warn" title={`${counts.old} position${counts.old === 1 ? ' is' : 's are'} over 15 minutes old`}>
+              Shown because they are the last thing we know, not because they are current. A rider in a
+              dead zone and a rider who stopped sharing look identical from here.
+            </Banner>
+          ) : null}
 
           <Card style={{ padding: 0, overflow: 'hidden', marginBottom: 18 }}>
             <Plot riders={riders} selected={selected} onSelect={setSelected} />
           </Card>
+
+          {byTrip.length > 1 || (byTrip[0]?.[1].riders.length ?? 0) > 1 ? (
+            <Card style={{ marginBottom: 18 }}>
+              <h3 style={{ font: `600 15px ${SG}`, color: 'var(--ink)', margin: '0 0 4px' }}>By crew</h3>
+              <p style={{ font: `400 12.5px ${HG}`, color: 'var(--sur)', margin: '0 0 12px' }}>
+                Spread is the widest gap between any two riders on that trip — the &ldquo;are they still
+                together?&rdquo; number.
+              </p>
+              {byTrip.map(([tripId, { name, riders: crew }]) => {
+                const spread = spreadKm.get(tripId) ?? 0;
+                return (
+                  <div
+                    key={tripId}
+                    style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '9px 0', borderTop: '1px solid var(--line)' }}
+                  >
+                    <div>
+                      <div style={{ font: `600 13.5px ${HG}`, color: 'var(--ink)' }}>{name}</div>
+                      <div style={{ font: `400 12px ${HG}`, color: 'var(--sur)' }}>
+                        {crew.length} rider{crew.length === 1 ? '' : 's'} ·{' '}
+                        {crew.filter((r) => r.riding).length} riding
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ ...NUM, fontSize: 16, fontWeight: 600, color: spread > 20 ? 'var(--warn)' : 'var(--ink)' }}>
+                        {crew.length < 2 ? '—' : spread < 1 ? `${Math.round(spread * 1000)} m` : `${spread.toFixed(1)} km`}
+                      </div>
+                      <div style={{ font: `400 11.5px ${HG}`, color: 'var(--sur)' }}>spread</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </Card>
+          ) : null}
 
           <Table head={['Age', 'Rider', 'Trip', 'Speed', 'Battery', 'Position', '']}>
             {riders.map((r) => {
@@ -335,6 +427,23 @@ function Plot({
       </div>
     </div>
   );
+}
+
+/**
+ * Great-circle distance in kilometres.
+ *
+ * Haversine rather than a flat approximation: the crew-spread figure is the one number here an
+ * operator might act on, and a planar estimate drifts by percent over the distances a convoy covers.
+ */
+function haversineKm(a: OpsLiveRider, b: OpsLiveRider): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.latitude - a.latitude);
+  const dLon = toRad(b.longitude - a.longitude);
+  const lat1 = toRad(a.latitude);
+  const lat2 = toRad(b.latitude);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
 }
 
 /** Rounds to 1, 2 or 5 times a power of ten — the values a scale bar can label without noise. */
